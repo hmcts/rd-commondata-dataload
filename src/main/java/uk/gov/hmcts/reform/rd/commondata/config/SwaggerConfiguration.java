@@ -18,7 +18,8 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
             .useDefaultResponseMessages(false)
             .select()
-            .apis(RequestHandlerSelectors.basePackage(RdCommondataLoadApplication.class.getPackage().getName() + ".controllers"))
+            .apis(RequestHandlerSelectors.basePackage(
+                RdCommondataLoadApplication.class.getPackage().getName() + ".controllers"))
             .paths(PathSelectors.any())
             .build();
     }
