@@ -1,26 +1,18 @@
 version: '2.1'
 
 services:
-  spring-boot-template:
+
+  rd-commondata-db:
     build:
-      context: .
-      args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
-    image: hmctspublic.azurecr.io/spring-boot/template
+      context: database
+    image: hmcts/rd-commondata-db
+    container_name: rd-commondata-db
+    volumes:
+      - rd-commondata-db-volume:/var/lib/postgresql/data
     environment:
-      # these environment variables are used by java-logging library
-      - ROOT_APPENDER
-      - JSON_CONSOLE_PRETTY_PRINT
-      - ROOT_LOGGING_LEVEL
-      - REFORM_SERVICE_TYPE
-      - REFORM_SERVICE_NAME
-      - REFORM_TEAM
-      - REFORM_ENVIRONMENT
-      - LOGBACK_DATE_FORMAT
-      - LOGBACK_REQUIRE_THREAD
-      - LOGBACK_REQUIRE_ALERT_LEVEL=false
-      - LOGBACK_REQUIRE_ERROR_CODE=false
+      - POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-refcommondata}"
     ports:
-      - $SERVER_PORT:$SERVER_PORT
+      - 5458:5432
+
+volumes:
+  rd-commondata-db-volume:
