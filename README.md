@@ -1,15 +1,15 @@
-Commondata DataLoad API
+
 # rd-commondata-dataload
-Judicial reference data load (JRD)
+Reference data commondata dataload
 
-JRD is batch application and JRD batch is scheduled with Kubernetes which runs once in a day per cluster.
+RDCD is batch application and RDCD batch is scheduled with Kubernetes which runs once in a day per cluster.
 
-JRD consume data files from an external source, transform that data into the destination format
-and load the data into JRD database.
+RDCD consume data files from an external source, transform that data into the destination format
+and load the data into RDCD database.
 
-JRD Uses Data-Ingestion-Library (https://github.com/hmcts/data-ingestion-lib) and configure camel routes with
-data-ingestion-lib & JRD custom configuration files & crates camel integration framework which reads CSV files & Stores
-the CSV files data in JRD Database.
+RDCD Uses Data-Ingestion-Library (https://github.com/hmcts/data-ingestion-lib) and configure camel routes with
+data-ingestion-lib & RDCD custom configuration files & crates camel integration framework which reads CSV files & Stores
+the CSV files data in RDCD Database.
 
 Library should be included with build.gradle like follows
 compile group: 'uk.gov.hmcts.reform', name: 'data-ingestion-lib', version: '0.2.5'
@@ -25,7 +25,7 @@ The Palo Alto untrusted interfaces will form the Palo Alto backend pool, used by
 The files are decrypted and then scanned and if everything is okay then trusted traffic is sent to a configured endpoint, in this case an Azure Blob Storage account.
 
 # Data Transformation and Load - This is achieved through a K8S scheduler and Apache Camel.
-Kubernetes scheduler triggers Apache Camel routes which process files stored in Azure blob storage and persists it JRD database.
+Kubernetes scheduler triggers Apache Camel routes which process files stored in Azure blob storage and persists it RDCD database.
 
 # Building and deploying the application
 Building the application
