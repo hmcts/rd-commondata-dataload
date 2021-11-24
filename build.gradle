@@ -115,6 +115,7 @@ jacocoTestReport {
     xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
   }
 }
+
 pitest {
   junit5PluginVersion = '0.12'
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
@@ -136,10 +137,13 @@ project.tasks['pitest'].group = "Verification"
 project.tasks['sonarqube'].group = "Verification"
 project.tasks['sonarqube'].dependsOn test,jacocoTestReport
 
+project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
+
 sonarqube {
   properties {
     property "sonar.projectName", "RD::rd-commondata-load"
     property "sonar.projectKey", "uk.gov.hmcts.reform.rd.commondata:rd-commondata-load"
+
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
