@@ -9,7 +9,7 @@ clean_old_docker_artifacts() {
 
     docker rm rd-commondata-db
 
-    docker rmi hmcts/rd-judicial-db
+    docker rmi hmcts/rd-commondata-dataload
 
     docker volume rm rd-commondata-db-volume
 }

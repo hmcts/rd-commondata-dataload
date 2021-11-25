@@ -1,4 +1,4 @@
-java:
+job:
   # Don't modify below here
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
@@ -9,12 +9,12 @@ java:
     POSTGRES_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
     POSTGRES_PORT: "{{ .Values.postgresql.postgresqlPort}}"
     # LOCATIONS_DB: classpath:db/migration,classpath:db/postgres,classpath:db/migrationAks
-    LAUNCH_DARKLY_ENV: "preview"
+    # LAUNCH_DARKLY_ENV: "preview"
   postgresql:
     enabled: true
     postgresqlUsername: dbrdcommondata
     postgresqlPassword: dbrdcommondata
-    postgresqlDatabase: dbrdcommondata
+    postgresqlDatabase: dbcommondata
     postgresqlPort: 5432
   keyVaults:
     rd:

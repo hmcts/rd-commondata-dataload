@@ -12,7 +12,7 @@ plugins {
 }
 
 mainClassName = 'uk.gov.hmcts.reform.rd.commondata.RdCommondataLoadApplication'
-def jarName = 'rd-commondata-load.jar'
+def jarName = 'rd-commondata-dataload.jar'
 
 group = 'uk.gov.hmcts.reform.rd'
 version = '0.0.1'

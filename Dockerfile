@@ -2,7 +2,7 @@ ARG APP_INSIGHTS_AGENT_VERSION=2.6.1
 FROM hmctspublic.azurecr.io/base/java:openjdk-11-distroless-1.4
 
 # Mandatory!
-ENV APP rd-commondata-load.jar
+ENV APP rd-commondata-dataload.jar
 ENV APPLICATION_TOTAL_MEMORY 512M
 ENV APPLICATION_SIZE_ON_DISK_IN_MB 48
 
@@ -14,7 +14,6 @@ COPY build/libs/$APP /opt/app/
 
 WORKDIR /opt/app
 
-EXPOSE 8090
+EXPOSE 8100
 
-CMD [ "rd-commondata-load.jar" ]
-
+CMD [ "rd-commondata-dataload.jar" ]

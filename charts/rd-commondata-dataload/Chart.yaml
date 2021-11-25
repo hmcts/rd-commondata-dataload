@@ -7,9 +7,6 @@ version: 0.0.1
 maintainers:
   - name: Reference Data Team
 dependencies:
-  - name: java
-    version: 3.6.0
-    repository: '@hmctspublic'
   - name: job
     version: ~0.7.3
     repository: https://hmctspublic.azurecr.io/helm/v1/repo/
@@ -17,7 +14,7 @@ dependencies:
     version: ~8.9.8
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-  - name: blobstorage
-    version: 0.2.1
-    repository: https://hmctspublic.azurecr.io/helm/v1/repo/
-    condition: blobstorage.enabled
+  # - name: blobstorage
+  #   version: 0.2.1
+  #   repository: https://hmctspublic.azurecr.io/helm/v1/repo/
+  #   condition: blobstorage.enabled
