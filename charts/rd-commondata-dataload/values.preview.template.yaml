@@ -10,12 +10,6 @@ job:
     POSTGRES_PORT: "{{ .Values.postgresql.postgresqlPort}}"
     # LOCATIONS_DB: classpath:db/migration,classpath:db/postgres,classpath:db/migrationAks
     # LAUNCH_DARKLY_ENV: "preview"
-  postgresql:
-    enabled: true
-    postgresqlUsername: dbrdcommondata
-    postgresqlPassword: dbrdcommondata
-    postgresqlDatabase: dbcommondata
-    postgresqlPort: 5432
   keyVaults:
     rd:
       secrets:
@@ -25,3 +19,17 @@ job:
           alias: LD_SDK_KEY
         # - name: commondata-api-s2s-secret
         #   alias: COMMONDATA_API_S2S_SECRET
+
+global:
+    jobKind: CronJob
+
+postgresql:
+  enabled: true
+  image:
+    tag: '11.3.0'
+  postgresqlUsername: dbcommondata
+  postgresqlPassword: dbcommondata
+  postgresqlDatabase: dbcommondata
+  postgresqlPort: 5432
+  persistence:
+    enabled: false
