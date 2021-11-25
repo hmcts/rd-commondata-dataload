@@ -1,73 +1,41 @@
 #!/usr/bin/env sh
 
-print_help() {
-  echo "Script to run docker containers for Spring Boot Template API service
+GRADLE_CLEAN=true
+GRADLE_INSTALL=true
 
-  Usage:
+clean_old_docker_artifacts() {
 
-  ./run-in-docker.sh [OPTIONS]
+    docker stop rd-commondata-db
 
-  Options:
-    --clean, -c                   Clean and install current state of source code
-    --install, -i                 Install current state of source code
-    --param PARAM=, -p PARAM=     Parse script parameter
-    --help, -h                    Print this help block
+    docker rm rd-commondata-db
 
-  Available parameters:
+    docker rmi hmcts/rd-commondata-dataload
 
-  "
+    docker volume rm rd-commondata-db-volume
 }
 
-# script execution flags
-GRADLE_CLEAN=false
-GRADLE_INSTALL=false
-
-# TODO custom environment variables application requires.
-# TODO also consider enlisting them in help string above ^
-# TODO sample: DB_PASSWORD   Defaults to 'dev'
-# environment variables
-#DB_PASSWORD=dev
-#S2S_URL=localhost
-#S2S_SECRET=secret
-
 execute_script() {
-  cd $(dirname "$0")/..
 
-  if [ ${GRADLE_CLEAN} = true ]
-  then
-    echo "Clearing previous build.."
-    ./gradlew clean
+   clean_old_docker_artifacts
+
+   docker-compose down -v
+
+   docker system prune –af
+
+  ./gradlew clean assemble
+
+  if [ -f ~/.bash_functions ]; then
+      . ~/.bash_functions
+      get_az_keyvault_secrets 'rd'
   fi
 
-  if [ ${GRADLE_INSTALL} = true ]
-  then
-    echo "Assembling distribution.."
-    ./gradlew assemble
-  fi
+  export SERVER_PORT="${SERVER_PORT:-8100}"
 
-#  echo "Assigning environment variables.."
-#
-#  export DB_PASSWORD=${DB_PASSWORD}
-#  export S2S_URL=${S2S_URL}
-#  export S2S_SECRET=${S2S_SECRET}
+  pwd
 
-  echo "Bringing up docker containers.."
+  chmod +x bin/*
 
   docker-compose up
 }
 
-while true ; do
-  case "$1" in
-    -h|--help) print_help ; shift ; break ;;
-    -c|--clean) GRADLE_CLEAN=true ; GRADLE_INSTALL=true ; shift ;;
-    -i|--install) GRADLE_INSTALL=true ; shift ;;
-    -p|--param)
-      case "$2" in
-#        DB_PASSWORD=*) DB_PASSWORD="${2#*=}" ; shift 2 ;;
-#        S2S_URL=*) S2S_URL="${2#*=}" ; shift 2 ;;
-#        S2S_SECRET=*) S2S_SECRET="${2#*=}" ; shift 2 ;;
-        *) shift 2 ;;
-      esac ;;
-    *) execute_script ; break ;;
-  esac
-done
+execute_script
