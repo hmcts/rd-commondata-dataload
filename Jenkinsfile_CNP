@@ -8,6 +8,9 @@ def component = "commondata-dataload"
 
 withPipeline(type, product, component) {
   enableAksStagingDeployment()
+  disableLegacyDeploymentOnAAT()
+  disableLegacyDeployment()
+  nonServiceApp()
 
   // Sync environment specific branches with master branch
   // Configure branches to sync with master branch
