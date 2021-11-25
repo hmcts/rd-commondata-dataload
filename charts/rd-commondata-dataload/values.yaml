@@ -8,6 +8,18 @@ job:
   global:
     jobKind: CronJob
 
+  keyVaults:
+    rd:
+      secrets:
+        - name: ApplicationInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
+        - name: LD-SDK-KEY
+          alias: LD_SDK_KEY
+        - name: commondata-api-POSTGRES-PASS
+          alias: spring.datasource.password
+        # - name: commondata-api-s2s-secret
+        #   alias: COMMONDATA_API_S2S_SECRET
+
   environment:
     POSTGRES_HOST: rd-commondata-api-postgres-db-v11-{{ .Values.global.environment }}.postgres.database.azure.com
     POSTGRES_USERNAME: dbcommondata@rd-commondata-api-postgres-db-v11-{{ .Values.global.environment }}
@@ -20,20 +32,6 @@ job:
     # LOCATIONS_DB: classpath:db/migration,classpath:db/postgres
     # LAUNCH_DARKLY_ENV: "{{ .Values.global.environment }}"
 
-  postgresql:
-    enabled: false
+postgresql:
+  enabled: false
   
-  blobstorage:
-    enabled: false
-
-  keyVaults:
-    rd:
-      secrets:
-        - name: ApplicationInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
-        - name: LD-SDK-KEY
-          alias: LD_SDK_KEY
-        - name: commondata-api-POSTGRES-PASS
-          alias: spring.datasource.password
-        # - name: commondata-api-s2s-secret
-        #   alias: COMMONDATA_API_S2S_SECRET
