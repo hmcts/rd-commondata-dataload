@@ -1,3 +1,5 @@
+DROP TABLE  IF EXISTS  flag_details;
+
 create table flag_details(
 	id bigint,
 	flag_code  varchar(16) NOT NULL,
