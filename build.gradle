@@ -257,27 +257,8 @@ dependencies {  implementation (group: 'org.springframework.boot', name: 'spring
   testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.1'
   testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
   testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
+//TODO 1. Removed serenity dependancies
 
-  testImplementation (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
-    {
-      exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-      exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-  testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
-    {
-      exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-      exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-  testImplementation (group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity)
-    {
-      exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-      exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-  testImplementation (group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity)
-    {
-      exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-      exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
 
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
   testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
