@@ -19,4 +19,10 @@
     <cve>CVE-2020-8908</cve>
     <cve>CVE-2021-22053</cve>
    </suppress>
+   <suppress>
+     <cve>CVE-2021-22096</cve>
+     <cve>CVE-2018-1258</cve>
+     <cve>CVE-2021-33037</cve>
+     <cve>CVE-2021-42340</cve>
+   </suppress>
 </suppressions>
