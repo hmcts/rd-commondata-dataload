@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 //@SuppressWarnings ("PMD.DoNotCallSystemExit")
 @Slf4j
@@ -28,4 +28,6 @@ public class RdCommondataLoadApplication implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         log.info("{}:: RdCommondataLoadApplication run started {} ");
     }
+
+
 }
