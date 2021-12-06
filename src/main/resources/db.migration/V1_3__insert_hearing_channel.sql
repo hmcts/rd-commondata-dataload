@@ -26,3 +26,22 @@ VALUES ('HearingChannel','BBA3','telephone','Telephone',null,null,null,2,null,nu
 ('HearingSubChannel','BBA3','video-other','Video - Other',null,null,null,null,'HearingChannel','video','Y'),
 ('HearingSubChannel','BBA3','video-skype','Video - Skype',null,null,null,null,'HearingChannel','video','Y'),
 ('HearingSubChannel','BBA3','video-teams','Video - Teams',null,null,null,null,'HearingChannel','video','Y');
+
+CREATE TABLE non_standard_duration_codes(
+CategoryKey varchar(64) not null,
+ServiceID varchar(16),
+Key varchar(64) not null,
+Value_EN varchar(128) not null,
+Value_CY varchar(128),
+HintText_EN varchar(512),
+HintText_CY varchar(512),
+Lov_Order BIGINT(),
+ParentCategory varchar(64),
+ParentKey varchar(64),
+Active varchar(1)
+);
+
+INSERT INTO non_standard_duration_codes (CategoryKey,ServiceID,Key,Value_EN,Value_CY,HintText_EN,HintText_CY,Lov_Order,ParentCategory,ParentKey,Active)
+VALUES ('NonStdDurationReason', null, 'timeForInterpretation', 'Time for interpretation', null, null, null, null, null, null, 'Y'),
+('NonStdDurationReason', null, 'complexCase', 'Complex case', null, null, null, null, null, null, 'Y'),
+('NonStdDurationReason', null, 'litigantInPerson', 'Litigant in person', null, null, null, null, null, null, 'Y')
