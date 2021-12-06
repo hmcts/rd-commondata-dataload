@@ -17,28 +17,43 @@ spring:
     import: "optional:configtree:/mnt/secrets/"
   application:
     name: Rd Commondata Load
-#  datasource:
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}${DB_OPTIONS:}
-#    username: ${DB_USER_NAME}
-#    password: ${DB_PASSWORD}
-#    properties:
-#      charSet: UTF-8
-#    hikari:
-#      minimumIdle: 2
-#      maximumPoolSize: 10
-#      idleTimeout: 10000
-#      poolName: {to-be-defined}HikariCP
-#      maxLifetime: 7200000
-#      connectionTimeout: 30000
-#  jpa:
-#    properties:
-#      hibernate:
-#        jdbc:
-#          lob:
-#            # silence the 'wall-of-text' - unnecessary exception throw about blob types
-#            non_contextual_creation: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  batch:
+    initialize-schema: always
+      #run spring batch job manually as need to validate idempotent condition in code
+    #rather than giving control to spring
+    job:
+      enabled: false
+  #  jackson.date-format: yyyy-MM-dd
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: ${COMMONDATA_DB:classpath:db/migration}
 
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5458}/${POSTGRES_NAME:dbcommondata}${POSTGRES_CONNECTION_OPTIONS:}
+    username: ${POSTGRES_USERNAME:dbcommondata}
+    password: ${POSTGRES_PASSWORD:dbcommondata}
+    properties:
+      charSet: UTF-8
+    hikari:
+      max-lifetime: 600000
+      maximum-pool-size: 5
+      idle-timeout: 30000
+      minimum-idle: 1
+  profiles:
+    include:
+      - lib
+      - camel-routes-common
+mail:
+  enabled: false
 azure:
   application-insights:
     instrumentation-key: ${rpe.AppInsightsInstrumentationKey:00000000-0000-0000-0000-000000000000}

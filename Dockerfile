@@ -1,6 +1,8 @@
-ARG APP_INSIGHTS_AGENT_VERSION=2.6.1
-FROM hmctspublic.azurecr.io/base/java:openjdk-11-distroless-1.4
+ARG APP_INSIGHTS_AGENT_VERSION=2.5.1
 
+# Application image
+
+FROM hmctspublic.azurecr.io/base/java:openjdk-11-distroless-1.2
 # Mandatory!
 ENV APP rd-commondata-dataload.jar
 ENV APPLICATION_TOTAL_MEMORY 512M
