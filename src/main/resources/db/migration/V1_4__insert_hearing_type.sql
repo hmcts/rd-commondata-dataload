@@ -14,6 +14,6 @@ Active varchar(1)
 
 
 INSERT INTO hearing_type (CategoryKey,ServiceID,Key,Value_EN,Value_CY,HintText_EN,HintText_CY,Lov_Order,ParentCategory,ParentKey,Active)
-VALUES ('HearingType', 'BBA3', 'BBA3-substantive', 'Substantive', null, null , null, '1', null, null, 'Y'),
-('HearingType', 'BBA3', 'BBA3-directionHearings', 'Direction Hearings', null, null, null, '2', null, null, 'Y'),
-('HearingType', 'BBA3', 'BBA3-chambersOutcome', 'Chambers Outcome', null, null, null, '3', null, null, 'Y');
+VALUES ('HearingType', 'BBA3', 'BBA3-substantive', 'Substantive', null, null , null, 1, null, null, 'Y'),
+('HearingType', 'BBA3', 'BBA3-directionHearings', 'Direction Hearings', null, null, null, 2, null, null, 'Y'),
+('HearingType', 'BBA3', 'BBA3-chambersOutcome', 'Chambers Outcome', null, null, null, 3, null, null, 'Y');
