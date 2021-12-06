@@ -13,7 +13,7 @@ CREATE TABLE cancellation_reasons (
 );
 
 
-INSERT INTO public.cancellation_reasons (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
+INSERT INTO cancellation_reasons (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
 	 ('CancellationReason','BBA3','withdrawn','Withdrawn',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
 	 ('CancellationReason','BBA3','struckOut','Struck Out',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
 	 ('CancellationReason','BBA3','partyUnableToAttend','Party Unable To Attend',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
