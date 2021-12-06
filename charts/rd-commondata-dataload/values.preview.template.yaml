@@ -10,6 +10,7 @@ job:
     POSTGRES_USERNAME: dbcommondata
     POSTGRES_PASSWORD: dbcommondata
     POSTGRES_PORT: 5432
+    FLYWAY_ENABLED: true
     # LOCATIONS_DB: classpath:db/migration,classpath:db/postgres,classpath:db/migrationAks
     # LAUNCH_DARKLY_ENV: "preview"
   keyVaults:
