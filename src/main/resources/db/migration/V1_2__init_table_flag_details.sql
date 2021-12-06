@@ -1,15 +1,3 @@
-DROP TABLE  IF EXISTS  flag_details;
-
-create table flag_details(
-	id bigint,
-	flag_code  varchar(16) NOT NULL,
-	value_en text NOT NULL,
-	value_cy text,
-	category_id bigint NOT NULL ,
-
-	constraint flag_details_pk primary key (flag_code),
-	constraint id_unique unique (id)
-);
 
 INSERT INTO flag_details (id,flag_code,value_en,value_cy,category_id) VALUES
 	 (1,'CF0001','Case','',0),
