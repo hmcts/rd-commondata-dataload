@@ -130,7 +130,7 @@ pitest {
   historyInputLocation = 'build/reports/pitest/fastermutationtesting'
   historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
   outputFormats = ['XML', 'HTML']
-  timestampedReports = true
+  timestampedReports = false
   mutationThreshold = 85
   useClasspathFile = true
 }
@@ -147,7 +147,6 @@ sonarqube {
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
-    property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/rd/commondata/RdCommondataLoadApplication.java"
   }
 }
 
@@ -176,6 +175,15 @@ dependencyCheck {
   }
 }
 
+dependencyManagement {
+  dependencies {
+    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
+    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
+      entry 'guava'
+    }
+  }
+}
+
 repositories {
   mavenLocal()
   jcenter()
@@ -186,8 +194,8 @@ repositories {
 }
 
 def versions = [
-  junit               : '5.7.0',
-  junitPlatform       : '1.7.0',
+  junit               : '5.8.1',
+  junitPlatform       : '1.8.1',
   reformLogging       : '5.1.5',
   springBoot          : springBoot.class.package.implementationVersion,
   springfoxSwagger    : '2.9.2',
@@ -198,6 +206,15 @@ def versions = [
   sonarPitest         : '0.5'
 ]
 
+ext.libraries = [
+  junit5: [
+    "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
+    "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
+    "org.junit.jupiter:junit-jupiter-params:${versions.junit}",
+    "org.junit.platform:junit-platform-commons:${versions.junitPlatform}",
+    "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
+  ]
+]
 dependencies {
   implementation (group: 'org.springframework.boot', name: 'spring-boot-starter-web'){
     exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -206,19 +223,22 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
 
-  implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+  implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
   implementation group: 'org.springframework', name: 'spring-core', version: '5.2.18.RELEASE'
 
   implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
 
-  implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
-  implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.14.1'
+  implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
+  implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.13.3'
 
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
   implementation 'com.github.hmcts:data-ingestion-lib:0.5.0.3'
   implementation 'commons-io:commons-io:2.8.0'
+  implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
+  implementation group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
+  implementation group: 'org.flywaydb', name: 'flyway-core', version: versions.flyway
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.5.RELEASE'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
@@ -248,7 +268,7 @@ dependencies {
 
 
 
-  testImplementation(platform('org.junit:junit-bom:5.8.1'))
+  testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -262,6 +282,15 @@ dependencies {
 
   smokeTestImplementation sourceSets.main.runtimeClasspath
   smokeTestImplementation sourceSets.test.runtimeClasspath
+
+  testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
+  testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.1'
+  testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.4.RELEASE'
+  testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
+
+  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+
 }
 
 gradle.startParameter.continueOnFailure = true
@@ -305,7 +334,17 @@ configurations.all {
     }
   }
 }
+dependencyManagement {
 
+  dependencies {
+    // CVE-2021-42340
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
+  }
+}
 test {
   useJUnitPlatform()
 }
