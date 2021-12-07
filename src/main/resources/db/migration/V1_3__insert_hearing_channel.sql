@@ -35,7 +35,7 @@ Value_EN varchar(128) not null,
 Value_CY varchar(128),
 HintText_EN varchar(512),
 HintText_CY varchar(512),
-Lov_Order BIGINT(),
+Lov_Order BIGINT,
 ParentCategory varchar(64),
 ParentKey varchar(64),
 Active varchar(1)
@@ -44,7 +44,7 @@ Active varchar(1)
 INSERT INTO non_standard_duration_codes (CategoryKey,ServiceID,Key,Value_EN,Value_CY,HintText_EN,HintText_CY,Lov_Order,ParentCategory,ParentKey,Active)
 VALUES ('NonStdDurationReason', null, 'timeForInterpretation', 'Time for interpretation', null, null, null, null, null, null, 'Y'),
 ('NonStdDurationReason', null, 'complexCase', 'Complex case', null, null, null, null, null, null, 'Y'),
-('NonStdDurationReason', null, 'litigantInPerson', 'Litigant in person', null, null, null, null, null, null, 'Y')
+('NonStdDurationReason', null, 'litigantInPerson', 'Litigant in person', null, null, null, null, null, null, 'Y');
 
 CREATE TABLE case_type (
 	categorykey varchar(64) NOT NULL,
