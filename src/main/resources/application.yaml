@@ -25,7 +25,7 @@ spring:
             non_contextual_creation: true
   batch:
     initialize-schema: always
-      #run spring batch job manually as need to validate idempotent condition in code
+    #run spring batch job manually as need to validate idempotent condition in code
     #rather than giving control to spring
     job:
       enabled: false

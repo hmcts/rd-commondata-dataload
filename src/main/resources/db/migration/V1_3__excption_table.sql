@@ -1,3 +1,14 @@
+create table flag_service(
+	id bigint NOT NULL,
+	service_id varchar(16),
+	hearing_relevant boolean NOT NULL,
+	request_reason boolean NOT NULL,
+	flag_code varchar(16),
+	constraint flag_service_pk primary key (id));
+
+alter table flag_service add CONSTRAINT flag_service_flag_code_fk FOREIGN KEY (flag_code)
+REFERENCES flag_details (flag_code);
+
 CREATE TABLE dataload_exception_records(
  id SERIAL NOT NULL,
  table_Name varchar(64),
