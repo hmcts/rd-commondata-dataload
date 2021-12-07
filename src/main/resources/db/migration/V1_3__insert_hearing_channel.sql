@@ -27,7 +27,7 @@ VALUES ('HearingChannel','BBA3','telephone','Telephone',null,null,null,2,null,nu
 ('HearingSubChannel','BBA3','video-skype','Video - Skype',null,null,null,null,'HearingChannel','video','Y'),
 ('HearingSubChannel','BBA3','video-teams','Video - Teams',null,null,null,null,'HearingChannel','video','Y');
 
-CREATE TABLE non_standard_duration_codes(
+CREATE TABLE non_standard_duration_codes (
 CategoryKey varchar(64) not null,
 ServiceID varchar(16),
 Key varchar(64) not null,
