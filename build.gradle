@@ -199,7 +199,9 @@ def versions = [
 ]
 
 dependencies {
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+  implementation (group: 'org.springframework.boot', name: 'spring-boot-starter-web'){
+    exclude group: 'org.glassfish', module: 'jakarta.el'
+  }
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
@@ -216,7 +218,8 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
   implementation 'com.github.hmcts:data-ingestion-lib:0.5.0.3'
-
+  implementation 'commons-io:commons-io:2.8.0'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.5.RELEASE'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
   implementation (group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'){
@@ -224,6 +227,16 @@ dependencies {
   }
   testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.1'
   testImplementation (group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity)
+    {
+      exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+      exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+  testImplementation (group: 'net.serenity-bdd', name: 'serenity-core', version: '3.0.2')
+    {
+      exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+      exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+  testImplementation (group: 'net.serenity-bdd', name: 'serenity-spring', version: '3.0.2')
     {
       exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
       exclude group: 'javax.websocket', module: 'javax.websocket-api'
