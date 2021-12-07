@@ -7,13 +7,13 @@ if [ -z "$POSTGRES_PASSWORD" ]; then
   exit 1
 fi
 
-echo "Creating dbrdcommondata database . . ."
+echo "Creating dbcommondata database . . ."
 
 psql -v ON_ERROR_STOP=1 --username postgres --dbname postgres <<-EOSQL
-  CREATE ROLE dbrdcommondata WITH PASSWORD 'dbrdcommondata';
-  CREATE DATABASE dbrdcommondata ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
-  GRANT ALL PRIVILEGES ON DATABASE dbrdcommondata TO dbrdcommondata;
-  ALTER ROLE dbrdcommondata WITH LOGIN;
+  CREATE ROLE dbcommondata WITH PASSWORD 'dbcommondata';
+  CREATE DATABASE dbcommondata ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
+  GRANT ALL PRIVILEGES ON DATABASE dbcommondata TO dbcommondata;
+  ALTER ROLE dbcommondata WITH LOGIN;
 EOSQL
 
-echo "Done creating database dbrdcommondata."
+echo "Done creating database dbcommondata."
