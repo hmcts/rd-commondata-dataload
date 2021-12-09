@@ -948,7 +948,7 @@ INSERT INTO case_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en
 	 ('caseSubType','BBA3','BBA3-075AA','INVALID',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075AB','SANCTION FOR ANTI-SOCIAL BEHAVIOUR',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075AS','ASYLUM',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
-	 ('caseSubType','BBA3','BBA3-075AX','ASSESSED AS UNABLE TO PAY – COMPLEX',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
+	 ('caseSubType','BBA3','BBA3-075AX','ASSESSED AS UNABLE TO PAY - COMPLEX',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075BD','BACKDATING',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075BR','BEDROOM REDUCTION',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y');
 INSERT INTO case_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
@@ -971,7 +971,7 @@ INSERT INTO case_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en
 	 ('caseSubType','BBA3','BBA3-075LE','LATE (EXTENDING BACK)',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075LH','LOCAL HOUSING ALLOWANCE',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075LT','LIVING TOGETHER',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
-	 ('caseSubType','BBA3','BBA3-075LX','ASSESSED AS UNLIKELY TO PAY – COMPLEX',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
+	 ('caseSubType','BBA3','BBA3-075LX','ASSESSED AS UNLIKELY TO PAY - COMPLEX',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
 	 ('caseSubType','BBA3','BBA3-075OC','OVERPAYMENT - CAPITAL',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y');
 INSERT INTO case_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
 	 ('caseSubType','BBA3','BBA3-075OL','OVERPAYMENT - SEEK RECOVERY FROM LANDLORD/LETTING',NULL,NULL,NULL,NULL,'caseType','BBA3-075','Y'),
