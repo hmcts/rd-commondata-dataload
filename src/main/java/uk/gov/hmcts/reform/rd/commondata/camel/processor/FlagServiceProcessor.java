@@ -93,7 +93,7 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
             var flagCodeList = getIdList(jdbcTemplate, flagCodeQuery);
             checkForeignKeyConstraint(
                 validatedFlagServices,
-                flagCodeRecord -> checkIfValueNotInListIfPresent(flagCodeRecord.getFlagCode(), flagCodeList),
+                flagCodeRecord -> checkIfValueNotInListIfPresent(flagCodeRecord.getFlagCode().trim(), flagCodeList),
                 FLAG_CODE, FLAG_CODE_NOT_EXISTS,
                 exchange, flagServiceJsrValidatorInitializer
             );

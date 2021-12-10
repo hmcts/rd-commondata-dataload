@@ -1,0 +1,4 @@
+ID,ServiceID,HearingRelevant,RequestReason,FlagCode
+1,xxxxx,FALSE,true,RA0004
+2,XXXX,true,false,RA0008
+3,,false,true,RA0009

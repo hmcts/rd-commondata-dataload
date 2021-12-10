@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.rd.commondata.camel.binder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstan
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class FlagService extends CommonCsvField implements Serializable {
 
     @DataField(pos = 1, columnName = "ID")
