@@ -18,4 +18,5 @@ route:
     mapper-class: flagServiceMapper
     csv-binder-object: FlagService
     csv-headers-expected: ID,ServiceID,HearingRelevant,RequestReason,FlagCode
+    header-validation-enabled: true
 
