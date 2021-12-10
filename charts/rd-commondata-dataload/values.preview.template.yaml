@@ -9,7 +9,6 @@ job:
     POSTGRES_NAME: dbcommondata
     POSTGRES_USERNAME: dbcommondata
     POSTGRES_PASSWORD: dbcommondata
-    POSTGRES_PORT: 5432
     FLYWAY_ENABLED: true
     CONTAINER_NAME: rd-common-data
   keyVaults:
@@ -17,10 +16,6 @@ job:
       secrets:
         - name: ApplicationInsightsInstrumentationKey
           alias: azure.application-insights.instrumentation-key
-        - name: rd-commondata-storage-account-name
-          alias: ACCOUNT_NAME
-        - name: rd-commondata-storage-account-primary-key
-          alias: ACCOUNT_KEY
   secrets:
     BLOB_ACCOUNT_NAME:
       secretRef: storage-secret-{{ .Release.Name }}
@@ -38,7 +33,6 @@ postgresql:
   postgresqlUsername: dbcommondata
   postgresqlPassword: dbcommondata
   postgresqlDatabase: dbcommondata
-  postgresqlPort: 5432
   persistence:
     enabled: false
 
