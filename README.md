@@ -22,7 +22,7 @@ An internal SFTP server (behind a F5 Load balancer) will poll the files at perio
 
 The Palo Alto untrusted interfaces will form the Palo Alto backend pool, used by requests matched by the path-based rule.
 
-The files are decrypted and then scanned and if everything is okay then trusted traffic is sent to a configured endpoint, in this case an Azure Blob Storage account.
+The files are decrypted and then scanned and if everything is ok then trusted traffic is sent to a configured endpoint, in this case an Azure Blob Storage account.
 
 # Data Transformation and Load - This is achieved through a K8S scheduler and Apache Camel.
 Kubernetes scheduler triggers Apache Camel routes which process files stored in Azure blob storage and persists it RDCD database.
