@@ -32,6 +32,7 @@ public class FlagService extends CommonCsvField implements Serializable {
     @DataField(pos = 1, columnName = "ID")
     @NotEmpty
     @Pattern(regexp = ALLOW_NUMERIC_REGEX, message = "allowed numeric value only")
+    @SuppressWarnings("all")
     private String ID;
 
     @DataField(pos = 2, columnName = "ServiceID")

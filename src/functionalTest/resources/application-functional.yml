@@ -1,17 +1,4 @@
 spring:
-  mail:
-    from: no-reply@reform.hmcts.net
-    to:  manish.paryani@hmcts.net
-    subject:  Common Data - Exception in processing -
-    host: mta.reform.hmcts.net
-    port: 25
-    enabled: true
-    properties:
-      mail-smtp:
-        starttls:
-          enable: false
-        ssl:
-          trust: "*"
   flyway:
     locations: classpath:dbmigration
     enabled: true
