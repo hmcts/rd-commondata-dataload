@@ -27,8 +27,6 @@ job:
     CONTAINER_NAME: rd-common-data
     LOGBACK_REQUIRE_ALERT_LEVEL: 'false'
     LOGBACK_REQUIRE_ERROR_CODE: 'false'
-    postgresql:
-      enabled: false
 
 postgresql:
   enabled: false

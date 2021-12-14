@@ -4,6 +4,7 @@ create table flag_details(
 	value_en text NOT NULL,
 	value_cy text,
 	category_id bigint NOT NULL ,
+
 	constraint flag_details_pk primary key (flag_code),
 	constraint id_unique unique (id)
 );

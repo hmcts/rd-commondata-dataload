@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 
 @ExtendWith(SpringExtension.class)
-public abstract class CommonDataIntegrationBaseTest {
+public abstract class CommonDataFunctionalBaseTest {
 
     @Autowired
     protected CamelContext camelContext;
@@ -108,7 +108,6 @@ public abstract class CommonDataIntegrationBaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-
         if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
@@ -116,7 +115,6 @@ public abstract class CommonDataIntegrationBaseTest {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
         }
-        System.setProperty("azure.storage.container-name", "rd-common-data");
     }
 
     protected void validateFlagServiceFile(JdbcTemplate jdbcTemplate, String serviceSql,

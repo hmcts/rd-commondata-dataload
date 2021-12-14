@@ -27,7 +27,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
-import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataIntegrationBaseTest;
+import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
@@ -54,7 +54,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
-class CommonDataApplicationTest extends CommonDataIntegrationBaseTest {
+class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
 
     @Value("${commondata-flag-service-start-route}")
     String startRoute;

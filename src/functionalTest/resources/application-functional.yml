@@ -52,22 +52,14 @@ ordered-exception-select-query: select * from  dataload_exception_records order 
 flag-service-select-sql: select * from flag_service
 select-dataload-scheduler: select *  from dataload_schedular_audit
 flag-code-query: select flag_code from flag_details
-
 select-dataload-scheduler-failure: select *  from dataload_schedular_audit where status='Failure'
-
-
 truncate-audit: truncate dataload_schedular_audit
-
 truncate-exception: truncate dataload_exception_records
-
 jdbc-batch-size: 10
-
 logging-component-name: RD_Common_Data
 component:
   name: Common Reference Data
 mail:
   enabled: false
-
 idempotent-flag-ingestion: true
-
 CONTAINER_NAME: rd-common-data

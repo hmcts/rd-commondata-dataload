@@ -26,7 +26,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
-import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataIntegrationBaseTest;
+import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
@@ -53,7 +53,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
-public class CommonDataFlagServiceLoadTest extends CommonDataIntegrationBaseTest {
+public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
     @Qualifier("springJdbcTransactionManager")

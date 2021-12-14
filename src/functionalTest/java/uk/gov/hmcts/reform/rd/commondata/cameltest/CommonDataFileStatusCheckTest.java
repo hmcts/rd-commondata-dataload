@@ -26,7 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
-import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataIntegrationBaseTest;
+import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
@@ -56,7 +56,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @ExtendWith(SpringExtension.class)
 @WithTags({@WithTag("testType:Functional")})
-class CommonDataFileStatusCheckTest extends CommonDataIntegrationBaseTest {
+class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
 
     @Value("${truncate-audit}")
     protected String truncateAudit;

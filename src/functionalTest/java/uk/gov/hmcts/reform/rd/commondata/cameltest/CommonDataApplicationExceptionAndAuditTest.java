@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
-import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataIntegrationBaseTest;
+import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
@@ -52,7 +52,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @ExtendWith(SpringExtension.class)
 @WithTags({@WithTag("testType:Functional")})
 @SuppressWarnings("unchecked")
-class CommonDataApplicationExceptionAndAuditTest extends CommonDataIntegrationBaseTest {
+class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBaseTest {
 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
 
