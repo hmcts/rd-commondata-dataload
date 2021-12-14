@@ -115,6 +115,7 @@ public abstract class CommonDataFunctionalBaseTest {
             System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
         }
+        System.setProperty("azure.storage.container-name", "rd-common-data");
     }
 
     protected void validateFlagServiceFile(JdbcTemplate jdbcTemplate, String serviceSql,
