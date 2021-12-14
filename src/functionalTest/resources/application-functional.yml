@@ -1,0 +1,65 @@
+spring:
+  flyway:
+    locations: classpath:dbmigration
+    enabled: true
+  batch:
+    initialize-schema: always
+    # set batch false in integration test and run batch manually with batch runner to set dynamic test property values
+    # eg. dynamic properties ${parent.file.name}
+    job:
+      enabled: false
+
+#Local integration testing these values should be actual
+#ACCOUNT_NAME: ${ACCOUNT_NAME}
+#ACCOUNT_KEY: ${ACCOUNT_KEY}
+commondata-flag-service-start-route: direct:CommonData-FlagService
+archival-route: direct:CommonDataArchival
+archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
+active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
+archival-file-names: FlagService-test.csv
+archival-cred: credentials=#credsreg&operation=updateBlockBlob
+#archival-date-format keep in dd-MM-yyyy as to delete in testing
+archival-date-format: dd-MM-yyyy
+file-read-time-out: 2000
+scheduler-audit-select: select count(*) from dataload_schedular_audit where date(scheduler_start_time) = current_date
+invalid-exception-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,error_description,updated_timestamp) values(?, ?, ?, ?, ?)
+invalid-jsr-sql: insert into dataload_exception_records(table_name,scheduler_start_time,scheduler_name,key,field_in_error,error_description,updated_timestamp, row_id) values(?, ?, ?, ?, ?, ?, ?, ?)
+jsr-threshold-limit: 10
+batchjob-name: CommonDataLoad
+scheduler-insert-sql: insert into dataload_schedular_audit (scheduler_name,file_name, scheduler_start_time,scheduler_end_time,status) values(?,?,?,?,?)
+audit-enable: true
+commondata-flag-service-route-task: commonDataFlagServiceLoadTask
+commondata-flag-service-routes-to-execute: commondata-flag-service-load
+route:
+  commondata-flag-service-load:
+    id: commondata-flag-service-load
+    file-name: FlagService-test.csv
+    table-name: flag_service
+    truncate-sql:
+      sql:truncate table flag_service restart identity?dataSource=dataSource
+    insert-sql:
+      sql:insert into flag_service (id,service_id,hearing_relevant,request_reason,flag_code)
+      values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code)?batch=true&dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/rd-common-data/FlagService-test.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: flagServiceProcessor
+    mapper-class: flagServiceMapper
+    csv-binder-object: FlagService
+    csv-headers-expected: ID,ServiceID,HearingRelevant,RequestReason,FlagCode
+    header-validation-enabled: true
+exception-select-query: select * from  dataload_exception_records
+ordered-exception-select-query: select * from  dataload_exception_records order by error_description
+flag-service-select-sql: select * from flag_service
+select-dataload-scheduler: select *  from dataload_schedular_audit
+flag-code-query: select flag_code from flag_details
+select-dataload-scheduler-failure: select *  from dataload_schedular_audit where status='Failure'
+truncate-audit: truncate dataload_schedular_audit
+truncate-exception: truncate dataload_exception_records
+jdbc-batch-size: 10
+logging-component-name: RD_Common_Data
+component:
+  name: Common Reference Data
+mail:
+  enabled: false
+idempotent-flag-ingestion: true
+CONTAINER_NAME: rd-common-data

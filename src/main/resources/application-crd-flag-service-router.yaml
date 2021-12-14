@@ -1,0 +1,22 @@
+commondata-flag-service-start-route: direct:CommonData-FlagService
+commondata-flag-service-route-task: commonDataFlagServiceLoadTask
+commondata-flag-service-routes-to-execute: commondata-flag-service-load
+route:
+#Route: commondata-flag-service-load
+  commondata-flag-service-load:
+    id: commondata-flag-service-load
+    file-name: FlagService.csv
+    table-name: flag_service
+    truncate-sql:
+      sql:truncate table flag_service restart identity?dataSource=dataSource
+    insert-sql:
+      sql:insert into flag_service (id,service_id,hearing_relevant,request_reason,flag_code)
+      values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code)?batch=true&dataSource=dataSource
+    blob-path:
+      azure-blob://${azure.storage.account-name}/rd-common-data/FlagService.csv?credentials=#credsreg&operation=updateBlockBlob
+    processor-class: flagServiceProcessor
+    mapper-class: flagServiceMapper
+    csv-binder-object: FlagService
+    csv-headers-expected: ID,ServiceID,HearingRelevant,RequestReason,FlagCode
+    header-validation-enabled: true
+

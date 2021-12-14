@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8100}
+  port: 8100
 
 management:
   endpoint:
@@ -11,12 +11,10 @@ management:
       exposure:
         include: health, info, prometheus
 
-#If you use a database then uncomment below lines and update db properties accordingly
 spring:
-  config:
-    import: "optional:configtree:/mnt/secrets/"
   application:
-    name: Rd Commondata Load
+    name: commondata data load
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
@@ -27,18 +25,18 @@ spring:
             non_contextual_creation: true
   batch:
     initialize-schema: always
-      #run spring batch job manually as need to validate idempotent condition in code
+    #run spring batch job manually as need to validate idempotent condition in code
     #rather than giving control to spring
     job:
       enabled: false
   #  jackson.date-format: yyyy-MM-dd
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
-    locations: ${COMMONDATA_DB:classpath:db/migration}
+    locations: classpath:db/migration
 
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5458}/${POSTGRES_NAME:dbcommondata}${POSTGRES_CONNECTION_OPTIONS:}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5458}/${POSTGRES_NAME:dbcommondata}
     username: ${POSTGRES_USERNAME:dbcommondata}
     password: ${POSTGRES_PASSWORD:dbcommondata}
     properties:
@@ -48,12 +46,11 @@ spring:
       maximum-pool-size: 5
       idle-timeout: 30000
       minimum-idle: 1
+
   profiles:
     include:
       - lib
       - camel-routes-common
+      - crd-flag-service-router
 mail:
   enabled: false
-azure:
-  application-insights:
-    instrumentation-key: ${rpe.AppInsightsInstrumentationKey:00000000-0000-0000-0000-000000000000}

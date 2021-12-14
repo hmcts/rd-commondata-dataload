@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    propertiesvolume:
+      prefixed: false
+      paths: /mnt/secrets/rd
+      aliases:
+        commondata-api-POSTGRES-PASS: spring.datasource.password
+        ApplicationInsightsInstrumentationKey: azure.application-insights.instrumentation-key
+        rd-commondata-storage-account-name: ACCOUNT_NAME
+        rd-commondata-storage-account-primary-key: ACCOUNT_KEY
+        CONTAINER-NAME: CONTAINER_NAME
