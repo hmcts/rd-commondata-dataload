@@ -12,7 +12,7 @@ ParentKey varchar(64),
 Active varchar(1)
 );
 
-INSERT INTO public.additional_facilities (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
+INSERT INTO additional_facilities (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
 	 ('AdditionalFacilities',NULL,'AF-IDC','Immigration Detention Centre',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
 	 ('AdditionalFacilities',NULL,'AF-ICC','In Camera Court',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
 	 ('AdditionalFacilities',NULL,'AF-SSC','Same Sex Courtroom',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
