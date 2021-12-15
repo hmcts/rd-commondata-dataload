@@ -203,7 +203,7 @@ def versions = [
   camel               : '3.8.0',
   gradlePitest        : '1.5.1',
   pitest              : '1.7.0',
-  log4j               : '2.15.0'
+  log4j               : '2.16.0'
 ]
 
 ext.libraries = [
