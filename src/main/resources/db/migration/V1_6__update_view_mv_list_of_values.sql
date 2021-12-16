@@ -48,15 +48,7 @@ CREATE MATERIALIZED VIEW mv_list_of_values AS
 CREATE UNIQUE INDEX unique_list_of_values_indx ON mv_list_of_values
 (CategoryKey,ServiceID,Key,Value_EN,Value_CY,HintText_EN,HintText_CY,Lov_Order,ParentCategory,ParentKey,Active);
 
--- Create function to refresh mv
 
-CREATE OR REPLACE FUNCTION refresh_mv_list_of_values()
-  RETURNS TRIGGER LANGUAGE plpgsql AS $$
-BEGIN
-  REFRESH MATERIALIZED VIEW CONCURRENTLY mv_list_of_values;
-  RETURN NULL;
-END;
-$$;
 
 -- Write triggers for each table
 
