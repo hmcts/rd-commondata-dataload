@@ -23,5 +23,4 @@ INSERT INTO additional_facilities (categorykey,serviceid,"key",value_en,value_cy
 	 ('AdditionalFacilities',NULL,'AF-VF','Video Facility',NULL,NULL,NULL,NULL,NULL,NULL,'Y'),
 	 ('AdditionalFacilities',NULL,'AF-PVL','Prison Video Link',NULL,NULL,NULL,NULL,NULL,NULL,'Y');
 
-INSERT INTO interpreter_and_sign_language (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
-	 ('InterpreterLanguage',NULL,'bel-bel','Belorussian',NULL,NULL,NULL,NULL,NULL,NULL,'Y');
+UPDATE interpreter_and_sign_language SET value_en='Belorussian' WHERE value_en='Belorussia';
