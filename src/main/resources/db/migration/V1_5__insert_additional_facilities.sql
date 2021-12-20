@@ -44,3 +44,33 @@ INSERT INTO entity_role_codes (categorykey,serviceid,"key",value_en,value_cy,hin
  ('EntityRoleCode', 'BBA3', 'BBA3-appointee', 'Appointee', null, null, null, null, null, null, 'Y'),
  ('EntityRoleCode', 'BBA3', 'BBA3-jointParty', 'Joint Party', null, null, null, null, null, null, 'Y'),
  ('EntityRoleCode', 'BBA3', 'BBA3-otherParty', 'Other Party', null, null, null, null, null, null, 'Y');
+
+ --Create table panel_member_type
+ CREATE TABLE panel_member_type (
+ CategoryKey varchar(64) NOT NULL,
+ ServiceID	varchar(16),
+ Key	varchar(64)	NOT NULL,
+ Value_EN varchar(128) NOT NULL,
+ Value_CY varchar(128),
+ HintText_EN	varchar(512),
+ HintText_CY	varchar(512),
+ Lov_Order BIGINT,
+ ParentCategory varchar(64),
+ ParentKey	varchar(64),
+ Active varchar(1)
+ );
+
+ INSERT INTO public.panel_member_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
+ 	 ('PanelMemberType','BBA3','BBA3-DQPM','Disability Qualified Panel Member','','','',NULL,'','','Y'),
+ 	 ('PanelMemberType','BBA3','BBA3-MQPM1','Medically Qualified Panel Member','','','',NULL,'','','Y'),
+ 	 ('PanelMemberType','BBA3','BBA3-MQPM2','Medically Qualified Panel Member','','','',NULL,'','','Y'),
+ 	 ('PanelMemberType','BBA3','BBA3-FQPM','Financially Qualified Panel Member','','','',NULL,'','','Y'),
+ 	 ('PanelMemberType','BBA3','BBA3-RMM','Regional Medical Member','','','',NULL,'','','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM1-001','Cardiologist','','','',NULL,'PanelMemberType','BBA3-MQPM1','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM1-002','Carer','','','',NULL,'PanelMemberType','BBA3-MQPM1','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM1-003','Eye Surgeon','','','',NULL,'PanelMemberType','BBA3-MQPM1','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM1-004','General Practitioner','','','',NULL,'PanelMemberType','BBA3-MQPM1','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM2-001','Cardiologist','','','',NULL,'PanelMemberType','BBA3-MQPM2','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM2-002','Carer','','','',NULL,'PanelMemberType','BBA3-MQPM2','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM2-003','Eye Surgeon','','','',NULL,'PanelMemberType','BBA3-MQPM2','Y'),
+ 	 ('PanelMemberSpecialism','BBA3','BBA3-MQPM2-004','General Practitioner','','','',NULL,'PanelMemberType','BBA3-MQPM2','Y');
