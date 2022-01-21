@@ -184,7 +184,6 @@ dependencyManagement {
 
 repositories {
   mavenLocal()
-  jcenter()
   mavenCentral()
   maven {
     url 'https://jitpack.io'
