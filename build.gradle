@@ -323,6 +323,7 @@ dependencies {
   testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
   smokeTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
+  functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
 
 }
 
