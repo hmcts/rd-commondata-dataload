@@ -179,6 +179,13 @@ dependencyManagement {
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
+    // CVE-2021-25122
+    // CVE-2021-42340
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
   }
 }
 
@@ -195,7 +202,7 @@ def versions = [
   junit               : '5.8.1',
   junitPlatform       : '1.8.1',
   reformLogging       : '5.1.5',
-  springBoot          : springBoot.class.package.implementationVersion,
+  springBoot          : '2.4.12',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.0.76',
   lombok              : '1.18.6',
