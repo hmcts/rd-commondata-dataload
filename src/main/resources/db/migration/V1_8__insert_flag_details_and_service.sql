@@ -1,6 +1,6 @@
 Delete from flag_details;
 
-INSERT INTO public.flag_details (id,flag_code,value_en,value_cy,category_id) VALUES
+INSERT INTO flag_details (id,flag_code,value_en,value_cy,category_id) VALUES
 	 (1,'CF0001','Case','',0),
 	 (2,'PF0001','Party','',0),
 	 (3,'RA0001','Reasonable adjustment','',2),
@@ -77,3 +77,43 @@ INSERT INTO public.flag_details (id,flag_code,value_en,value_cy,category_id) VAL
 	 (74,'PF0018','Lacking capacity','',2),
 	 (75,'CF0010','Class appeal','',1),
 	 (76,'CF0011','Presidential panel','',1);
+
+INSERT INTO flag_service (id,service_id,hearing_relevant,request_reason,flag_code) VALUES
+	 (1,'XXXX',true,false,'RA0010'),
+	 (2,'XXXX',true,false,'RA0011'),
+	 (3,'XXXX',true,false,'RA0012'),
+	 (4,'XXXX',true,false,'RA0013'),
+	 (5,'XXXX',false,false,'RA0014'),
+	 (6,'XXXX',true,false,'RA0015'),
+	 (7,'XXXX',false,false,'RA0016'),
+	 (8,'XXXX',false,false,'RA0017'),
+	 (9,'XXXX',false,false,'RA0018'),
+	 (10,'XXXX',true,false,'RA0019'),
+	 (11,'XXXX',true,false,'RA0020'),
+	 (12,'XXXX',true,false,'RA0021'),
+	 (13,'XXXX',true,false,'RA0022'),
+	 (14,'XXXX',true,false,'RA0023'),
+	 (15,'XXXX',true,false,'RA0024'),
+	 (16,'XXXX',true,false,'RA0025'),
+	 (17,'XXXX',true,false,'RA0026'),
+	 (18,'XXXX',true,false,'RA0027'),
+	 (19,'XXXX',true,false,'RA0028'),
+	 (20,'XXXX',true,false,'RA0029'),
+	 (21,'XXXX',true,false,'RA0030'),
+	 (22,'XXXX',true,false,'RA0031'),
+	 (23,'XXXX',true,false,'RA0032'),
+	 (24,'XXXX',true,false,'RA0033'),
+	 (25,'XXXX',true,false,'RA0034'),
+	 (26,'XXXX',true,false,'RA0035'),
+	 (27,'XXXX',true,false,'RA0036'),
+	 (28,'XXXX',true,false,'RA0037'),
+	 (29,'XXXX',true,false,'RA0038'),
+	 (30,'XXXX',true,false,'RA0039'),
+	 (31,'XXXX',true,false,'RA0040'),
+	 (32,'XXXX',true,false,'RA0041'),
+	 (33,'XXXX',true,false,'RA0042'),
+	 (34,'XXXX',true,false,'RA0043'),
+	 (35,'XXXX',true,false,'RA0044'),
+	 (36,'XXXX',true,false,'RA0045'),
+	 (37,'XXXX',false,false,'RA0046'),
+	 (38,'XXXX',true,false,'RA0047');
