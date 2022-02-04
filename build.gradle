@@ -89,6 +89,12 @@ task smoke(type: Test) {
   classpath = sourceSets.smokeTest.runtimeClasspath
 }
 
+task fortifyScan(type: JavaExec)  {
+  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+  classpath += sourceSets.test.runtimeClasspath
+  jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 pmd {
   toolVersion = "6.39.0"
   sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
@@ -266,6 +272,7 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
+  testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
   testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.1'
   testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
   testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
