@@ -179,8 +179,7 @@ dependencyManagement {
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
-    // CVE-2021-25122
-    // CVE-2021-42340
+    
     dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
