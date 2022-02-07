@@ -239,7 +239,7 @@ dependencies {
 
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.3') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.1') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
   }
   implementation 'commons-io:commons-io:2.8.0'
