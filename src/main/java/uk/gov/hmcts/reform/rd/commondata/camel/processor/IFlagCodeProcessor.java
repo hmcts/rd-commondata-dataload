@@ -38,22 +38,21 @@ public interface IFlagCodeProcessor<T> {
 
         Type mySuperclass = getType();
         validatedDomains.removeAll(objectsWithIntegrityViolations);
-        if (isNotEmpty(objectsWithIntegrityViolations)) {
+        if (isNotEmpty(objectsWithIntegrityViolations)
+            && ((Class) mySuperclass).getCanonicalName().equals(FlagService.class.getCanonicalName())) {
 
-            if (((Class) mySuperclass).getCanonicalName().equals(FlagService.class.getCanonicalName())) {
-                List<Pair<String, Long>> invalidFlagCode = new ArrayList<>();
-                objectsWithIntegrityViolations
+            List<Pair<String, Long>> invalidFlagCode = new ArrayList<>();
+            objectsWithIntegrityViolations
                     .stream()
-                    .map(flagService -> ((FlagService) flagService))
+                    .map(FlagService.class::cast)
                     .forEach(invalidCodeList -> invalidFlagCode.add(Pair.of(
                         invalidCodeList.getFlagCode(),
                         invalidCodeList.getRowId()
                     )));
 
-                jsrValidatorInitializer.auditJsrExceptions(invalidFlagCode,
+            jsrValidatorInitializer.auditJsrExceptions(invalidFlagCode,
                                                            fieldName, exceptionMessage, exchange
-                );
-            }
+            );
         }
     }
 

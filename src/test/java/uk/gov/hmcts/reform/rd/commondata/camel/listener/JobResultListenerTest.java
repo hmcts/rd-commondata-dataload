@@ -14,7 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
-public class JobResultListenerTest {
+class JobResultListenerTest {
 
     JobResultListener jobResultListener = spy(new JobResultListener());
 
@@ -23,7 +23,7 @@ public class JobResultListenerTest {
     IArchivalBlobService archivalBlobService = mock(ArchivalBlobServiceImpl.class);
 
     @BeforeEach
-    public void init() {
+    void init() {
         setField(jobResultListener, "archivalBlobService", archivalBlobService);
     }
 
