@@ -179,6 +179,12 @@ dependencyManagement {
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
+    
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
   }
 }
 
@@ -191,10 +197,10 @@ repositories {
 }
 
 def versions = [
-  junit               : '5.7.2',
-  junitPlatform       : '1.8.2',
+  junit               : '5.8.1',
+  junitPlatform       : '1.8.1',
   reformLogging       : '5.1.9',
-  springBoot          : '2.4.9',
+  springBoot          : '2.4.12',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.0.76',
   lombok              : '1.18.6',
@@ -314,6 +320,14 @@ dependencies {
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
   testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+
+  smokeTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
+  functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
+  functionalTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
+  functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
+  functionalTestImplementation group: 'org.junit.platform', name: 'junit-platform-commons', version: versions.junitPlatform
+  functionalTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-engine', version: versions.junitPlatform
+
 }
 
 gradle.startParameter.continueOnFailure = true
