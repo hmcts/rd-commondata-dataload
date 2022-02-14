@@ -15,13 +15,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class FlagServiceMapperTest {
+class FlagServiceMapperTest {
 
     @Spy
     FlagServiceMapper flagServiceMapper = new FlagServiceMapper();
 
     @Test
-    public void testMapper() {
+    void testMapper() {
         FlagService flagService = FlagService.builder()
             .ID("1")
             .serviceId("XXXX")
