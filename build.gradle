@@ -179,7 +179,7 @@ dependencyManagement {
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
-    
+
     dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.54') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
@@ -245,7 +245,7 @@ dependencies {
 
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.1') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.2') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
   }
   implementation 'commons-io:commons-io:2.8.0'
@@ -343,6 +343,14 @@ bootJar {
 
 // Gradle 7.x issue, workaround from: https://github.com/gradle/gradle/issues/17236#issuecomment-894768083
 rootProject.tasks.named("processSmokeTestResources") {
+  duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processFunctionalTestResources") {
+  duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processIntegrationTestResources") {
   duplicatesStrategy = 'include'
 }
 
