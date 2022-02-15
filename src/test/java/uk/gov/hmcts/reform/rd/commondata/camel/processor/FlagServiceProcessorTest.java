@@ -40,7 +40,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 
 @ExtendWith(MockitoExtension.class)
-public class FlagServiceProcessorTest {
+class FlagServiceProcessorTest {
     @Spy
     private FlagServiceProcessor processor = new FlagServiceProcessor();
 
@@ -65,7 +65,7 @@ public class FlagServiceProcessorTest {
     ConfigurableApplicationContext applicationContext;
 
     @BeforeEach
-    public void init() {
+    void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @ExtendWith(MockitoExtension.class)
-public class CommonDataFlagServiceRouteTaskTest {
+class CommonDataFlagServiceRouteTaskTest {
     @Spy
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask = new CommonDataFlagServiceRouteTask();
 
@@ -36,7 +36,7 @@ public class CommonDataFlagServiceRouteTaskTest {
     CamelContext camelContext = new DefaultCamelContext();
 
     @BeforeEach
-    public void init() {
+    void init() {
         setField(commonDataFlagServiceRouteTask, "logComponentName", "testlogger");
         setField(commonDataFlagServiceRouteTask, "dataLoadRoute", dataLoadRoute);
         setField(commonDataFlagServiceRouteTask, "commonDataExecutor", commonDataExecutor);

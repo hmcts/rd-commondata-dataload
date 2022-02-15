@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.checkIfValueNotInListIfPresent;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.filterDomainObjects;
 
-public class CommonDataLoadUtilsTest {
+class CommonDataLoadUtilsTest {
 
     @Test
     void testCheckIfValueNotInListIfPresent() {

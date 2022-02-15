@@ -19,7 +19,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.IS_READY_TO_AUDIT;
 
 @ExtendWith(MockitoExtension.class)
-public class CommonDataExecutorTest {
+class CommonDataExecutorTest {
     CommonDataExecutor commonDataExecutor = new CommonDataExecutor();
 
     CommonDataExecutor commonDataExecutorSpy = spy(commonDataExecutor);
@@ -31,7 +31,7 @@ public class CommonDataExecutorTest {
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
 
     @BeforeEach
-    public void init() {
+    void init() {
         setField(commonDataExecutorSpy, "auditService", auditService);
     }
 
