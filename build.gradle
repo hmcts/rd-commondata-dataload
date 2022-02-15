@@ -245,8 +245,9 @@ dependencies {
 
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.1') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.2') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+    exclude group: 'org.glassfish', module: 'jakarta.el'
   }
   implementation 'commons-io:commons-io:2.8.0'
   implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
@@ -346,6 +347,14 @@ bootJar {
 
 // Gradle 7.x issue, workaround from: https://github.com/gradle/gradle/issues/17236#issuecomment-894768083
 rootProject.tasks.named("processSmokeTestResources") {
+  duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processFunctionalTestResources") {
+  duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processIntegrationTestResources") {
   duplicatesStrategy = 'include'
 }
 
