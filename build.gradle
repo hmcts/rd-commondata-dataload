@@ -247,6 +247,7 @@ dependencies {
 
   implementation ('com.github.hmcts:data-ingestion-lib:0.5.1.2') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+    exclude group: 'org.glassfish', module: 'jakarta.el'
   }
   implementation 'commons-io:commons-io:2.8.0'
   implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
