@@ -1,5 +1,4 @@
 -- Create mv mv_list_of_values
-
 CREATE MATERIALIZED VIEW mv_list_of_values AS
 
   (
@@ -28,6 +27,19 @@ CREATE MATERIALIZED VIEW mv_list_of_values AS
     UNION ALL
 
     SELECT * FROM interpreter_and_sign_language
+
+    UNION ALL
+
+    SELECT * FROM additional_facilities
+
+    UNION ALL
+
+    SELECT * FROM panel_member_type
+
+    UNION ALL
+
+    SELECT * FROM entity_role_codes
+
   );
 
 --Create unique index on mv_list_of_values
@@ -89,3 +101,20 @@ CREATE TRIGGER tg_refresh_mv_for_interpreter_and_sign_language AFTER INSERT OR U
 ON interpreter_and_sign_language
 FOR EACH STATEMENT EXECUTE PROCEDURE refresh_mv_list_of_values();
 
+-- For additional_facilities
+
+CREATE TRIGGER tg_refresh_mv_for_additional_facilities AFTER INSERT OR UPDATE OR DELETE
+ON additional_facilities
+FOR EACH STATEMENT EXECUTE PROCEDURE refresh_mv_list_of_values();
+
+-- For panel_member_type
+
+CREATE TRIGGER tg_refresh_mv_for_panel_member_type AFTER INSERT OR UPDATE OR DELETE
+ON panel_member_type
+FOR EACH STATEMENT EXECUTE PROCEDURE refresh_mv_list_of_values();
+
+-- For entity_role_codes
+
+CREATE TRIGGER tg_refresh_mv_for_entity_role_codes AFTER INSERT OR UPDATE OR DELETE
+ON entity_role_codes
+FOR EACH STATEMENT EXECUTE PROCEDURE refresh_mv_list_of_values();
