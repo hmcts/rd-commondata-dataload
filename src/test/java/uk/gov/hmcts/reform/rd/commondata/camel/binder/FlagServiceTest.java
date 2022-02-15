@@ -9,12 +9,12 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-public class FlagServiceTest {
+class FlagServiceTest {
 
     private Validator validator;
 
     @Test
-    public void testFlagService() {
+    void testFlagService() {
         FlagService flagService = FlagService.builder()
             .ID("1")
             .serviceId("XXXX")
@@ -41,7 +41,7 @@ public class FlagServiceTest {
     }
 
     @Test
-    public void testFlagServiceJsrAnnotation() {
+    void testFlagServiceJsrAnnotation() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
         FlagService flagService = new FlagService();
