@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 
 @Configuration
 @EnableBatchProcessing
@@ -25,6 +26,10 @@ public class BatchConfig {
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
 
     @Autowired
+    CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
+
+
+    @Autowired
     JobResultListener jobResultListener;
 
     @Autowired
@@ -32,6 +37,9 @@ public class BatchConfig {
 
     @Value("${commondata-flag-service-route-task}")
     String commonDataTask;
+
+    @Value("${commondata-list-of-values-route-task}")
+    String commonDataListOfValuesTask;
 
     @Value("${batchjob-name}")
     String jobName;
@@ -44,6 +52,13 @@ public class BatchConfig {
     public Step stepCommonDataRoute() {
         return steps.get(commonDataTask)
             .tasklet(commonDataFlagServiceRouteTask)
+            .build();
+    }
+
+    @Bean
+    public Step stepCommonDataListOfValuesRoute() {
+        return steps.get(commonDataTask)
+            .tasklet(commonDataListOfValuesRouteTask)
             .build();
     }
 

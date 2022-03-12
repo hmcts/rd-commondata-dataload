@@ -14,9 +14,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ALLOW_TRUE_FALSE_REGEX;
 
 @Component
 @Setter
@@ -26,11 +24,10 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstan
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class List_Of_Values extends CommonCsvField implements Serializable {
+public class ListOfValues extends CommonCsvField implements Serializable {
 
     @DataField(pos = 1, columnName = "CategoryKey")
     @NotEmpty
-    @SuppressWarnings("all")
     private String categoryKey;
 
     @DataField(pos = 2, columnName = "ServiceID")
@@ -59,7 +56,6 @@ public class List_Of_Values extends CommonCsvField implements Serializable {
     private String parentCategory;
 
     @DataField(pos = 5, columnName = "ParentKey")
-    @NotEmpty
     private String parentKey;
 
     @DataField(pos = 5, columnName = "Active")

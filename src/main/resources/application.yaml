@@ -53,5 +53,6 @@ spring:
       - lib
       - camel-routes-common
       - crd-flag-service-router
+      - crd-list-of-values-router
 mail:
   enabled: false

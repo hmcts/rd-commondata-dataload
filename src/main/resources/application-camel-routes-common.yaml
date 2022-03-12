@@ -3,7 +3,7 @@ aggregation-strategy-timeout: 2000
 archival-route: direct:CommonDataArchival
 archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
-archival-file-names: FlagService.csv
+archival-file-names: FlagService.csv,ListOfValues.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 archival-date-format: dd-MM-yyyy--HH-mm
 file-read-time-out: 180000
@@ -17,3 +17,4 @@ logging-component-name: RD_Common_Data
 component:
   name: Common Reference Data
 flag-code-query: select flag_code from flag_details
+list-of-values-query: select category_key from list_of_values
