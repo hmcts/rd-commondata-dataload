@@ -13,8 +13,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 
 @Component
 @Setter
@@ -26,40 +24,39 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = false)
 public class ListOfValues extends CommonCsvField implements Serializable {
 
-    @DataField(pos = 1, columnName = "CategoryKey")
+    @DataField(pos = 1, columnName = "categorykey")
     @NotEmpty
     private String categoryKey;
 
-    @DataField(pos = 2, columnName = "ServiceID")
+    @DataField(pos = 2, columnName = "serviceid")
     private String serviceId;
 
-    @DataField(pos = 3, columnName = "Key")
-    @NotNull
+    @DataField(pos = 3, columnName = "key")
+    @NotEmpty
     private String key;
 
-    @DataField(pos = 4, columnName = "Value_EN")
-    private String value_EN;
+    @DataField(pos = 4, columnName = "value_en")
+    private String valueEN;
 
-    @DataField(pos = 5, columnName = "Value_CY")
-    private String value_CY;
+    @DataField(pos = 5, columnName = "value_cy")
+    private String valueCY;
 
-    @DataField(pos = 5, columnName = "HintText_EN")
-    private String hintText_EN;
+    @DataField(pos = 6, columnName = "hintText_en")
+    private String hintTextEN;
 
-    @DataField(pos = 5, columnName = "HintText_CY")
-    private String hintText_CY;
+    @DataField(pos = 7, columnName = "hintText_cy")
+    private String hintTextCY;
 
-    @DataField(pos = 5, columnName = "Lov_Order")
-    private String lov_Order;
+    @DataField(pos = 8, columnName = "lov_order")
+    private String lovOrder;
 
-    @DataField(pos = 5, columnName = "ParentCategory")
+    @DataField(pos = 9, columnName = "parentcategory")
     private String parentCategory;
 
-    @DataField(pos = 5, columnName = "ParentKey")
+    @DataField(pos = 10, columnName = "parentkey")
     private String parentKey;
 
-    @DataField(pos = 5, columnName = "Active")
+    @DataField(pos = 11, columnName = "active")
     @NotEmpty
     private String active;
-
 }

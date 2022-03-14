@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class CommonDataListOfValuesRouteTask extends BaseTasklet implements Tasklet{
+public class CommonDataListOfValuesRouteTask extends BaseTasklet implements Tasklet {
 
     @Value("${commondata-list-of-values-start-route}")
     String startRoute;

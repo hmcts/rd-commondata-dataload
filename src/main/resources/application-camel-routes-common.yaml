@@ -17,4 +17,4 @@ logging-component-name: RD_Common_Data
 component:
   name: Common Reference Data
 flag-code-query: select flag_code from flag_details
-list-of-values-query: select category_key from list_of_values
+list-of-values-query: select categorykey from list_of_values

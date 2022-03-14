@@ -28,7 +28,6 @@ public class BatchConfig {
     @Autowired
     CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
 
-
     @Autowired
     JobResultListener jobResultListener;
 
@@ -70,6 +69,7 @@ public class BatchConfig {
     public Job runRoutesJob() {
         return jobBuilderFactory.get(jobName)
             .start(stepCommonDataRoute())
+            .next(stepCommonDataListOfValuesRoute())
             .listener(jobResultListener)
             .build();
     }
