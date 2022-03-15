@@ -17,6 +17,7 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,6 +52,17 @@ class CommonDataListOfValuesRouteTaskTest {
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
         verify(commonDataListOfValuesRouteTask, times(1))
             .execute(anyString(), anyList(), anyBoolean());
+    }
+
+    @Test
+    void testExecute_NoAuditPreference() {
+        doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
+        when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataListOfValuesRouteTask
+            .execute(anyString(), anyList(), isNull()));
+        verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
+        verify(commonDataListOfValuesRouteTask, times(1))
+            .execute(anyString(), anyList(), isNull());
     }
 
 }

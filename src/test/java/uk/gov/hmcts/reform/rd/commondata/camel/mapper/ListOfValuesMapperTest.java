@@ -52,4 +52,37 @@ class ListOfValuesMapperTest {
         verify(listOfValuesMapper, times(1)).getMap(listOfValues);
         Assertions.assertThat(actual).hasSize(11).isEqualTo(expected);
     }
+
+    @Test
+    void testMapperWithNullLovOrder() {
+        ListOfValues listOfValues = ListOfValues.builder()
+            .categoryKey("TEST002")
+            .serviceId("XXXX")
+            .key("TEST002")
+            .valueEN("TEST002")
+            .valueCY("TEST002")
+            .hintTextEN("TEST002")
+            .hintTextCY("TEST002")
+            .lovOrder("")
+            .parentCategory("TEST002")
+            .parentKey("TEST002")
+            .active("Y")
+            .build();
+        var expected = new HashMap<String, Object>();
+        expected.put("categoryKey", trim(listOfValues.getCategoryKey()));
+        expected.put("serviceId", trim(listOfValues.getServiceId()));
+        expected.put("key", trim(listOfValues.getKey()));
+        expected.put("value_en", trim(listOfValues.getValueEN()));
+        expected.put("value_cy", trim(listOfValues.getValueCY()));
+        expected.put("hinttext_en", trim(listOfValues.getHintTextEN()));
+        expected.put("hinttext_cy", trim(listOfValues.getHintTextCY()));
+        expected.put("lov_order", null);
+        expected.put("parentcategory", trim(listOfValues.getParentCategory()));
+        expected.put("parentkey", trim(listOfValues.getParentKey()));
+        expected.put("active", trim(listOfValues.getActive()));
+
+        Map<String, Object> actual = listOfValuesMapper.getMap(listOfValues);
+        verify(listOfValuesMapper, times(1)).getMap(listOfValues);
+        Assertions.assertThat(actual).hasSize(11).isEqualTo(expected);
+    }
 }
