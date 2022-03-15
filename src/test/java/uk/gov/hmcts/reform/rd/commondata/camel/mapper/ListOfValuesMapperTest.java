@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
 
 import java.util.HashMap;
