@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @ExtendWith(MockitoExtension.class)
-public class CommonDataListOfValuesRouteTaskTest {
+class CommonDataListOfValuesRouteTaskTest {
     @Spy
     CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask = new CommonDataListOfValuesRouteTask();
 

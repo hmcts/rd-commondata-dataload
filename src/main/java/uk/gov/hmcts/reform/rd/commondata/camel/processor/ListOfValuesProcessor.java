@@ -14,7 +14,8 @@ public class ListOfValuesProcessor extends JsrValidationBaseProcessor<ListOfValu
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
+      // There is no need to do any validation and
+       //  filteration here just starightforward to load the values from csv in azure portal to database
 
     }
 }
