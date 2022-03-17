@@ -4,6 +4,9 @@ create table flag_details(
 	value_en text NOT NULL,
 	value_cy text,
 	category_id bigint NOT NULL ,
+	mrd_created_time TIMESTAMP,
+	mrd_updated_time TIMESTAMP,
+	mrd_deleted_time TIMESTAMP,
 	constraint flag_details_pk primary key (flag_code),
 	constraint id_unique unique (id)
 );
