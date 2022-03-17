@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
@@ -37,9 +36,7 @@ import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 import static org.springframework.util.ResourceUtils.getFile;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
@@ -118,9 +115,9 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
         jobLauncherTestUtils.launchJob();
         //Validate Success Result
         validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
-            ListOfValues.builder().categoryKey("AdditionalFacilities").serviceId("").key("AF-VF").valueEN("Video Facility")
-                .valueCY("").hintTextEN("").hintTextCY("").lovOrder("").parentCategory("").parentKey("").key("Y")
-                .build()), 1);
+            ListOfValues.builder().categoryKey("AdditionalFacilities").serviceId("").key("AF-VF")
+                .valueEN("Video Facility").valueCY("").hintTextEN("").hintTextCY("").lovOrder("").parentCategory("")
+                .parentKey("").key("Y").build()), 1);
         //Validates Success Audit
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
