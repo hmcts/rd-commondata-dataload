@@ -21,7 +21,9 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 
 import java.util.List;
 import java.util.Map;
@@ -47,15 +49,14 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected DataLoadRoute parentRoute;
 
-    @Value("${commondata-flag-service-start-route}")
-    protected String startRoute;
-
-
     @Value("${archival-cred}")
     protected String archivalCred;
 
     @Value("${flag-service-select-sql}")
     protected String flagServiceSelectData;
+
+    @Value("${list-of-values-select-sql}")
+    protected String listOfValuesSelectData;
 
     @Value("${audit-enable}")
     protected Boolean auditEnable;
@@ -96,7 +97,14 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
 
+    @Autowired
+    protected CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
+
+
     public static final String UPLOAD_FLAG_SERVICE_FILE_NAME = "FlagService-test.csv";
+
+    public static final String UPLOAD_LIST_OF_VALUES_FILE_NAME = "ListOfValues-test.csv";
+
 
     @BeforeEach
     public void setUpSpringContext() throws Exception {
@@ -126,6 +134,13 @@ public abstract class CommonDataFunctionalBaseTest {
         assertEquals(exceptedResult, flagServices);
     }
 
+    protected void validateListOfValuesFile(JdbcTemplate jdbcTemplate, String serviceSql,
+                                            List<ListOfValues> exceptedResult, int size) {
+        var rowMapper = newInstance(ListOfValues.class);
+        var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
+        assertEquals(size, listOfValues.size());
+        assertEquals(exceptedResult, listOfValues);
+    }
 
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {

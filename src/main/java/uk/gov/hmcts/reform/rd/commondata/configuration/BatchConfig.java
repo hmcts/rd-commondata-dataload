@@ -56,7 +56,7 @@ public class BatchConfig {
 
     @Bean
     public Step stepCommonDataListOfValuesRoute() {
-        return steps.get(commonDataTask)
+        return steps.get(commonDataListOfValuesTask)
             .tasklet(commonDataListOfValuesRouteTask)
             .build();
     }
