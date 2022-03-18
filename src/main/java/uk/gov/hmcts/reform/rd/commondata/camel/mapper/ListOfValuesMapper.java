@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.trim;
 
 @Component
@@ -23,14 +24,14 @@ public class ListOfValuesMapper implements IMapper {
         listOfValuesRow.put("value_cy", trim(listOfValues.getValueCY()));
         listOfValuesRow.put("hinttext_en", trim(listOfValues.getHintTextEN()));
         listOfValuesRow.put("hinttext_cy", trim(listOfValues.getHintTextCY()));
-        if (listOfValues.getLovOrder().equals("")) {
-            listOfValuesRow.put("lov_order",null);
-        } else {
-            listOfValuesRow.put("lov_order", Long.valueOf(trim(listOfValues.getLovOrder())));
-        }
         listOfValuesRow.put("parentcategory", trim(listOfValues.getParentCategory()));
         listOfValuesRow.put("parentkey", trim(listOfValues.getParentKey()));
         listOfValuesRow.put("active", trim(listOfValues.getActive()));
+        if (isBlank(listOfValues.getLovOrder())) {
+            listOfValuesRow.put("lov_order", null);
+        } else {
+            listOfValuesRow.put("lov_order", Long.valueOf(trim(listOfValues.getLovOrder())));
+        }
         return listOfValuesRow;
     }
 }

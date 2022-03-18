@@ -132,7 +132,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             MappingConstants.PARTIAL_SUCCESS
         );
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test

@@ -31,9 +31,12 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
+import uk.gov.hmcts.reform.rd.commondata.camel.mapper.ListOfValuesMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
+import uk.gov.hmcts.reform.rd.commondata.camel.processor.ListOfValuesProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
@@ -59,11 +62,19 @@ public class CommonDataCamelConfig {
         return new FlagServiceProcessor();
     }
 
+    @Bean
+    public ListOfValuesProcessor listOfValuesProcessor() { return new ListOfValuesProcessor();}
+
+    @Bean
+    public ListOfValuesMapper listOfValuesMapper(){return new ListOfValuesMapper();}
 
     @Bean
     public FlagServiceMapper flagServiceMapper() {
         return new FlagServiceMapper();
     }
+
+    @Bean
+    public ListOfValues listOfValues() { return new ListOfValues(); }
 
 
     @Bean

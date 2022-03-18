@@ -73,7 +73,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file in to a clean list_of_values table")
-    public void testFlagServiceCsv_Success() throws Exception {
+    public void testListOfValuesCsv_Success() throws Exception {
         testListOfValuesInsertion(
             "list_of_values_success.csv",
             MappingConstants.SUCCESS
@@ -83,7 +83,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file with different headers in different cases "
         + "in to a clean list_of_values table")
-    public void testFlagServiceCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
+    public void testListOfValuesCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
         String fileName = "list_of_values_success_insensitive_headers.csv";
         testListOfValuesInsertion(
             fileName,
@@ -94,7 +94,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file which has headers and data enclosed within quotes"
         + " in to a clean list_of_values table")
-    public void testFlagServiceCsv_WithQuotes_Success() throws Exception {
+    public void testListOfValuesCsv_WithQuotes_Success() throws Exception {
         String fileName = "list_of_values_success_with_quotes.csv";
         testListOfValuesInsertion(
             fileName,
@@ -116,8 +116,8 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
         //Validate Success Result
         validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
             ListOfValues.builder().categoryKey("AdditionalFacilities").serviceId("").key("AF-VF")
-                .valueEN("Video Facility").valueCY("").hintTextEN("").hintTextCY("").lovOrder("").parentCategory("")
-                .parentKey("").key("Y").build()), 1);
+                .valueEN("Video Facility").valueCY("").hintTextEN("").hintTextCY("").parentCategory("")
+                .parentKey("").active("Y").build()), 1);
         //Validates Success Audit
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
