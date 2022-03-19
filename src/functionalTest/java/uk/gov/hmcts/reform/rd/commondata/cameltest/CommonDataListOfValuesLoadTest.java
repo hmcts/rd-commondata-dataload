@@ -4,7 +4,6 @@ import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
-import org.javatuples.Quartet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -105,6 +104,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file which has a leading "
         + "trailing white space")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_WithLeadingTrailingSpace_Success() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
@@ -123,18 +123,23 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
     }
 
     @Test
-    @DisplayName("Status: PartialSuccess - Test for loading a valid Csv file which has a non numeric"
-        + "value for ID field")
+    @DisplayName("Status: Success - Test for loading a valid Csv file which has a  numeric"
+        + "value for CategoryKey field")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    public void testListOfValuesCsv_WithNonNumericValueID_PartialSuccess() throws Exception {
-        String fileName = "list_of_values_partial_success_id_numeric.csv";
-        testListOfValuesInsertion(
-            fileName,
-            MappingConstants.PARTIAL_SUCCESS
+    public void testListOfValuesCsv_WithNonNumericValueCategoryKey_Success() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/listOfValues/list_of_values_partial_success_categoryKey_numeric.csv"))
         );
-        Quartet<String, String, String, Long> quartet = Quartet.with("categorykey", "allowed string only", "1", 1L);
-        validateFlagServiceFileJsrException(jdbcTemplate, exceptionQuery, 1, LIST_OF_VALUES_TABLE_NAME, quartet);
 
+        jobLauncherTestUtils.launchJob();
+        validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
+            ListOfValues.builder().categoryKey("1").serviceId("").key("AF-WR")
+                .valueEN("Witness Room").valueCY("").hintTextEN("").hintTextCY("").parentCategory("")
+                .parentKey("").active("Y").build()), 1);
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
     @Test
@@ -155,7 +160,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
@@ -177,7 +182,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 

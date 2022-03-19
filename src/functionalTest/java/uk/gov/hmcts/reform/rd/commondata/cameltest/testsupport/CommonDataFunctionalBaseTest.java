@@ -27,8 +27,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -141,24 +139,24 @@ public abstract class CommonDataFunctionalBaseTest {
     protected void validateListOfValuesFile(JdbcTemplate jdbcTemplate, String serviceSql,
                                             List<ListOfValues> exceptedResult, int size) {
         RowMapper<ListOfValues> rowMapper = (rs, rowNum) -> {
-          ListOfValues listOfValues = new ListOfValues();
-          listOfValues.setActive(rs.getString("active"));
-          listOfValues.setCategoryKey(rs.getString("categorykey"));
-          listOfValues.setHintTextEN(rs.getString("hinttext_en"));
-          listOfValues.setHintTextCY(rs.getString("hinttext_cy"));
-          listOfValues.setKey(rs.getString("key"));
-          listOfValues.setValueCY(rs.getString("value_cy"));
-          listOfValues.setValueEN(rs.getString("value_en"));
-          listOfValues.setLovOrder(rs.getString("lov_order"));
-          listOfValues.setServiceId(rs.getString("serviceid"));
-          listOfValues.setParentCategory(rs.getString("parentcategory"));
-          listOfValues.setParentKey(rs.getString("parentkey"));
-          return listOfValues;
-      };
-      var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
-      assertEquals(size, listOfValues.size());
-      assertEquals(exceptedResult, listOfValues);
-  }
+            ListOfValues listOfValues = new ListOfValues();
+            listOfValues.setActive(rs.getString("active"));
+            listOfValues.setCategoryKey(rs.getString("categorykey"));
+            listOfValues.setHintTextEN(rs.getString("hinttext_en"));
+            listOfValues.setHintTextCY(rs.getString("hinttext_cy"));
+            listOfValues.setKey(rs.getString("key"));
+            listOfValues.setValueCY(rs.getString("value_cy"));
+            listOfValues.setValueEN(rs.getString("value_en"));
+            listOfValues.setLovOrder(rs.getString("lov_order"));
+            listOfValues.setServiceId(rs.getString("serviceid"));
+            listOfValues.setParentCategory(rs.getString("parentcategory"));
+            listOfValues.setParentKey(rs.getString("parentkey"));
+            return listOfValues;
+        };
+        var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
+        assertEquals(size, listOfValues.size());
+        assertEquals(exceptedResult, listOfValues);
+    }
 
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
