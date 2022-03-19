@@ -69,8 +69,9 @@ public class BatchConfig {
     public Job runRoutesJob() {
         return jobBuilderFactory.get(jobName)
             .start(stepCommonDataRoute())
-            .next(stepCommonDataListOfValuesRoute())
             .listener(jobResultListener)
+            .on("*").to(stepCommonDataListOfValuesRoute())
+            .end()
             .build();
     }
 }

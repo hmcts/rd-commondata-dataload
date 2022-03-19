@@ -63,10 +63,14 @@ public class CommonDataCamelConfig {
     }
 
     @Bean
-    public ListOfValuesProcessor listOfValuesProcessor() { return new ListOfValuesProcessor();}
+    public ListOfValuesProcessor listOfValuesProcessor() {
+        return new ListOfValuesProcessor();
+    }
 
     @Bean
-    public ListOfValuesMapper listOfValuesMapper(){return new ListOfValuesMapper();}
+    public ListOfValuesMapper listOfValuesMapper() {
+        return new ListOfValuesMapper();
+    }
 
     @Bean
     public FlagServiceMapper flagServiceMapper() {
@@ -74,7 +78,9 @@ public class CommonDataCamelConfig {
     }
 
     @Bean
-    public ListOfValues listOfValues() { return new ListOfValues(); }
+    public ListOfValues listOfValues() {
+        return new ListOfValues();
+    }
 
 
     @Bean

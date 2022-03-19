@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
@@ -24,6 +25,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -138,16 +140,30 @@ public abstract class CommonDataFunctionalBaseTest {
 
     protected void validateListOfValuesFile(JdbcTemplate jdbcTemplate, String serviceSql,
                                             List<ListOfValues> exceptedResult, int size) {
-        var rowMapper = newInstance(ListOfValues.class);
-        var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
-        assertEquals(size, listOfValues.size());
-        assertEquals(exceptedResult, listOfValues);
-    }
+        RowMapper<ListOfValues> rowMapper = (rs, rowNum) -> {
+          ListOfValues listOfValues = new ListOfValues();
+          listOfValues.setActive(rs.getString("active"));
+          listOfValues.setCategoryKey(rs.getString("categorykey"));
+          listOfValues.setHintTextEN(rs.getString("hinttext_en"));
+          listOfValues.setHintTextCY(rs.getString("hinttext_cy"));
+          listOfValues.setKey(rs.getString("key"));
+          listOfValues.setValueCY(rs.getString("value_cy"));
+          listOfValues.setValueEN(rs.getString("value_en"));
+          listOfValues.setLovOrder(rs.getString("lov_order"));
+          listOfValues.setServiceId(rs.getString("serviceid"));
+          listOfValues.setParentCategory(rs.getString("parentcategory"));
+          listOfValues.setParentKey(rs.getString("parentkey"));
+          return listOfValues;
+      };
+      var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
+      assertEquals(size, listOfValues.size());
+      assertEquals(exceptedResult, listOfValues);
+  }
 
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());
