@@ -395,3 +395,13 @@ functional {
 integration {
   useJUnitPlatform()
 }
+
+dependencyManagement {
+  dependencies {
+    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.13.2') {
+      entry 'jackson-databind'
+      entry 'jackson-core'
+      entry 'jackson-annotations'
+    }
+  }
+}
