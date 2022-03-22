@@ -1,6 +1,6 @@
-commondata-list-of-values-start-route: direct:CommonData-ListOfValues
-commondata-list-of-values-route-task: commonDataListOfValuesLoadTask
-commondata-list-of-values-routes-to-execute: commondata-list-of-values-load
+commondata-categories-start-route: direct:CommonData-ListOfValues
+commondata-categories-route-task: commonDataListOfValuesLoadTask
+commondata-categories-routes-to-execute: commondata-list-of-values-load
 route:
 #Route: commondata-list-of-values-load
   commondata-list-of-values-load:
@@ -17,9 +17,9 @@ route:
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/rd-common-data/ListOfValues.csv?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: listOfValuesProcessor
-    mapper-class: listOfValuesMapper
-    csv-binder-object: ListOfValues
+    processor-class: categoriesProcessor
+    mapper-class: categoriesMapper
+    csv-binder-object: Categories
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
     header-validation-enabled: true
 

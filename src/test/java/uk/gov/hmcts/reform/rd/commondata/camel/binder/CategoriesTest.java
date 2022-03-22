@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 class CategoriesTest {
 
     @Test
-    void testListOfValues() {
+    void testCategories() {
         Categories categories = Categories.builder().categoryKey("TEST001")
             .serviceId("XXXX")
             .key("TEST001")
@@ -32,7 +32,7 @@ class CategoriesTest {
         Assertions.assertEquals("TEST001", categories.getParentKey());
         Assertions.assertEquals("Y", categories.getActive());
 
-        String listOfValuesBuilderString = Categories.builder()
+        String categoriesBuilderString = Categories.builder()
             .categoryKey("TEST002")
             .serviceId("XXXX")
             .key("TEST002")
@@ -45,7 +45,7 @@ class CategoriesTest {
             .parentKey("TEST002")
             .active("Y")
             .toString();
-        Assertions.assertEquals(listOfValuesBuilderString, "ListOfValues.ListOfValuesBuilder("
+        Assertions.assertEquals(categoriesBuilderString, "Categories.CategoriesBuilder("
             + "categoryKey=TEST002, serviceId=XXXX, key=TEST002, valueEN=TEST002, valueCY=TEST002, hintTextEN=TEST002"
             + ", hintTextCY=TEST002, lovOrder=TEST002, parentCategory=TEST002, parentKey=TEST002, active=Y)");
     }

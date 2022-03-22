@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 
 
 import java.util.List;
@@ -100,7 +100,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
 
     @Autowired
-    protected CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
+    protected CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
 
     public static final String UPLOAD_FLAG_SERVICE_FILE_NAME = "FlagService-test.csv";

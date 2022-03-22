@@ -25,7 +25,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
@@ -55,13 +55,13 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
+    CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
     @Autowired
     @Qualifier("springJdbcTransactionManager")
     protected PlatformTransactionManager platformTransactionManager;
 
-    private static final String LIST_OF_VALUES_TABLE_NAME = "List_Of_Values";
+    private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";
 
     @BeforeEach
     public void init() {
@@ -109,7 +109,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/listOfValues/list_of_values_success_leadingspace.csv"))
+                "classpath:sourceFiles/categories/list_of_values_success_leadingspace.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -130,7 +130,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/listOfValues/list_of_values_partial_success_categoryKey_numeric.csv"))
+                "classpath:sourceFiles/categories/list_of_values_partial_success_categoryKey_numeric.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -149,7 +149,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/listOfValues/list_of_values_failure_additional_header.csv"))
+                "classpath:sourceFiles/categories/list_of_values_failure_additional_header.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -171,7 +171,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/listOfValues/list_of_values_failure_unknown_header.csv"))
+                "classpath:sourceFiles/categories/list_of_values_failure_unknown_header.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -189,7 +189,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     private void testListOfValuesInsertion(String fileName, String status) throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
-            new FileInputStream(getFile(String.format("classpath:sourceFiles/listOfValues/%s", fileName)))
+            new FileInputStream(getFile(String.format("classpath:sourceFiles/categories/%s", fileName)))
         );
 
         camelContext.getGlobalOptions()

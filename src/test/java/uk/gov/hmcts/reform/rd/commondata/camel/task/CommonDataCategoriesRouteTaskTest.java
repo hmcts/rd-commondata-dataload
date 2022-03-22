@@ -27,7 +27,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 @ExtendWith(MockitoExtension.class)
 class CommonDataCategoriesRouteTaskTest {
     @Spy
-    CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask = new CommonDataListOfValuesRouteTask();
+    CommonDataCategoriesRouteTask commonDataCategoriesRouteTask = new CommonDataCategoriesRouteTask();
 
     DataLoadRoute dataLoadRoute = mock(DataLoadRoute.class);
 
@@ -37,20 +37,20 @@ class CommonDataCategoriesRouteTaskTest {
 
     @BeforeEach
     void init() {
-        setField(commonDataListOfValuesRouteTask, "logComponentName", "testlogger");
-        setField(commonDataListOfValuesRouteTask, "dataLoadRoute", dataLoadRoute);
-        setField(commonDataListOfValuesRouteTask, "commonDataExecutor", commonDataExecutor);
-        setField(commonDataListOfValuesRouteTask, "camelContext", camelContext);
+        setField(commonDataCategoriesRouteTask, "logComponentName", "testlogger");
+        setField(commonDataCategoriesRouteTask, "dataLoadRoute", dataLoadRoute);
+        setField(commonDataCategoriesRouteTask, "commonDataExecutor", commonDataExecutor);
+        setField(commonDataCategoriesRouteTask, "camelContext", camelContext);
     }
 
     @Test
     void testExecute() {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
-        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataListOfValuesRouteTask
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask
             .execute(anyString(), anyList(), anyBoolean()));
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
-        verify(commonDataListOfValuesRouteTask, times(1))
+        verify(commonDataCategoriesRouteTask, times(1))
             .execute(anyString(), anyList(), anyBoolean());
     }
 
@@ -58,10 +58,10 @@ class CommonDataCategoriesRouteTaskTest {
     void testExecute_NoAuditPreference() {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
-        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataListOfValuesRouteTask
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask
             .execute(anyString(), anyList(), isNull()));
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
-        verify(commonDataListOfValuesRouteTask, times(1))
+        verify(commonDataCategoriesRouteTask, times(1))
             .execute(anyString(), anyList(), isNull());
     }
 

@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 
 @Configuration
 @EnableBatchProcessing
@@ -26,7 +26,7 @@ public class BatchConfig {
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
 
     @Autowired
-    CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
+    CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
     @Autowired
     JobResultListener jobResultListener;
@@ -37,8 +37,8 @@ public class BatchConfig {
     @Value("${commondata-flag-service-route-task}")
     String commonDataTask;
 
-    @Value("${commondata-list-of-values-route-task}")
-    String commonDataListOfValuesTask;
+    @Value("${commondata-categories-route-task}")
+    String commonDataCategoriesTask;
 
     @Value("${batchjob-name}")
     String jobName;
@@ -55,9 +55,9 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step stepCommonDataListOfValuesRoute() {
-        return steps.get(commonDataListOfValuesTask)
-            .tasklet(commonDataListOfValuesRouteTask)
+    public Step stepCommonDataCategoriesRoute() {
+        return steps.get(commonDataCategoriesTask)
+            .tasklet(commonDataCategoriesRouteTask)
             .build();
     }
 
@@ -70,7 +70,7 @@ public class BatchConfig {
         return jobBuilderFactory.get(jobName)
             .start(stepCommonDataRoute())
             .listener(jobResultListener)
-            .on("*").to(stepCommonDataListOfValuesRoute())
+            .on("*").to(stepCommonDataCategoriesRoute())
             .end()
             .build();
     }
