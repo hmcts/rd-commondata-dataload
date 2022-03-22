@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
@@ -52,7 +52,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
 
-public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest {
+public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
     CommonDataListOfValuesRouteTask commonDataListOfValuesRouteTask;
@@ -115,7 +115,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
         jobLauncherTestUtils.launchJob();
         //Validate Success Result
         validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
-            ListOfValues.builder().categoryKey("AdditionalFacilities").serviceId("").key("AF-VF")
+            Categories.builder().categoryKey("AdditionalFacilities").serviceId("").key("AF-VF")
                 .valueEN("Video Facility").valueCY("").hintTextEN("").hintTextCY("").parentCategory("")
                 .parentKey("").active("Y").build()), 1);
         //Validates Success Audit
@@ -135,7 +135,7 @@ public class CommonDataListOfValuesLoadTest extends CommonDataFunctionalBaseTest
 
         jobLauncherTestUtils.launchJob();
         validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
-            ListOfValues.builder().categoryKey("1").serviceId("").key("AF-WR")
+            Categories.builder().categoryKey("1").serviceId("").key("AF-WR")
                 .valueEN("Witness Room").valueCY("").hintTextEN("").hintTextCY("").parentCategory("")
                 .parentKey("").active("Y").build()), 1);
         //Validates Success Audit

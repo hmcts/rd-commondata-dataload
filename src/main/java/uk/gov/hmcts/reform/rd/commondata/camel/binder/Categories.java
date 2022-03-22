@@ -24,7 +24,7 @@ import javax.validation.constraints.NotEmpty;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ListOfValues extends CommonCsvField implements Serializable {
+public class Categories extends CommonCsvField implements Serializable {
 
     @DataField(pos = 1, columnName = "categorykey")
     @NotEmpty

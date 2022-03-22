@@ -5,11 +5,12 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 @Component
 @Slf4j
-public class ListOfValuesProcessor extends JsrValidationBaseProcessor<ListOfValues> {
+public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> {
+
 
 
     @Override

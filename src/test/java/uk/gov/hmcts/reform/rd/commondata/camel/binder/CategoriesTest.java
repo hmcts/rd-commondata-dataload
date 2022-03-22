@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-class ListOfValuesTest {
+class CategoriesTest {
 
     @Test
     void testListOfValues() {
-        ListOfValues listOfValues = ListOfValues.builder().categoryKey("TEST001")
+        Categories categories = Categories.builder().categoryKey("TEST001")
             .serviceId("XXXX")
             .key("TEST001")
             .valueEN("TEST001")
@@ -20,19 +20,19 @@ class ListOfValuesTest {
             .parentKey("TEST001")
             .active("Y")
             .build();
-        Assertions.assertEquals("TEST001", listOfValues.getCategoryKey());
-        Assertions.assertEquals("XXXX", listOfValues.getServiceId());
-        Assertions.assertEquals("TEST001", listOfValues.getKey());
-        Assertions.assertEquals("TEST001", listOfValues.getValueEN());
-        Assertions.assertEquals("TEST001", listOfValues.getValueCY());
-        Assertions.assertEquals("TEST001", listOfValues.getHintTextEN());
-        Assertions.assertEquals("TEST001", listOfValues.getHintTextCY());
-        Assertions.assertEquals("TEST001", listOfValues.getLovOrder());
-        Assertions.assertEquals("TEST001", listOfValues.getParentCategory());
-        Assertions.assertEquals("TEST001", listOfValues.getParentKey());
-        Assertions.assertEquals("Y", listOfValues.getActive());
+        Assertions.assertEquals("TEST001", categories.getCategoryKey());
+        Assertions.assertEquals("XXXX", categories.getServiceId());
+        Assertions.assertEquals("TEST001", categories.getKey());
+        Assertions.assertEquals("TEST001", categories.getValueEN());
+        Assertions.assertEquals("TEST001", categories.getValueCY());
+        Assertions.assertEquals("TEST001", categories.getHintTextEN());
+        Assertions.assertEquals("TEST001", categories.getHintTextCY());
+        Assertions.assertEquals("TEST001", categories.getLovOrder());
+        Assertions.assertEquals("TEST001", categories.getParentCategory());
+        Assertions.assertEquals("TEST001", categories.getParentKey());
+        Assertions.assertEquals("Y", categories.getActive());
 
-        String listOfValuesBuilderString = ListOfValues.builder()
+        String listOfValuesBuilderString = Categories.builder()
             .categoryKey("TEST002")
             .serviceId("XXXX")
             .key("TEST002")

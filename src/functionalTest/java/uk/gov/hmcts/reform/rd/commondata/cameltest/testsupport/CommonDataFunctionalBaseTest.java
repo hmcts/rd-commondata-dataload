@@ -22,7 +22,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.ListOfValues;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataListOfValuesRouteTask;
 
@@ -137,21 +137,21 @@ public abstract class CommonDataFunctionalBaseTest {
     }
 
     protected void validateListOfValuesFile(JdbcTemplate jdbcTemplate, String serviceSql,
-                                            List<ListOfValues> exceptedResult, int size) {
-        RowMapper<ListOfValues> rowMapper = (rs, rowNum) -> {
-            ListOfValues listOfValues = new ListOfValues();
-            listOfValues.setActive(rs.getString("active"));
-            listOfValues.setCategoryKey(rs.getString("categorykey"));
-            listOfValues.setHintTextEN(rs.getString("hinttext_en"));
-            listOfValues.setHintTextCY(rs.getString("hinttext_cy"));
-            listOfValues.setKey(rs.getString("key"));
-            listOfValues.setValueCY(rs.getString("value_cy"));
-            listOfValues.setValueEN(rs.getString("value_en"));
-            listOfValues.setLovOrder(rs.getString("lov_order"));
-            listOfValues.setServiceId(rs.getString("serviceid"));
-            listOfValues.setParentCategory(rs.getString("parentcategory"));
-            listOfValues.setParentKey(rs.getString("parentkey"));
-            return listOfValues;
+                                            List<Categories> exceptedResult, int size) {
+        RowMapper<Categories> rowMapper = (rs, rowNum) -> {
+            Categories categories = new Categories();
+            categories.setActive(rs.getString("active"));
+            categories.setCategoryKey(rs.getString("categorykey"));
+            categories.setHintTextEN(rs.getString("hinttext_en"));
+            categories.setHintTextCY(rs.getString("hinttext_cy"));
+            categories.setKey(rs.getString("key"));
+            categories.setValueCY(rs.getString("value_cy"));
+            categories.setValueEN(rs.getString("value_en"));
+            categories.setLovOrder(rs.getString("lov_order"));
+            categories.setServiceId(rs.getString("serviceid"));
+            categories.setParentCategory(rs.getString("parentcategory"));
+            categories.setParentKey(rs.getString("parentkey"));
+            return categories;
         };
         var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
         assertEquals(size, listOfValues.size());
