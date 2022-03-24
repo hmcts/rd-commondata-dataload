@@ -8,4 +8,5 @@ DROP TABLE cancellation_reasons;
 DROP TABLE interpreter_and_sign_language;
 DROP TABLE additional_facilities;
 DROP TABLE panel_member_type;
+DROP TABLE entity_role_codes;
 COMMIT;
