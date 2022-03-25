@@ -132,7 +132,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             MappingConstants.PARTIAL_SUCCESS
         );
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
                 "RA0004").build()
         ), 1);
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertEquals(2, result.size());
+        assertEquals(3, result.size());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             MappingConstants.PARTIAL_SUCCESS
         );
         Quartet<String, String, String, Long> quartet = Quartet.with("ID", "allowed numeric value only", "hello", 5L);
-        validateFlagServiceFileJsrException(jdbcTemplate, exceptionQuery, 1, FLAG_SERVICE_TABLE_NAME, quartet);
+        validateFlagServiceFileJsrException(jdbcTemplate, exceptionQuery, 2, FLAG_SERVICE_TABLE_NAME, quartet);
 
     }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
@@ -21,7 +22,10 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
+
 
 import java.util.List;
 import java.util.Map;
@@ -47,15 +51,14 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected DataLoadRoute parentRoute;
 
-    @Value("${commondata-flag-service-start-route}")
-    protected String startRoute;
-
-
     @Value("${archival-cred}")
     protected String archivalCred;
 
     @Value("${flag-service-select-sql}")
     protected String flagServiceSelectData;
+
+    @Value("${list-of-values-select-sql}")
+    protected String listOfValuesSelectData;
 
     @Value("${audit-enable}")
     protected Boolean auditEnable;
@@ -96,7 +99,14 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
 
+    @Autowired
+    protected CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
+
+
     public static final String UPLOAD_FLAG_SERVICE_FILE_NAME = "FlagService-test.csv";
+
+    public static final String UPLOAD_LIST_OF_VALUES_FILE_NAME = "ListOfValues-test.csv";
+
 
     @BeforeEach
     public void setUpSpringContext() throws Exception {
@@ -126,11 +136,32 @@ public abstract class CommonDataFunctionalBaseTest {
         assertEquals(exceptedResult, flagServices);
     }
 
+    protected void validateListOfValuesFile(JdbcTemplate jdbcTemplate, String serviceSql,
+                                            List<Categories> exceptedResult, int size) {
+        RowMapper<Categories> rowMapper = (rs, rowNum) -> {
+            Categories categories = new Categories();
+            categories.setActive(rs.getString("active"));
+            categories.setCategoryKey(rs.getString("categorykey"));
+            categories.setHintTextEN(rs.getString("hinttext_en"));
+            categories.setHintTextCY(rs.getString("hinttext_cy"));
+            categories.setKey(rs.getString("key"));
+            categories.setValueCY(rs.getString("value_cy"));
+            categories.setValueEN(rs.getString("value_en"));
+            categories.setLovOrder(rs.getString("lov_order"));
+            categories.setServiceId(rs.getString("serviceid"));
+            categories.setParentCategory(rs.getString("parentcategory"));
+            categories.setParentKey(rs.getString("parentkey"));
+            return categories;
+        };
+        var listOfValues = jdbcTemplate.query(serviceSql, rowMapper);
+        assertEquals(size, listOfValues.size());
+        assertEquals(exceptedResult, listOfValues);
+    }
 
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());

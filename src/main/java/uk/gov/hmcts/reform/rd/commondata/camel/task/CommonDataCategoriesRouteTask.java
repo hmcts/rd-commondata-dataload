@@ -12,16 +12,17 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class CommonDataFlagServiceRouteTask extends BaseTasklet implements Tasklet {
+public class CommonDataCategoriesRouteTask extends BaseTasklet implements Tasklet {
 
-    @Value("${commondata-flag-service-start-route}")
+    @Value("${commondata-categories-start-route}")
     String startRoute;
 
-    @Value("${commondata-flag-service-routes-to-execute}")
+    @Value("${commondata-categories-routes-to-execute}")
     List<String> routesToExecute;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        return super.execute(startRoute, routesToExecute, Boolean.FALSE);
+        return super.execute(startRoute, routesToExecute, Boolean.TRUE);
     }
+
 }
