@@ -257,7 +257,6 @@ dependencies {
   implementation group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: versions.flyway
 
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
 
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.11.0'
