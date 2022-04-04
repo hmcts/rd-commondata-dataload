@@ -18,9 +18,10 @@ def jarName = 'rd-commondata-dataload.jar'
 group = 'uk.gov.hmcts.reform.rd'
 version = '0.0.1'
 
-allprojects {
-  sourceCompatibility = '11'
-  targetCompatibility = '11'
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
 }
 
 sourceSets {
@@ -99,7 +100,7 @@ pmd {
 }
 
 jacoco {
-  toolVersion = "0.8.5"
+  toolVersion = "0.8.7"
 }
 
 jacocoTestReport {
@@ -107,7 +108,7 @@ jacocoTestReport {
   reports {
     xml.required = true
     csv.required = false
-    xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    xml.outputLocation = file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
   }
 }
 
@@ -203,7 +204,7 @@ def versions = [
   springBoot          : '2.4.13',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.0.76',
-  lombok              : '1.18.6',
+  lombok              : '1.18.22',
   flyway              : '6.5.5',
   camel               : '3.8.0',
   gradlePitest        : '1.5.1',
