@@ -264,7 +264,7 @@ dependencies {
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
-  implementation group: 'org.springframework', name: 'spring-core', version: '5.3.18'
+  implementation group: 'org.springframework', name: 'spring-core', version: '5.3.19'
  	implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
   implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.18'
   implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.18'
