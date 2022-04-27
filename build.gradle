@@ -329,7 +329,7 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
   testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
-  testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.7.0'
+  testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.7.4'
   testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
