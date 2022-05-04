@@ -5,7 +5,7 @@ route:
 #Route: commondata-list-of-values-load
   commondata-list-of-values-load:
     id: commondata-list-of-values-load
-    file-name: ListOfValues.csv
+    file-name: CaseLinkingReasons.csv
     table-name: list_of_values
     insert-sql:
       sql:insert into list_of_values (categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,
@@ -16,7 +16,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/ListOfValues.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: categoriesProcessor
     mapper-class: categoriesMapper
     csv-binder-object: Categories
