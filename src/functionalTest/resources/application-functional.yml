@@ -33,6 +33,8 @@ commondata-flag-service-route-task: commonDataFlagServiceLoadTask
 commondata-flag-service-routes-to-execute: commondata-flag-service-load
 commondata-categories-route-task: commonDataListOfValuesLoadTask
 commondata-categories-routes-to-execute: commondata-list-of-values-load
+commondata-caselinking-route-task: commonDataCaseLinkingReasonsTask
+commondata-caselinking-routes-to-execute: commondata-case-linking-reasons-load
 route:
   commondata-flag-service-load:
     id: commondata-flag-service-load
