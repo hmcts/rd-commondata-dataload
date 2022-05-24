@@ -72,8 +72,8 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file in to a clean list_of_values table")
-    public void testListOfValuesCsv_Success() throws Exception {
-        testListOfValuesInsertion(
+    public void testCaseLinkingCsv_Success() throws Exception {
+        testCaseLinkingInsertion(
             "case_linking_success.csv",
             MappingConstants.SUCCESS
         );
@@ -82,9 +82,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file with different headers in different cases "
         + "in to a clean list_of_values table")
-    public void testListOfValuesCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
+    public void testCaseLinkingCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
         String fileName = "case_linking_success_insensitive_headers.csv";
-        testListOfValuesInsertion(
+        testCaseLinkingInsertion(
             fileName,
             MappingConstants.SUCCESS
         );
@@ -93,9 +93,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file which has headers and data enclosed within quotes"
         + " in to a clean list_of_values table")
-    public void testListOfValuesCsv_WithQuotes_Success() throws Exception {
+    public void testCaseLinkingCsv_WithQuotes_Success() throws Exception {
         String fileName = "case_linking_success_with_quotes.csv";
-        testListOfValuesInsertion(
+        testCaseLinkingInsertion(
             fileName,
             MappingConstants.SUCCESS
         );
@@ -105,9 +105,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @DisplayName("Status: Success - Test for loading a valid Csv file which has a leading "
         + "trailing white space")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testListOfValuesCsv_WithLeadingTrailingSpace_Success() throws Exception {
+    void testCaseLinkingCsv_WithLeadingTrailingSpace_Success() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            UPLOAD_CASE_LINKING_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/categories/list_of_values_success_leadingspace.csv"))
         );
@@ -126,7 +126,7 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @DisplayName("Status: Success - Test for loading a valid Csv file which has a  numeric"
         + "value for CategoryKey field")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    public void testListOfValuesCsv_WithNonNumericValueCategoryKey_Success() throws Exception {
+    public void testCaseLinkingCsv_WithNonNumericValueCategoryKey_Success() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_CASE_LINKING_FILE_NAME,
             new FileInputStream(getFile(
@@ -145,7 +145,7 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Failure - Test for loading a file with an additional unknown header.")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testListOfValuesCsv_UnknownHeader_Failure() throws Exception {
+    void testCaseLinkingCsv_UnknownHeader_Failure() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_CASE_LINKING_FILE_NAME,
             new FileInputStream(getFile(
@@ -158,7 +158,7 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_CASE_LINKING_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
+            "There is a mismatch in the headers of the csv file :: CaseLinking-test.csv"
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_CASE_LINKING_FILE_NAME);
@@ -167,7 +167,7 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Failure - Test for loading a file with a missing header.")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testListOfValuesCsv_MissingHeader_Failure() throws Exception {
+    void testCaseLinkingCsv_MissingHeader_Failure() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_CASE_LINKING_FILE_NAME,
             new FileInputStream(getFile(
@@ -180,13 +180,13 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_CASE_LINKING_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
+            "There is a mismatch in the headers of the csv file :: CaseLinking-test.csv"
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_CASE_LINKING_FILE_NAME);
     }
 
-    private void testListOfValuesInsertion(String fileName, String status) throws Exception {
+    private void testCaseLinkingInsertion(String fileName, String status) throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_CASE_LINKING_FILE_NAME,
             new FileInputStream(getFile(String.format("classpath:sourceFiles/caseLinking/%s", fileName)))
