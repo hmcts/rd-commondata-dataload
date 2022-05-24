@@ -65,4 +65,14 @@ class CommonDataCaseLinkingRouteTaskTest {
             .execute(anyString(), anyList(), isNull());
     }
 
+    @Test
+    void execute() {
+        doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
+        when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCaseLinkingRouteTask
+            .execute(anyString(), anyList(), anyBoolean()));
+        verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
+        verify(commonDataCaseLinkingRouteTask, times(1))
+            .execute(anyString(), anyList(), anyBoolean());
+    }
 }
