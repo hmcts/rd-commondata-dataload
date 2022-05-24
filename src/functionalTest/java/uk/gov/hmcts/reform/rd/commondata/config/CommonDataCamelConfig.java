@@ -37,6 +37,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.CategoriesMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.CategoriesProcessor;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
@@ -210,6 +211,10 @@ public class CommonDataCamelConfig {
         return new CommonDataCategoriesRouteTask();
     }
 
+    @Bean
+    CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask() {
+        return new CommonDataCaseLinkingRouteTask();
+    }
 
     @Bean
     CommonDataExecutor commonDataExecutor() {
