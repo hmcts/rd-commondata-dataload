@@ -213,7 +213,9 @@ def versions = [
   pitest             : '1.7.3',
   flyway              : '6.5.5',
   camel               : '3.8.0',
-  log4j               : '2.17.1'
+  log4j               : '2.17.1',
+  springVersion      : '5.3.20'
+
 ]
 
 ext.libraries = [
@@ -270,20 +272,20 @@ dependencies {
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-  implementation group: 'org.springframework', name: 'spring-core', version: '5.3.19'
+  implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
 
- 	implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-context', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-context-support', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-expression', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-jcl', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-web', version: '5.3.18'
-  implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.18'
+ 	implementation group: 'org.springframework', name: 'spring-beans', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-aop', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-aspects', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-context', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-context-support', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-expression', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-jcl', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-jdbc', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-orm', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-tx', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-web', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-webmvc', version: versions.springVersion
 
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
