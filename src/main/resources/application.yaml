@@ -54,5 +54,6 @@ spring:
       - camel-routes-common
       - crd-flag-service-router
       - crd-list-of-values-router
+      - crd-case-linking-reasons-router
 mail:
   enabled: false

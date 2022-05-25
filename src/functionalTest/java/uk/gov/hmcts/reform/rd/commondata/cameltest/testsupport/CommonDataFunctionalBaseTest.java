@@ -23,6 +23,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 
@@ -102,10 +103,15 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
+    @Autowired
+    protected CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
+
 
     public static final String UPLOAD_FLAG_SERVICE_FILE_NAME = "FlagService-test.csv";
 
     public static final String UPLOAD_LIST_OF_VALUES_FILE_NAME = "ListOfValues-test.csv";
+
+    public static final String UPLOAD_CASE_LINKING_FILE_NAME = "CaseLinking-test.csv";
 
 
     @BeforeEach

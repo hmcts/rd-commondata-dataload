@@ -149,6 +149,7 @@ sonarqube {
 
     property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/rd/commondata/configuration/**," +
       "src/main/java/uk/gov/hmcts/reform/rd/commondata/CommonDataLoadApplication.java," +
+      "src/main/java/uk/gov/hmcts/reform/rd/commondata/camel/task/CommonDataCaseLinkingRouteTask.java,"+
       "src/main/java/uk/gov/hmcts/reform/rd/commondata/camel/binder/**,"
   }
 }
