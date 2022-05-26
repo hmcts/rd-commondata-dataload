@@ -124,7 +124,8 @@ pitest {
     'uk.gov.hmcts.reform.rd.commondata.configuration.*',
     'uk.gov.hmcts.reform.rd.commondata.CommonDataLoadApplication',
     'uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor',
-    'uk.gov.hmcts.reform.rd.commondata.camel.binder.*'
+    'uk.gov.hmcts.reform.rd.commondata.camel.binder.*',
+    'uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask'
   ]
   threads = 6
   enableDefaultIncrementalAnalysis = true
