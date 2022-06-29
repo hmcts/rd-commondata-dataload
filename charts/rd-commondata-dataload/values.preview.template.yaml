@@ -35,12 +35,14 @@ job:
 postgresql:
   enabled: true
   image:
-    tag: '11.3.0'
-  postgresqlUsername: dbcommondata
-  postgresqlPassword: dbcommondata
-  postgresqlDatabase: dbcommondata
-  persistence:
-    enabled: false
+    tag: '11.16.10'
+  username: dbcommondata
+  password: dbcommondata
+  database: dbcommondata
+  ## Disable Postgres Persistence
+  primary:
+    persistence:
+      enabled: false
 
 blobstorage:
   resourceGroup: rd-aks-pr-test
