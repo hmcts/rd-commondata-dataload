@@ -35,7 +35,7 @@ job:
 postgresql:
   enabled: true
   image:
-    tag: '11.16.10'
+    tag: '11.16.0'
   username: dbcommondata
   password: dbcommondata
   database: dbcommondata
