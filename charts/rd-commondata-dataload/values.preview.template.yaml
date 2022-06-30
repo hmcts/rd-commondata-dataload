@@ -36,9 +36,10 @@ postgresql:
   enabled: true
   image:
     tag: '11.16.0'
-  username: dbcommondata
-  password: dbcommondata
-  database: dbcommondata
+  auth:
+    username: dbcommondata
+    password: dbcommondata
+    database: dbcommondata
   ## Disable Postgres Persistence
   primary:
     persistence:
