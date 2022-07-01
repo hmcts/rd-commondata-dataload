@@ -215,7 +215,7 @@ def versions = [
   pitest             : '1.7.3',
   flyway              : '6.5.5',
   camel               : '3.8.0',
-  log4j               : '2.17.2',
+  log4j               : '2.17.1',
   springVersion      : '5.3.20'
 
 ]
