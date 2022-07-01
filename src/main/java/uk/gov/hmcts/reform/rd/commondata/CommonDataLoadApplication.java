@@ -31,7 +31,6 @@ public class CommonDataLoadApplication implements ApplicationRunner {
 
     public static void main(final String[] args) throws InterruptedException {
 
-        //dummy change to fix PR build
         ApplicationContext context = SpringApplication.run(CommonDataLoadApplication.class, args);
         //Sleep added to allow app-insights to flush the logs
         Thread.sleep(7000);
