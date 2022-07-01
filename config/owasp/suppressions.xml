@@ -10,4 +10,8 @@
    ]]></notes>
     <cve>CVE-2016-1000027</cve>
   </suppress>
+  <suppress until="2024-05-16">
+    <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-core@.*$</packageUrl>
+    <CVE>CVE-2022-33915</CVE>
+  </suppress>
 </suppressions>
