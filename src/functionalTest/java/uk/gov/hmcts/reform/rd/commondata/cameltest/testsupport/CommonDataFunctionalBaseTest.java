@@ -21,12 +21,11 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.AuditServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
-
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 
 import java.util.List;
 import java.util.Map;
