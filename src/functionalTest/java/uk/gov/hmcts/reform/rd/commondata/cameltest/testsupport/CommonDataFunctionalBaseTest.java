@@ -124,13 +124,13 @@ public abstract class CommonDataFunctionalBaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
-            System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_KEY"));
-            System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
-        } else {
-            System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
-            System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
-        }
+        System.setProperty("azure.storage.account-key",
+                           "0+VBTzfcEU7KaatWUgruR8lxJHCtoXuXZQcbPPcxp8WSTa2c3K4nWFdrNr2b45UpMJePHkZ0I2SatzDlC4e93w==");
+        System.setProperty("azure.storage.account-name", "rdpreview");
+        System.setProperty("RD_LD_SDK_KEY", "sdk-b1310c4a-e522-4512-9e68-d75d23b04c5d");
+        System.setProperty("OAUTH2_CLIENT_AUTH",
+                           "cmQtcHJvZmVzc2lvbmFsLWFwaTpjYzVmMmE2LTk2OTAtMTFlOS1iYzQyLTUyNmFmNzc2NGY2NA==");
+        System.setProperty("OAUTH2_AUTH", "YWRtaW4ucmVmZGF0YUBobWN0cy5uZXQ6Q2hhbjllLW1lCgo=");
         System.setProperty("azure.storage.container-name", "rd-common-data");
     }
 
@@ -167,7 +167,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(2, result.size());
+        assertEquals(3, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());
