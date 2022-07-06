@@ -86,9 +86,9 @@ route:
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons.csv?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: categoriesProcessor
-    mapper-class: categoriesMapper
-    csv-binder-object: Categories
+    processor-class: listOfValuesProcessor
+    mapper-class: listOfValuesMapper
+    csv-binder-object: ListOfValues
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
     header-validation-enabled: true
 exception-select-query: select * from  dataload_exception_records
@@ -108,3 +108,6 @@ mail:
   enabled: false
 idempotent-flag-ingestion: true
 CONTAINER_NAME: rd-common-data
+
+ACCOUNT_NAME: rdpreview
+ACCOUNT_KEY: 0+VBTzfcEU7KaatWUgruR8lxJHCtoXuXZQcbPPcxp8WSTa2c3K4nWFdrNr2b45UpMJePHkZ0I2SatzDlC4e93w==
