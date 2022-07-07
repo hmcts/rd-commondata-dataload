@@ -91,7 +91,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
         );
 
         Quartet<String, String, String, Long> quartet = Quartet.with("serviceId", "must not be empty", "4", 5L);
-        validateFlagServiceFileJsrException(jdbcTemplate, exceptionQuery, 2, FLAG_SERVICE_TABLE_NAME, quartet);
+        validateFlagServiceFileJsrException(jdbcTemplate, exceptionQuery, 3, FLAG_SERVICE_TABLE_NAME, quartet);
     }
 
     @Test
