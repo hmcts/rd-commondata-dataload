@@ -74,18 +74,18 @@ route:
     header-validation-enabled: true
   commondata-case-linking-reasons-load:
     id: commondata-case-linking-reasons-load
-    file-name: CaseLinkingReasons.csv
-    table-name: list_of_values
+    file-name: CaseLinkingReasons-test.csv
+    table-name: List_Of_Values
     insert-sql:
       sql:insert into list_of_values (categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,
       parentcategory,parentkey,active)
       values(:#categoryKey,:#serviceId,:#key,:#value_en,:#value_cy,:#hinttext_en,:#hinttext_cy,:#lov_order,
-      :#parentcategory,:#parentkey,:#active) on conflict (categorykey,key,serviceid) do UPDATE SET categorykey = :#categoryKey,
+      :#parentcategory,:#parentkey,:#active) on conflict (key) do UPDATE SET categorykey = :#categoryKey,
       serviceid = :#serviceId, value_en = :#value_en, value_cy = :#value_cy, hinttext_en =:#hinttext_en,
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons-test.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
