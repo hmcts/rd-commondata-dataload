@@ -16,7 +16,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     update-sql:
-      sql:delete from list_of_values where active = 'D'?dataSource=dataSource
+      sql:delete from list_of_values where RTRIM(LTRIM(active)) = 'D'?dataSource=dataSource
     blob-path:
       azure-blob://${azure.storage.account-name}/rd-common-data/ListOfValues.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: categoriesProcessor
