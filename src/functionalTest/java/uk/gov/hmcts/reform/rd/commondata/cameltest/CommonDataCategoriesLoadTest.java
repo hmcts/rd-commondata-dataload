@@ -212,7 +212,9 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             comKeyErrorMsg
         );
         validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
-        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
+                                    "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
     }
 
     @Test
@@ -235,7 +237,9 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             comKeyErrorMsg
         );
         validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
-        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
+                                    "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
     }
 
     @Test
@@ -258,7 +262,12 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             comKeyErrorMsg
         );
         validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
-        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+        validateCategoriesFileAudit(
+            jdbcTemplate,
+            auditSchedulerQuery,
+            "PartialSuccess",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
     }
 
     @Test
@@ -281,7 +290,12 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             comKeyErrorMsg
         );
         validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
-        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+        validateCategoriesFileAudit(
+            jdbcTemplate,
+            auditSchedulerQuery,
+            "PartialSuccess",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
     }
 
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,

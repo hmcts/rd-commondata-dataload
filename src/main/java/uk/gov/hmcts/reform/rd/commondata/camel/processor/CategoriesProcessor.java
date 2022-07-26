@@ -13,13 +13,11 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
@@ -52,13 +50,15 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             : singletonList((Categories) exchange.getIn().getBody());
 
         log.info(" {} Categories Records count before Validation {}::", logComponentName,
-                 categoriesList.size());
+                 categoriesList.size()
+        );
 
         List<Categories> filteredCategories = removeDeletedCompositekey(categoriesList);
         List<Categories> finalCategoriesList = getUniqueCompositeKey(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
-                 finalCategoriesList.size());
+                 finalCategoriesList.size()
+        );
 
         if (categoriesList.size() != finalCategoriesList.size()) {
             String auditStatus = PARTIAL_SUCCESS;
@@ -69,10 +69,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
         exchange.getMessage().setBody(finalCategoriesList);
 
-        List<Categories> invalidCategories = getInvalidCategories(categoriesList,finalCategoriesList);
+        List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
-        if(!CollectionUtils.isEmpty(invalidCategories)) {
+        if (!CollectionUtils.isEmpty(invalidCategories)) {
             invalidCategories.stream()
                 .forEach(categories -> {
                     invalidCategoryIds.add(Pair.of(
@@ -91,7 +91,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
     }
 
-    private List<Categories> getInvalidCategories(List<Categories> orgCategoryList, List<Categories> finalCategoriesList) {
+    private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
+                                                  List<Categories> finalCategoriesList) {
         List<Categories> invalidCategories = new ArrayList<>(orgCategoryList);
 
         invalidCategories.removeAll(finalCategoriesList);
@@ -110,7 +111,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                 if (uniqueCompositekey.contains(categories.getCategoryKey() + categories.getServiceId()
                                                     + categories.getKey())) {
                     log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
-                             categories.getCategoryKey() + categories.getServiceId() + categories.getKey());
+                             categories.getCategoryKey() + categories.getServiceId() + categories.getKey()
+                    );
                 } else {
                     uniqueCompositekey.add(categories.getCategoryKey() + categories.getServiceId()
                                                + categories.getKey());
@@ -119,7 +121,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             } else {
 
                 log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
-                         categories.getCategoryKey() + categories.getServiceId() + categories.getKey());
+                         categories.getCategoryKey() + categories.getServiceId() + categories.getKey()
+                );
             }
         });
         return finalCategories;
@@ -128,7 +131,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     private List<Categories> removeDeletedCompositekey(List<Categories> categoriesList) {
 
         return categoriesList.stream()
-                      .filter(cat -> !cat.getActive().equalsIgnoreCase("D"))
+            .filter(cat -> !cat.getActive().equalsIgnoreCase("D"))
             .toList();
     }
 
@@ -137,6 +140,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         FileStatus fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
         fileStatus.setAuditStatus(auditStatus);
         registerFileStatusBean(applicationContext, routeProperties.getFileName(), fileStatus,
-                               exchange.getContext());
+                               exchange.getContext()
+        );
     }
 }
