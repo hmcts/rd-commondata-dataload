@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -34,8 +35,11 @@ import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
 import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
@@ -185,6 +189,39 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
+
+    @Test
+    @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case1.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_DupRecord_Active_Status_Y() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_duplicate_rec_case1.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(3, listOfValues.size());
+
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
+        );
+       // validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+    }
+
+    protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
+                                                String auditSchedulerQuery, String status, String fileName) {
+        var result = jdbcTemplate.queryForList(auditSchedulerQuery);
+        assertEquals(3, result.size());
+        Optional<Map<String, Object>> auditEntry =
+            result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
+        assertTrue(auditEntry.isPresent());
+        auditEntry.ifPresent(audit -> assertEquals(status, audit.get("status")));
+    }
+
 
     private void testListOfValuesInsertion(String fileName, String status) throws Exception {
         commonDataBlobSupport.uploadFile(
