@@ -10,6 +10,16 @@
    ]]></notes>
     <cve>CVE-2016-1000027</cve>
   </suppress>
+  <suppress until="2024-05-16">
+    <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-core@.*$</packageUrl>
+    <cve>CVE-2022-33915</cve>
+  </suppress>
+  <suppress until="2024-05-16">
+    <notes><![CDATA[
+   file name: log4j-api-2.17.1.jar
+   ]]></notes>
+    <cve>CVE-2022-33915</cve>
+  </suppress>
   <suppress until="2022-12-30">
     <notes><![CDATA[
     file name: tomcat-embed-core-9.0.63.jar
