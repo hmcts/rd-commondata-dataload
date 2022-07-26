@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
@@ -193,7 +195,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     @Test
     @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case1.")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testListOfValuesCsv_DupRecord_Active_Status_Y() throws Exception {
+    void testListOfValuesCsv_DupRecord_Case1() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             new FileInputStream(getFile(
@@ -202,14 +204,84 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(3, listOfValues.size());
+        assertEquals(1, listOfValues.size());
 
+        String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
+            comKeyErrorMsg
         );
-       // validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
-        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+    }
+
+    @Test
+    @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case2.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_DupRecord_Case2() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_duplicate_rec_case2.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(1, listOfValues.size());
+
+        String comKeyErrorMsg = "Composite Key violation";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            comKeyErrorMsg
+        );
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+    }
+
+    @Test
+    @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case3.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_DupRecord_Case3() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_duplicate_rec_case3.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(1, listOfValues.size());
+
+        String comKeyErrorMsg = "Composite Key violation";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            comKeyErrorMsg
+        );
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+    }
+
+    @Test
+    @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case4.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_DupRecord_Case4() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_duplicate_rec_case4.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(2, listOfValues.size());
+
+        String comKeyErrorMsg = "Composite Key violation";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            comKeyErrorMsg
+        );
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery, "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
@@ -220,6 +292,17 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());
         auditEntry.ifPresent(audit -> assertEquals(status, audit.get("status")));
+    }
+
+    protected void validateCategoriesFileException(JdbcTemplate jdbcTemplate,
+                                                    String exceptionQuery,
+                                                    Pair<String, String> pair,
+                                                    int index) {
+        var result = jdbcTemplate.queryForList(exceptionQuery);
+        assertThat(
+            (String) result.get(index).get("error_description"),
+            containsString(pair.getValue1())
+        );
     }
 
 
