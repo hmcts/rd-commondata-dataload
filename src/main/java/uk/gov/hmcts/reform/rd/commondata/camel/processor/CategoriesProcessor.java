@@ -2,13 +2,17 @@ package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +34,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     @Value("${logging-component-name}")
     private String logComponentName;
 
+    @Autowired
+    JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
+    public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
+    public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
 
     @SuppressWarnings("unchecked")
@@ -59,6 +67,28 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             setFileStatus(exchange, applicationContext, auditStatus);
         }
         exchange.getMessage().setBody(finalCategoriesList);
+
+        List<Categories> invalidCategories = getInvalidCategories(categoriesList,finalCategoriesList);
+        List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
+
+        invalidCategories.stream()
+                .forEach(categories->{
+                    invalidCategoryIds.add(Pair.of(
+                        categories.getKey(),
+                        categories.getRowId()));
+                });
+
+        lovServiceJsrValidatorInitializer.auditJsrExceptions(invalidCategoryIds, LOV_COMPOSITE_KEY, LOV_COMPOSITE_KEY_ERROR_MSG, exchange);
+
+
+    }
+
+    private List<Categories> getInvalidCategories(List<Categories> orgCategoryList, List<Categories> finalCategoriesList) {
+        List<Categories> invalidCategories = new ArrayList<>(orgCategoryList);
+
+        invalidCategories.removeAll(finalCategoriesList);
+
+        return invalidCategories;
     }
 
     private List<Categories> getUniqueCompositeKey(List<Categories> filteredCategories) {
