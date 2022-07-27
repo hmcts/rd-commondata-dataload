@@ -34,7 +34,7 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoriesProcessorTest {
+ class CategoriesProcessorTest {
     @Spy
     private CategoriesProcessor processor = new CategoriesProcessor();
 

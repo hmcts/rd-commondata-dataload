@@ -74,12 +74,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
             invalidCategories.stream()
-                .forEach(categories -> {
-                    invalidCategoryIds.add(Pair.of(
-                        categories.getKey(),
-                        categories.getRowId()
-                    ));
-                });
+                .forEach(categories -> invalidCategoryIds.add(Pair.of(
+                    categories.getKey(),
+                    categories.getRowId()
+                )));
 
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
