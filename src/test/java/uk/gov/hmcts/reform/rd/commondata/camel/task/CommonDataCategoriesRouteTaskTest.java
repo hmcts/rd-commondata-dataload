@@ -11,6 +11,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,6 +20,8 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
 
+import java.sql.ResultSet;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -60,13 +63,33 @@ class CommonDataCategoriesRouteTaskTest {
     }
 
     @Test
+    @SuppressWarnings({"unchecked"})
     void testExecute() {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
+        Categories expected = Categories.builder().categoryKey("value returned by query")
+            .serviceId("value returned by query")
+            .key("value returned by query").build();
         when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
         when(jdbcTemplate.query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString()))
-            .thenReturn(List.of(
-                Categories.builder().categoryKey("categoryKey").serviceId("serviceId").key("key").build()
-            ));
+            .thenAnswer((Answer<List<Categories>>) invocation -> {
+                // Fetch the method arguments
+                Object[] args = invocation.getArguments();
+
+                // Create a mock result set and setup an expectation on it
+                ResultSet rs = mock(ResultSet.class);
+                when(rs.getString(anyString())).thenReturn("value returned by query");
+
+                // Fetch the row mapper instance from the arguments
+                RowMapper<Categories> rm = (RowMapper<Categories>) args[1];
+                // Invoke the row mapper
+                Categories actual = rm.mapRow(rs, 0);
+
+                // Assert the result of the row mapper execution
+                Assertions.assertEquals(expected, actual);
+
+                // Return your created list for the template#query call
+                return List.of(expected);
+            });
         when(jdbcTemplate.update(anyString(), anyString())).thenReturn(1);
 
         Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask.execute(any(), any()));
@@ -88,6 +111,26 @@ class CommonDataCategoriesRouteTaskTest {
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
         verify(commonDataCategoriesRouteTask, times(1))
             .execute(anyString(), anyList(), isNull());
+    }
+
+
+    @Test
+    void testExecute_NoDCategoriestoDelete() {
+        doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
+        when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
+        when(jdbcTemplate.query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString()))
+            .thenReturn(Collections.emptyList()
+            );
+        when(jdbcTemplate.update(anyString(), anyString())).thenReturn(0);
+
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask.execute(any(), any()));
+        verify(dataLoadRoute,times(1)).startRoute(any(),any());
+        verify(commonDataCategoriesRouteTask, times(1)).execute(any(), any());
+        verify(categoriesJsrValidatorInitializer,times(1))
+            .auditJsrExceptions(ArgumentMatchers.any(), any(), anyString(), any(Exchange.class));
+        verify(jdbcTemplate, times(1))
+            .query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString());
+        verify(jdbcTemplate, times(1)).update(anyString(), anyString());
     }
 
 }
