@@ -11,3 +11,4 @@ CREATE TABLE List_Of_Values (
 	parentkey varchar(64),
 	active varchar(1)
 );
+
