@@ -35,7 +35,7 @@ public class CommonDataCategoriesRouteTask extends BaseTasklet implements Taskle
     List<String> routesToExecute;
 
     @Autowired
-    JsrValidatorInitializer<Categories> categoriesJsrValidatorInitializer;
+    JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -72,7 +72,7 @@ public class CommonDataCategoriesRouteTask extends BaseTasklet implements Taskle
         categories.forEach(category -> categoryKeys.add(Pair.of(
             String.join("-",category.getCategoryKey(), category.getKey(), category.getServiceId()),
             category.getRowId())));
-        categoriesJsrValidatorInitializer.auditJsrExceptions(categoryKeys, null, message, exchange);
+        lovServiceJsrValidatorInitializer.auditJsrExceptions(categoryKeys, null, message, exchange);
     }
 
     private List<Categories> getCategoriesByStatus(String activeFlag) {
