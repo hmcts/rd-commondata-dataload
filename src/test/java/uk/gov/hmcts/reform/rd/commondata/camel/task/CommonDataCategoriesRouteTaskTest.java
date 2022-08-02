@@ -49,7 +49,7 @@ class CommonDataCategoriesRouteTaskTest {
     JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
 
     @Mock
-    JsrValidatorInitializer<Categories> categoriesJsrValidatorInitializer;
+    JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
 
     @BeforeEach
     void init() {
@@ -58,8 +58,8 @@ class CommonDataCategoriesRouteTaskTest {
         setField(commonDataCategoriesRouteTask, "commonDataExecutor", commonDataExecutor);
         setField(commonDataCategoriesRouteTask, "camelContext", camelContext);
         setField(commonDataCategoriesRouteTask, "jdbcTemplate", jdbcTemplate);
-        setField(commonDataCategoriesRouteTask, "categoriesJsrValidatorInitializer",
-                 categoriesJsrValidatorInitializer);
+        setField(commonDataCategoriesRouteTask, "lovServiceJsrValidatorInitializer",
+                 lovServiceJsrValidatorInitializer);
     }
 
     @Test
@@ -95,7 +95,7 @@ class CommonDataCategoriesRouteTaskTest {
         Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask.execute(any(), any()));
         verify(dataLoadRoute,times(1)).startRoute(any(),any());
         verify(commonDataCategoriesRouteTask, times(1)).execute(any(), any());
-        verify(categoriesJsrValidatorInitializer,times(1))
+        verify(lovServiceJsrValidatorInitializer,times(1))
             .auditJsrExceptions(ArgumentMatchers.any(), any(), anyString(), any(Exchange.class));
         verify(jdbcTemplate, times(1))
             .query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString());
@@ -126,7 +126,7 @@ class CommonDataCategoriesRouteTaskTest {
         Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask.execute(any(), any()));
         verify(dataLoadRoute,times(1)).startRoute(any(),any());
         verify(commonDataCategoriesRouteTask, times(1)).execute(any(), any());
-        verify(categoriesJsrValidatorInitializer,times(1))
+        verify(lovServiceJsrValidatorInitializer,times(1))
             .auditJsrExceptions(ArgumentMatchers.any(), any(), anyString(), any(Exchange.class));
         verify(jdbcTemplate, times(1))
             .query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString());
