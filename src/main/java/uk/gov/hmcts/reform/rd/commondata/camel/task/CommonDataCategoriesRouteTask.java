@@ -56,7 +56,7 @@ public class CommonDataCategoriesRouteTask extends BaseTasklet implements Taskle
         audit(categories, INVALID_JSR_PARENT_ROW);
         // Delete given Categories
         boolean deleted = deleteCategories(ACTIVE_FLAG_D);
-        log.info(" {} status Categories are {}", ACTIVE_FLAG_D, deleted);
+        log.info("{} status Categories deleted is {}", ACTIVE_FLAG_D, deleted);
     }
 
     private boolean deleteCategories(String status) {
