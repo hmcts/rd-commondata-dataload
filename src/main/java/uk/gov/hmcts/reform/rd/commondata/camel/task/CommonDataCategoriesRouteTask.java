@@ -70,7 +70,7 @@ public class CommonDataCategoriesRouteTask extends BaseTasklet implements Taskle
         properties.setTableName("list_of_values");
         exchange.getIn().setHeader("routedetails", properties);
         categories.forEach(category -> categoryKeys.add(Pair.of(
-            String.join("-",category.getCategoryKey(), category.getKey(), category.getServiceId()),
+            String.join(",",category.getCategoryKey(), category.getKey(), category.getServiceId()),
             category.getRowId())));
         lovServiceJsrValidatorInitializer.auditJsrExceptions(categoryKeys, null, message, exchange);
     }
