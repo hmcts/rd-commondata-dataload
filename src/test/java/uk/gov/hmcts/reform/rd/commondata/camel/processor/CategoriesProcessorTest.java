@@ -105,6 +105,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         var lovServiceList = new ArrayList<Categories>();
         lovServiceList.addAll(getLovServicesCase2());
 
+
         exchange.getIn().setBody(lovServiceList);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
@@ -116,6 +117,59 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         Assertions.assertEquals(1, actualLovServiceList.size());
 
     }
+
+    @Test
+    @DisplayName("Test for LOV Duplicate records getUniqueCompositeKey")
+    void testListOfValuesCsv_getUniqueCompositeKey() throws Exception {
+        var lovServiceList = new ArrayList<Categories>();
+        lovServiceList.addAll(getLovServicesCase3());
+
+        List<Categories> filteredCategories = processor.removeDeletedCompositekey(lovServiceList);
+
+
+        List<Categories> finalCategoriesList = processor.getUniqueCompositeKey(filteredCategories);
+
+        Assertions.assertTrue(!filteredCategories.isEmpty());
+        Assertions.assertTrue(!finalCategoriesList.isEmpty());
+        Assertions.assertEquals(1, finalCategoriesList.size());
+
+        Categories categories = finalCategoriesList.get(0);
+
+        Assertions.assertEquals("Y",categories.getActive());
+
+    }
+
+    @Test
+    @DisplayName("Test for LOV Duplicate records getInvalidCategories")
+    void testListOfValuesCsv_getInvalidCategories() throws Exception {
+        var lovServiceList = new ArrayList<Categories>();
+        lovServiceList.addAll(getLovServicesCase3());
+
+        List<Categories> filteredCategories = processor.removeDeletedCompositekey(lovServiceList);
+
+
+        List<Categories> finalCategoriesList = processor.getUniqueCompositeKey(filteredCategories);
+        List<Categories> invalidCategories = processor
+            .getInvalidCategories(lovServiceList, finalCategoriesList);
+
+        Assertions.assertTrue(!filteredCategories.isEmpty());
+        Assertions.assertTrue(!finalCategoriesList.isEmpty());
+        Assertions.assertTrue(!invalidCategories.isEmpty());
+
+
+        Assertions.assertEquals(2, invalidCategories.size());
+
+        Categories categories1 = invalidCategories.get(0);
+        Assertions.assertEquals("D",categories1.getActive());
+        categories1 = invalidCategories.get(1);
+        Assertions.assertEquals("N",categories1.getActive());
+
+    }
+
+
+
+
+
 
     private List<Categories> getLovServicesCase1() {
         return ImmutableList.of(
@@ -159,6 +213,72 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
                 .active("Y")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesCase3() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("Y")
+                .build(),
+
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("N")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesCase4() {
+        return List.of(
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("Y")
+                .build(),
+
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("N")
                 .build()
         );
     }
