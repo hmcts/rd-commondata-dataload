@@ -53,8 +53,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                  categoriesList.size()
         );
 
-        List<Categories> filteredCategories = removeDeletedCompositekey(categoriesList);
-        List<Categories> finalCategoriesList = getUniqueCompositeKey(filteredCategories);
+        //List<Categories> filteredCategories = removeDeletedCompositekey(categoriesList);
+        List<Categories> finalCategoriesList = getUniqueCompositeKey(categoriesList);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
                  finalCategoriesList.size()
@@ -73,9 +73,11 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
-            invalidCategories.stream()
+            invalidCategories
                 .forEach(categories -> invalidCategoryIds.add(Pair.of(
-                    categories.getKey(),
+                    String.join(",",
+                                categories.getCategoryKey(), categories.getKey(), categories.getServiceId()
+                    ),
                     categories.getRowId()
                 )));
 
@@ -104,8 +106,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Categories> finalCategories = new ArrayList<>();
 
         filteredCategories.forEach(categories -> {
-            if (categories.getActive().equalsIgnoreCase("Y")
-                || categories.getActive().equalsIgnoreCase("N")) {
                 if (uniqueCompositekey.contains(categories.getCategoryKey() + categories.getServiceId()
                                                     + categories.getKey())) {
                     log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
@@ -116,21 +116,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                                                + categories.getKey());
                     finalCategories.add(categories);
                 }
-            } else {
-
-                log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
-                         categories.getCategoryKey() + categories.getServiceId() + categories.getKey()
-                );
-            }
         });
         return finalCategories;
-    }
-
-    private List<Categories> removeDeletedCompositekey(List<Categories> categoriesList) {
-
-        return categoriesList.stream()
-            .filter(cat -> !cat.getActive().equalsIgnoreCase("D"))
-            .toList();
     }
 
     void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {
