@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
@@ -71,24 +72,24 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
+        if (!CollectionUtils.isEmpty(invalidCategories)) {
+            invalidCategories.stream()
+                .forEach(categories -> invalidCategoryIds.add(Pair.of(
+                    categories.getKey(),
+                    categories.getRowId()
+                )));
 
-        invalidCategories.stream()
-            .forEach(categories -> invalidCategoryIds.add(Pair.of(
-                categories.getKey(),
-                categories.getRowId()
-            )));
-
-        lovServiceJsrValidatorInitializer.auditJsrExceptions(
-            invalidCategoryIds,
-            LOV_COMPOSITE_KEY,
-            LOV_COMPOSITE_KEY_ERROR_MSG,
-            exchange
-        );
-
+            lovServiceJsrValidatorInitializer.auditJsrExceptions(
+                invalidCategoryIds,
+                LOV_COMPOSITE_KEY,
+                LOV_COMPOSITE_KEY_ERROR_MSG,
+                exchange
+            );
+        }
 
     }
 
-    List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
+    private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
                                                   List<Categories> finalCategoriesList) {
         List<Categories> invalidCategories = new ArrayList<>(orgCategoryList);
 
@@ -97,7 +98,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return invalidCategories;
     }
 
-    List<Categories> getUniqueCompositeKey(List<Categories> filteredCategories) {
+    private List<Categories> getUniqueCompositeKey(List<Categories> filteredCategories) {
 
         Set<String> uniqueCompositekey = new HashSet<>();
         List<Categories> finalCategories = new ArrayList<>();
@@ -125,7 +126,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return finalCategories;
     }
 
-    List<Categories> removeDeletedCompositekey(List<Categories> categoriesList) {
+    private List<Categories> removeDeletedCompositekey(List<Categories> categoriesList) {
 
         return categoriesList.stream()
             .filter(cat -> !cat.getActive().equalsIgnoreCase("D"))

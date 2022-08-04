@@ -118,57 +118,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
     }
 
-    @Test
-    @DisplayName("Test for LOV Duplicate records getUniqueCompositeKey")
-    void testListOfValuesCsv_getUniqueCompositeKey() throws Exception {
-        var lovServiceList = new ArrayList<Categories>();
-        lovServiceList.addAll(getLovServicesCase3());
-
-        List<Categories> filteredCategories = processor.removeDeletedCompositekey(lovServiceList);
-
-
-        List<Categories> finalCategoriesList = processor.getUniqueCompositeKey(filteredCategories);
-
-        Assertions.assertTrue(!filteredCategories.isEmpty());
-        Assertions.assertTrue(!finalCategoriesList.isEmpty());
-        Assertions.assertEquals(1, finalCategoriesList.size());
-
-        Categories categories = finalCategoriesList.get(0);
-
-        Assertions.assertEquals("Y",categories.getActive());
-
-    }
-
-    @Test
-    @DisplayName("Test for LOV Duplicate records getInvalidCategories")
-    void testListOfValuesCsv_getInvalidCategories() throws Exception {
-        var lovServiceList = new ArrayList<Categories>();
-        lovServiceList.addAll(getLovServicesCase3());
-
-        List<Categories> filteredCategories = processor.removeDeletedCompositekey(lovServiceList);
-
-
-        List<Categories> finalCategoriesList = processor.getUniqueCompositeKey(filteredCategories);
-        List<Categories> invalidCategories = processor
-            .getInvalidCategories(lovServiceList, finalCategoriesList);
-
-        Assertions.assertTrue(!filteredCategories.isEmpty());
-        Assertions.assertTrue(!finalCategoriesList.isEmpty());
-        Assertions.assertTrue(!invalidCategories.isEmpty());
-
-
-        Assertions.assertEquals(2, invalidCategories.size());
-
-        Categories categories1 = invalidCategories.get(0);
-        Assertions.assertEquals("D",categories1.getActive());
-        categories1 = invalidCategories.get(1);
-        Assertions.assertEquals("N",categories1.getActive());
-
-    }
-
-
-
-
 
 
     private List<Categories> getLovServicesCase1() {

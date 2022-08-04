@@ -298,32 +298,6 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
     }
 
-    @Test
-    @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case5.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testListOfValuesCsv_DupRecord_Case5() throws Exception {
-        commonDataBlobSupport.uploadFile(
-            UPLOAD_LIST_OF_VALUES_FILE_NAME,
-            new FileInputStream(getFile(
-                "classpath:sourceFiles/categories/list_of_values_duplicate_rec_case5.csv"))
-        );
-
-        jobLauncherTestUtils.launchJob();
-        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(0, listOfValues.size());
-
-        String comKeyErrorMsg = "Composite Key violation";
-        Pair<String, String> pair = new Pair<>(
-            UPLOAD_LIST_OF_VALUES_FILE_NAME,
-            comKeyErrorMsg
-        );
-        validateCategoriesFileAudit(
-            jdbcTemplate,
-            auditSchedulerQuery,
-            "Failure",
-            UPLOAD_LIST_OF_VALUES_FILE_NAME
-        );
-    }
 
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
