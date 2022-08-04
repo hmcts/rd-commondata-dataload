@@ -105,7 +105,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         var lovServiceList = new ArrayList<Categories>();
         lovServiceList.addAll(getLovServicesCase2());
 
-
         exchange.getIn().setBody(lovServiceList);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
@@ -117,8 +116,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         Assertions.assertEquals(1, actualLovServiceList.size());
 
     }
-
-
 
     private List<Categories> getLovServicesCase1() {
         return ImmutableList.of(
@@ -165,5 +162,4 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .build()
         );
     }
-
 }
