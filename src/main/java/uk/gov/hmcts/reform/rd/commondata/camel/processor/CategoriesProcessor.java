@@ -49,14 +49,13 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             ? (List<Categories>) exchange.getIn().getBody()
             : singletonList((Categories) exchange.getIn().getBody());
 
-        log.info(" {} Categories Records count before Validation {}::", logComponentName,
+        log.info(" {} Categories Records count before Composite key Validation {}::", logComponentName,
                  categoriesList.size()
         );
 
-        //List<Categories> filteredCategories = removeDeletedCompositekey(categoriesList);
         List<Categories> finalCategoriesList = getUniqueCompositeKey(categoriesList);
 
-        log.info(" {} Categories Records count after Validation {}::", logComponentName,
+        log.info(" {} Categories Records count after Composite key Validation {}::", logComponentName,
                  finalCategoriesList.size()
         );
 
@@ -94,7 +93,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
                                                   List<Categories> finalCategoriesList) {
         List<Categories> invalidCategories = new ArrayList<>(orgCategoryList);
-
         invalidCategories.removeAll(finalCategoriesList);
 
         return invalidCategories;
@@ -106,16 +104,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Categories> finalCategories = new ArrayList<>();
 
         filteredCategories.forEach(categories -> {
-                if (uniqueCompositekey.contains(categories.getCategoryKey() + categories.getServiceId()
+            if (!uniqueCompositekey.contains(categories.getCategoryKey() + categories.getServiceId()
                                                     + categories.getKey())) {
-                    log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
-                             categories.getCategoryKey() + categories.getServiceId() + categories.getKey()
-                    );
-                } else {
-                    uniqueCompositekey.add(categories.getCategoryKey() + categories.getServiceId()
+                uniqueCompositekey.add(categories.getCategoryKey() + categories.getServiceId()
                                                + categories.getKey());
-                    finalCategories.add(categories);
-                }
+                finalCategories.add(categories);
+            }
         });
         return finalCategories;
     }
