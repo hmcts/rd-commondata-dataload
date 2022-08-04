@@ -298,7 +298,6 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
     }
 
-
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
