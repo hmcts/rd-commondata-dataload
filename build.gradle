@@ -119,7 +119,7 @@ jacocoTestReport {
 pitest {
   junit5PluginVersion = '0.15'
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
-  testSourceSets = [sourceSets.test]
+  testSourceSets = [sourceSets.test, sourceSets.functionalTest]
   excludedClasses = [
     'uk.gov.hmcts.reform.rd.commondata.configuration.*',
     'uk.gov.hmcts.reform.rd.commondata.CommonDataLoadApplication',
