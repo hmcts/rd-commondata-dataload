@@ -59,6 +59,11 @@ public class CommonDataCamelConfig {
     }
 
     @Bean
+    public JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
+    }
+
+    @Bean
     public FlagServiceProcessor flagServiceProcessor() {
         return new FlagServiceProcessor();
     }
