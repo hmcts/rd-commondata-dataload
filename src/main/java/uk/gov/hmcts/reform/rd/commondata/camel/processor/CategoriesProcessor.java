@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,9 +17,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
@@ -53,8 +53,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                  categoriesList.size()
         );
 
-        List<Categories> filteredCategories = removeDeletedCompositekey(categoriesList);
-        List<Categories> finalCategoriesList = getUniqueCompositeKey(filteredCategories);
+        Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList);
+        List<Categories> finalCategoriesList = getValidCategories(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
                  finalCategoriesList.size()
@@ -98,39 +98,42 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return invalidCategories;
     }
 
-    private List<Categories> getUniqueCompositeKey(List<Categories> filteredCategories) {
+    private List<Categories> getValidCategories(Multimap<String, Categories> multimap) {
 
-        Set<String> uniqueCompositekey = new HashSet<>();
         List<Categories> finalCategories = new ArrayList<>();
-
-        filteredCategories.forEach(categories -> {
-            if (categories.getActive().equalsIgnoreCase("Y")
-                || categories.getActive().equalsIgnoreCase("N")) {
-                if (uniqueCompositekey.contains(categories.getCategoryKey() + categories.getServiceId()
-                                                    + categories.getKey())) {
-                    log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
-                             categories.getCategoryKey() + categories.getServiceId() + categories.getKey()
-                    );
-                } else {
-                    uniqueCompositekey.add(categories.getCategoryKey() + categories.getServiceId()
-                                               + categories.getKey());
-                    finalCategories.add(categories);
+        multimap.asMap().forEach((key, collection) -> {
+            List<Categories> categoriesList =  collection.stream().toList();
+            if (categoriesList.size() > 1) {
+                Categories activeCategories =  categoriesList.stream()
+                    .filter(categories -> categories.getActive().equalsIgnoreCase("Y"))
+                    .findFirst().orElse(null);
+                int counter = 0;
+                for (Categories category: categoriesList) {
+                    if (counter == 0 && category.getActive().equalsIgnoreCase("D") && activeCategories != null) {
+                        continue;
+                    } else {
+                        if ((category.getActive().equalsIgnoreCase("Y")
+                            && activeCategories != null)  || category.getActive().equalsIgnoreCase("D")) {
+                            finalCategories.add(category);
+                            activeCategories = null;
+                        }
+                    }
+                    counter++;
                 }
             } else {
-
-                log.info(" {} Exception Categories Records count after Validation {}::", logComponentName,
-                         categories.getCategoryKey() + categories.getServiceId() + categories.getKey()
-                );
+                finalCategories.addAll(collection.stream().toList());
             }
         });
         return finalCategories;
     }
 
-    private List<Categories> removeDeletedCompositekey(List<Categories> categoriesList) {
-
-        return categoriesList.stream()
-            .filter(cat -> !cat.getActive().equalsIgnoreCase("D"))
-            .toList();
+    private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList) {
+        Multimap<String, Categories> multimap = ArrayListMultimap.create();
+        categoriesList.forEach(categories -> {
+            multimap.put(categories.getCategoryKey() + categories.getServiceId()
+                             + categories.getKey(),categories);
+        });
+        return multimap;
     }
 
     void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {
