@@ -73,8 +73,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
-            invalidCategories.stream()
-                .forEach(categories -> invalidCategoryIds.add(Pair.of(
+            invalidCategories.forEach(categories -> invalidCategoryIds.add(Pair.of(
                     categories.getKey(),
                     categories.getRowId()
                 )));
@@ -107,21 +106,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                 Categories activeCategories =  categoriesList.stream()
                     .filter(categories -> categories.getActive().equalsIgnoreCase("Y"))
                     .findFirst().orElse(null);
-                int counter = 0;
-                for (Categories category: categoriesList) {
-                    if (counter == 0 && category.getActive().equalsIgnoreCase("D") && activeCategories != null) {
-                        continue;
-                    } else {
-                        if ((category.getActive().equalsIgnoreCase("Y")
-                            && activeCategories != null)  || category.getActive().equalsIgnoreCase("D")) {
-                            finalCategories.add(category);
-                            activeCategories = null;
-                        }
-                    }
-                    counter++;
-                }
+                finalCategories.addAll(filterInvalidCategories(activeCategories,categoriesList));
             } else {
-                finalCategories.addAll(collection.stream().toList());
+                finalCategories.addAll(categoriesList);
             }
         });
         return finalCategories;
@@ -129,10 +116,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
     private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList) {
         Multimap<String, Categories> multimap = ArrayListMultimap.create();
-        categoriesList.forEach(categories -> {
-            multimap.put(categories.getCategoryKey() + categories.getServiceId()
-                             + categories.getKey(),categories);
-        });
+        categoriesList.forEach(categories -> multimap.put(categories.getCategoryKey() + categories.getServiceId()
+                             + categories.getKey(),categories));
         return multimap;
     }
 
@@ -144,4 +129,24 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                                exchange.getContext()
         );
     }
+
+    private List<Categories> filterInvalidCategories(Categories activeCategories,List<Categories> categoriesList) {
+        List<Categories> validCategories = new ArrayList<>();
+        int counter = 0;
+        for (Categories category: categoriesList) {
+            if (counter == 0 && category.getActive().equalsIgnoreCase("D") && activeCategories != null) {
+                counter++;
+                continue;
+            } else {
+                if ((category.getActive().equalsIgnoreCase("Y")
+                    && activeCategories != null)  || category.getActive().equalsIgnoreCase("D")) {
+                    validCategories.add(category);
+                    activeCategories = null;
+                }
+            }
+            counter++;
+        }
+        return validCategories;
+    }
+
 }
