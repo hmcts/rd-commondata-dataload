@@ -351,7 +351,7 @@ dependencies {
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.5'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
-  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
+  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.1'
 
   smokeTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
