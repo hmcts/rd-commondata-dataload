@@ -12,5 +12,10 @@ public final class CommonDataLoadConstants {
     public static final String ROUTER_NAME = "RD_Common_Data";
     public static final String ALLOW_TRUE_FALSE_REGEX = "^(?i)\\s*(true|false)\\s*$";
     public static final String ALLOW_NUMERIC_REGEX = "[0-9]+";
-
+    public static final String ACTIVE_FLAG_D = "D";
+    public static final String INVALID_JSR_PARENT_ROW = "Record is deleted as Active flag was 'D'";
+    public static final String SELECT_CATEGORY_BY_STATUS =
+        "SELECT categorykey, key, serviceid FROM list_of_values WHERE TRIM(active) = ?";
+    public static final String DELETE_CATEGORY_BY_STATUS =
+        "DELETE FROM list_of_values WHERE TRIM(active) = ?";
 }
