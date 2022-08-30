@@ -74,9 +74,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
             invalidCategories.forEach(categories -> invalidCategoryIds.add(Pair.of(
-                    categories.getKey(),
-                    categories.getRowId()
-                )));
+                categories.getKey(),
+                categories.getRowId()
+            )));
 
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
@@ -101,12 +101,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
         List<Categories> finalCategories = new ArrayList<>();
         multimap.asMap().forEach((key, collection) -> {
-            List<Categories> categoriesList =  collection.stream().toList();
+            List<Categories> categoriesList = collection.stream().toList();
             if (categoriesList.size() > 1) {
-                Categories activeCategories =  categoriesList.stream()
+                Categories activeCategories = categoriesList.stream()
                     .filter(categories -> categories.getActive().equalsIgnoreCase("Y"))
                     .findFirst().orElse(null);
-                finalCategories.addAll(filterInvalidCategories(activeCategories,categoriesList));
+                finalCategories.addAll(filterInvalidCategories(activeCategories, categoriesList));
             } else {
                 finalCategories.addAll(categoriesList);
             }
@@ -117,7 +117,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList) {
         Multimap<String, Categories> multimap = ArrayListMultimap.create();
         categoriesList.forEach(categories -> multimap.put(categories.getCategoryKey() + categories.getServiceId()
-                             + categories.getKey(),categories));
+                                                              + categories.getKey(), categories));
         return multimap;
     }
 
@@ -130,18 +130,25 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         );
     }
 
-    private List<Categories> filterInvalidCategories(Categories activeCategories,List<Categories> categoriesList) {
+    private List<Categories> filterInvalidCategories(Categories activeCategories, List<Categories> categoriesList) {
         List<Categories> validCategories = new ArrayList<>();
         int counter = 0;
-        for (Categories category: categoriesList) {
+        boolean activeProcessed = false;
+        for (Categories category : categoriesList) {
             if (counter == 0 && category.getActive().equalsIgnoreCase("D") && activeCategories != null) {
                 counter++;
                 continue;
             } else {
                 if ((category.getActive().equalsIgnoreCase("Y")
-                    && activeCategories != null)  || category.getActive().equalsIgnoreCase("D")) {
+                    && !activeProcessed)) {
                     validCategories.add(category);
-                    activeCategories = null;
+                    activeProcessed = true;
+                } else {
+                    //process 'D' logic records
+                    if (category.getActive().equalsIgnoreCase("D")
+                        && Boolean.TRUE.equals(deleteFlagValidation(activeCategories, category, activeProcessed))) {
+                        validCategories.add(category);
+                    }
                 }
             }
             counter++;
@@ -149,4 +156,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return validCategories;
     }
 
+    private Boolean deleteFlagValidation(Categories activeCategories, Categories category, boolean activeProcessed) {
+
+        return activeProcessed && !activeCategories.getValueEN().equalsIgnoreCase(category.getValueEN());
+
+    }
 }
