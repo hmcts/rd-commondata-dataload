@@ -18,6 +18,8 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
@@ -132,13 +134,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
     private List<Categories> filterInvalidCategories(Categories activeCategories, List<Categories> categoriesList) {
         List<Categories> validCategories = new ArrayList<>();
-        int counter = 0;
+
         boolean activeProcessed = false;
+
         for (Categories category : categoriesList) {
-            if (counter == 0 && category.getActive().equalsIgnoreCase("D") && activeCategories != null) {
-                counter++;
-                continue;
-            } else {
                 if ((category.getActive().equalsIgnoreCase("Y")
                     && !activeProcessed)) {
                     validCategories.add(category);
@@ -146,19 +145,19 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                 } else {
                     //process 'D' logic records
                     if (category.getActive().equalsIgnoreCase("D")
-                        && Boolean.TRUE.equals(deleteFlagValidation(activeCategories, category, activeProcessed))) {
+                        && Boolean.TRUE.equals(deleteFlagValidation(activeCategories, category))) {
+                        validCategories = validCategories.stream()
+                            .filter(categories -> !categories.getActive().equalsIgnoreCase("Y"))
+                            .collect(Collectors.toList());
                         validCategories.add(category);
                     }
                 }
-            }
-            counter++;
         }
         return validCategories;
     }
 
-    private Boolean deleteFlagValidation(Categories activeCategories, Categories category, boolean activeProcessed) {
-
-        return activeProcessed && !activeCategories.getValueEN().equalsIgnoreCase(category.getValueEN());
-
+    private Boolean deleteFlagValidation(Categories activeCategories, Categories category) {
+        boolean isActive = activeCategories != null? Boolean.TRUE : Boolean.FALSE;
+        return isActive && activeCategories.getValueEN().equalsIgnoreCase(category.getValueEN());
     }
 }
