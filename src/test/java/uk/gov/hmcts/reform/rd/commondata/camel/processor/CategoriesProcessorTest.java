@@ -203,7 +203,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
-                .valueEN("ADVANCE PAYMENT new")
+                .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
                 .active("D")
