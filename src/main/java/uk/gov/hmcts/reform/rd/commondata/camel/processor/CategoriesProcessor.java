@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -138,26 +137,26 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         boolean activeProcessed = false;
 
         for (Categories category : categoriesList) {
-                if ((category.getActive().equalsIgnoreCase("Y")
+            if ((category.getActive().equalsIgnoreCase("Y")
                     && !activeProcessed)) {
-                    validCategories.add(category);
-                    activeProcessed = true;
-                } else {
-                    //process 'D' logic records
-                    if (category.getActive().equalsIgnoreCase("D")
+                validCategories.add(category);
+                activeProcessed = true;
+            } else {
+                //process 'D' logic records
+                if (category.getActive().equalsIgnoreCase("D")
                         && Boolean.TRUE.equals(deleteFlagValidation(activeCategories, category))) {
-                        validCategories = validCategories.stream()
+                    validCategories = validCategories.stream()
                             .filter(categories -> !categories.getActive().equalsIgnoreCase("Y"))
                             .collect(Collectors.toList());
-                        validCategories.add(category);
-                    }
+                    validCategories.add(category);
                 }
+            }
         }
         return validCategories;
     }
 
     private Boolean deleteFlagValidation(Categories activeCategories, Categories category) {
-        boolean isActive = activeCategories != null? Boolean.TRUE : Boolean.FALSE;
+        boolean isActive = activeCategories != null ? Boolean.TRUE : Boolean.FALSE;
         return isActive && activeCategories.getValueEN().equalsIgnoreCase(category.getValueEN());
     }
 }

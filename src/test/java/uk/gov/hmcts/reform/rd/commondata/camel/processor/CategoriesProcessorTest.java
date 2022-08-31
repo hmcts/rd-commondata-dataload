@@ -85,7 +85,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
     @Test
     @DisplayName("Test for LOV Duplicate records Case1")
-    void testListOfValuesCsv_DupRecord_Case1() throws Exception {
+    void testListOfValuesCsv_DupRecord_Case1() {
         var lovServiceList = new ArrayList<Categories>();
         lovServiceList.addAll(getLovServicesCase1());
 
@@ -101,7 +101,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
     @Test
     @DisplayName("Test for LOV Duplicate records Case2")
-    void testListOfValuesCsv_DupRecord_Case2() throws Exception {
+    void testListOfValuesCsv_DupRecord_Case2() {
         var lovServiceList = new ArrayList<Categories>();
         lovServiceList.addAll(getLovServicesCase2());
 
@@ -114,7 +114,23 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(1, actualLovServiceList.size());
+    }
 
+    @Test
+    @DisplayName("Test for LOV 'D' records Case3")
+    void testListOfValuesCsv_DupRecord_Case3() throws Exception {
+        var lovServiceList = new ArrayList<Categories>();
+        lovServiceList.addAll(getLovServicesCase3());
+
+        exchange.getIn().setBody(lovServiceList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(1, actualLovServiceList.size());
     }
 
     private List<Categories> getLovServicesCase1() {
@@ -146,7 +162,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
-                .valueEN("ADVANCE PAYMENT new")
+                .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
                 .active("D")
@@ -168,6 +184,29 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
                 .active("N")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesCase3() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("Y")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT new")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
                 .build()
         );
     }
