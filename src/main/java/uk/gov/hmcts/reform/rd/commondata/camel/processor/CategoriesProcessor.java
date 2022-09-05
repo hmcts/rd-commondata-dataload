@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
@@ -26,6 +25,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registe
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_Y;
 
 @Component
 @Slf4j
@@ -104,10 +104,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         multimap.asMap().forEach((key, collection) -> {
             List<Categories> categoriesList = collection.stream().toList();
             if (categoriesList.size() > 1) {
-                Categories activeCategories = categoriesList.stream()
-                    .filter(categories -> categories.getActive().equalsIgnoreCase("Y"))
-                    .findFirst().orElse(null);
-                finalCategories.addAll(filterInvalidCategories(activeCategories, categoriesList));
+                finalCategories.addAll(filterInvalidCategories(categoriesList));
             } else {
                 finalCategories.addAll(categoriesList);
             }
@@ -131,32 +128,18 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         );
     }
 
-    private List<Categories> filterInvalidCategories(Categories activeCategories, List<Categories> categoriesList) {
+    private List<Categories> filterInvalidCategories(List<Categories> categoriesList) {
         List<Categories> validCategories = new ArrayList<>();
 
         boolean activeProcessed = false;
 
         for (Categories category : categoriesList) {
-            if ((category.getActive().equalsIgnoreCase("Y")
+            if ((ACTIVE_Y.equalsIgnoreCase(category.getActive())
                     && !activeProcessed)) {
                 validCategories.add(category);
                 activeProcessed = true;
-            } else {
-                //process 'D' logic records
-                if (category.getActive().equalsIgnoreCase("D")
-                        && Boolean.TRUE.equals(deleteFlagValidation(activeCategories, category))) {
-                    validCategories = validCategories.stream()
-                            .filter(categories -> !categories.getActive().equalsIgnoreCase("Y"))
-                            .collect(Collectors.toList());
-                    validCategories.add(category);
-                }
             }
         }
         return validCategories;
-    }
-
-    private Boolean deleteFlagValidation(Categories activeCategories, Categories category) {
-        boolean isActive = activeCategories != null ? Boolean.TRUE : Boolean.FALSE;
-        return isActive && activeCategories.getValueEN().equalsIgnoreCase(category.getValueEN());
     }
 }
