@@ -363,6 +363,12 @@ dependencies {
 
 }
 
+configurations.all {
+
+  exclude group: 'org.codehaus.jettison', module: 'jettison'
+  exclude group: 'org.springframework.security', module: 'spring-security-crypto'
+}
+
 gradle.startParameter.continueOnFailure = true
 
 bootJar {
