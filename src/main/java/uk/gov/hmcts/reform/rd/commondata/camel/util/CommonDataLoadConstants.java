@@ -18,4 +18,5 @@ public final class CommonDataLoadConstants {
         "SELECT categorykey, key, serviceid FROM list_of_values WHERE TRIM(active) = ?";
     public static final String DELETE_CATEGORY_BY_STATUS =
         "DELETE FROM list_of_values WHERE TRIM(active) = ?";
+    public static final String ACTIVE_Y = "Y";
 }
