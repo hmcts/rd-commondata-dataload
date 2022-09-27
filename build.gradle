@@ -349,7 +349,7 @@ dependencies {
   testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
   testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.3'
-  testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.5'
+  testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.7'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
   testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
