@@ -363,6 +363,11 @@ dependencies {
 
 }
 
+configurations.all {
+
+  exclude group: 'org.codehaus.jettison', module: 'jettison'
+}
+
 gradle.startParameter.continueOnFailure = true
 
 bootJar {
