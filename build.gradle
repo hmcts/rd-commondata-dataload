@@ -256,7 +256,7 @@ dependencies {
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
   // https://mvnrepository.com/artifact/org.yaml/snakeyaml
   implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
-
+  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.2'
 
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
 
