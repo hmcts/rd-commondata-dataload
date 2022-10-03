@@ -30,13 +30,13 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.EmailServiceImpl;
 import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
-import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.CategoriesMapper;
-import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
+import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.CategoriesProcessor;
+import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
@@ -55,6 +55,11 @@ public class CommonDataCamelConfig {
 
     @Bean
     public JsrValidatorInitializer<FlagService> flagServiceJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
+    }
+
+    @Bean
+    public JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
     }
 
