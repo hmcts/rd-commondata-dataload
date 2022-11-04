@@ -187,7 +187,7 @@ dependencyManagement {
       entry 'guava'
     }
 
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.63') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.68') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
@@ -252,9 +252,8 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.1'
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
-
+  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.2'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
 
 
@@ -289,7 +288,7 @@ dependencies {
   implementation group: 'org.springframework', name: 'spring-tx', version: versions.springVersion
   implementation group: 'org.springframework', name: 'spring-web', version: versions.springVersion
   implementation group: 'org.springframework', name: 'spring-webmvc', version: versions.springVersion
-
+  implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
@@ -432,7 +431,7 @@ integration {
 
 dependencyManagement {
   dependencies {
-    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.13.2') {
+    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.14.0-rc1') {
       entry 'jackson-databind'
       entry 'jackson-core'
       entry 'jackson-annotations'
