@@ -207,7 +207,7 @@ def versions = [
   junit               : '5.8.2',
   junitPlatform       : '1.8.2',
   reformLogging       : '5.1.9',
-  springBoot          : '2.6.6',
+  springBoot          : '2.7.5',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.0.76',
   lombok              : '1.18.22',
