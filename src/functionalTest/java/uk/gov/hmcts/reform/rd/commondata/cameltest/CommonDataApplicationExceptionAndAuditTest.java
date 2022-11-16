@@ -76,11 +76,11 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
         //Validate Success Result
         validateFlagServiceFile(jdbcTemplate, flagServiceSelectData, List.of(
             FlagService.builder().ID("1").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0004").defaultStatus("Requested").availableExternally("true").build(),
+                "RA0004").defaultStatus("Requested").availableExternally("t").build(),
             FlagService.builder().ID("2").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0008").defaultStatus("Active").availableExternally("true").build(),
+                "RA0008").defaultStatus("Active").availableExternally("t").build(),
             FlagService.builder().ID("3").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0009").defaultStatus("Requested").availableExternally("false").build()
+                "RA0009").defaultStatus("Requested").availableExternally("f").build()
         ), 3);
         //Validates Success Audit
         validateFlagServiceFileAudit(
