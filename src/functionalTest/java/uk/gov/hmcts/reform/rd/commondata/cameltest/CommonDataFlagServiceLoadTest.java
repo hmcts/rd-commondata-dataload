@@ -264,13 +264,15 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     }
 
     @Test
-    @DisplayName("Status: Success - Test for loading a valid Csv file in to a clean flag_service table")
+    @DisplayName("Status: Success - Test for loading a valid Csv file but no values for " +
+        "default_status and available_externally to check default values setup in to a clean flag_service table")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testFlagServiceDefaultValuesSetForDefaultStatusAndAvailableExternally_Csv_Success() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_service_success_default_values_for_default_status_available_externally.csv"))
+                "classpath:sourceFiles/flagService/" +
+                    "flag_service_success_default_values_for_default_status_available_externally.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
