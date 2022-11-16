@@ -61,7 +61,8 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
-    private static final String HEADER_MISSMATCH_MESSAGE = "There is a mismatch in the headers of the csv file :: FlagService-test.csv";
+    private static final String HEADER_MISSMATCH_MESSAGE
+        = "There is a mismatch in the headers of the csv file :: FlagService-test.csv";
     private static final String FALIURE_MESSAGE = "Failure";
 
     @BeforeEach
