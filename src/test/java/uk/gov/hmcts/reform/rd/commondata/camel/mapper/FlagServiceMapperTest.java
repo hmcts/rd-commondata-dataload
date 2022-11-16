@@ -29,7 +29,7 @@ class FlagServiceMapperTest {
             .requestReason("FALSE")
             .flagCode("TEST001")
             .defaultStatus("Requested")
-            .availableExternally("true")
+            .availableExternally("TRUE")
             .build();
         var expected = new HashMap<String, Object>();
         expected.put("id", Long.valueOf(trim(flagService.getID())));
@@ -38,7 +38,7 @@ class FlagServiceMapperTest {
         expected.put("request_reason", Boolean.valueOf(trim(flagService.getRequestReason())));
         expected.put("flag_code", trim(flagService.getFlagCode()));
         expected.put("default_status", trim(flagService.getDefaultStatus()));
-        expected.put("available_externally", flagService.getAvailableExternally());
+        expected.put("available_externally", Boolean.valueOf(trim(flagService.getAvailableExternally())));
         Map<String, Object> actual = flagServiceMapper.getMap(flagService);
         verify(flagServiceMapper, times(1)).getMap(flagService);
         Assertions.assertThat(actual).hasSize(7).isEqualTo(expected);
