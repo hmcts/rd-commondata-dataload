@@ -300,8 +300,6 @@ dependencies {
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
   implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
 
-  testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
-
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
