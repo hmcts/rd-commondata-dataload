@@ -27,6 +27,8 @@ public class FlagServiceMapper implements IMapper {
         flagServiceParamMap.put("hearing_relevant", Boolean.valueOf(trim(flagService.getHearingRelevant())));
         flagServiceParamMap.put("request_reason", Boolean.valueOf(trim(flagService.getRequestReason())));
         flagServiceParamMap.put("flag_code", trim(flagService.getFlagCode()));
+        flagServiceParamMap.put("default_status", trim(flagService.getDefaultStatus()));
+        flagServiceParamMap.put("available_externally", Boolean.valueOf(trim(flagService.getAvailableExternally())));
         return flagServiceParamMap;
     }
 

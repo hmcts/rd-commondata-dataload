@@ -1,3 +1,3 @@
-ID,ServiceID,HearingRelevant,RequestReason,FlagCode
-1,xxxxx,FALSE,true,RA0004
-2,XXXX,hello,world,RA0008
+ID,ServiceID,HearingRelevant,RequestReason,FlagCode,DefaultStatus,AvailableExternally
+1,xxxxx,FALSE,true,RA0004,Requested,true
+2,XXXX,hello,world,RA0008,Active,invalid
