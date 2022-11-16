@@ -271,7 +271,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/"
-                    +"flag_service_success_default_values_for_default_status_available_externally.csv"))
+                    + "flag_service_success_default_values_for_default_status_available_externally.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
