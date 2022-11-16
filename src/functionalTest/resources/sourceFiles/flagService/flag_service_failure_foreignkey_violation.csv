@@ -1,2 +1,2 @@
 ID,ServiceID,HearingRelevant,RequestReason,FlagCode,DefaultStatus,AvailableExternally
-1,xxxx,FALSE,true,invalid,flagcode,Requested,true
+1,xxxx,FALSE,true,invalid,invalidflagcode,Requested,true
