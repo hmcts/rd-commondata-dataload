@@ -63,7 +63,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
     private static final String HEADER_MISSMATCH_MESSAGE
         = "There is a mismatch in the headers of the csv file :: FlagService-test.csv";
-    private static final String FALIURE_MESSAGE = "Failure";
+    private static final String FAILURE_MESSAGE = "Failure";
 
     @BeforeEach
     public void init() {
@@ -216,7 +216,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             HEADER_MISSMATCH_MESSAGE
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FALIURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
     @Test
@@ -238,7 +238,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             HEADER_MISSMATCH_MESSAGE
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FALIURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
     @Test
@@ -260,7 +260,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             HEADER_MISSMATCH_MESSAGE
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FALIURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
     private void testFlagServiceInsertion(String fileName, String status) throws Exception {
