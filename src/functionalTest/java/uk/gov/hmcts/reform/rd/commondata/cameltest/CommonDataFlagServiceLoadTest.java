@@ -263,6 +263,26 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
+    @Test
+    @DisplayName("Status: Success - Test for loading a valid Csv file in to a clean flag_service table")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    public void testFlagServiceDefaultValuesSetForDefaultStatusAndAvailableExternally_Csv_Success() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/flag_service_success_default_values_for_default_status_available_externally.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        //Validate Success Result
+        validateFlagServiceFile(jdbcTemplate, flagServiceSelectData, List.of(
+            FlagService.builder().ID("10").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
+                "RA0014").defaultStatus("Active").availableExternally("f").build()
+        ), 1);
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_FLAG_SERVICE_FILE_NAME);
+    }
+
     private void testFlagServiceInsertion(String fileName, String status) throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,

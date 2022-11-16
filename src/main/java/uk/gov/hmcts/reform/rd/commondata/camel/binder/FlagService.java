@@ -53,10 +53,10 @@ public class FlagService extends CommonCsvField implements Serializable {
     @NotEmpty
     private String flagCode;
 
-    @DataField(pos = 6, columnName = "DefaultStatus")
+    @DataField(pos = 6, columnName = "DefaultStatus", defaultValue = "Active")
     private String defaultStatus;
 
-    @DataField(pos = 7, columnName = "AvailableExternally")
+    @DataField(pos = 7, columnName = "AvailableExternally",defaultValue = "false")
     @Pattern(regexp = ALLOW_TRUE_FALSE_REGEX, message = "allowed input true or false")
     private String availableExternally;
 
