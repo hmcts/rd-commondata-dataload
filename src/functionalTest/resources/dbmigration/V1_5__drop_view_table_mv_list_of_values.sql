@@ -1,3 +1,5 @@
+
+--Drop Views
 DROP MATERIALIZED VIEW mv_list_of_values;
 DROP TABLE hearing_channel;
 DROP TABLE hearing_type;
