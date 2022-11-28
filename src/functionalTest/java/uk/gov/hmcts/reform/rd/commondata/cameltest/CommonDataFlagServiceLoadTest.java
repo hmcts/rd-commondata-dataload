@@ -32,6 +32,7 @@ import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
 
 import java.io.FileInputStream;
+import java.time.Clock;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +61,9 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
+    private static final String HEADER_MISSMATCH_MESSAGE
+        = "There is a mismatch in the headers of the csv file :: FlagService-test.csv";
+    private static final String FAILURE_MESSAGE = "Failure";
 
     @BeforeEach
     public void init() {
@@ -151,11 +155,10 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
         jobLauncherTestUtils.launchJob();
         //Validate Success Result
         validateFlagServiceFileLoad(List.of(
-            FlagService.builder().ID("1").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0004").build()
+            buildFlagServiceLoadObject()
         ), 1);
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertEquals(4, result.size());
+        assertEquals(5, result.size());
     }
 
     @Test
@@ -172,8 +175,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
         jobLauncherTestUtils.launchJob();
         //Validate Success Result
         validateFlagServiceFile(jdbcTemplate, flagServiceSelectData, List.of(
-            FlagService.builder().ID("1").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0004").build()
+            buildFlagServiceLoadObject()
         ), 1);
         //Validates Success Audit
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_FLAG_SERVICE_FILE_NAME);
@@ -211,10 +213,10 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: FlagService-test.csv"
+            HEADER_MISSMATCH_MESSAGE
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
     @Test
@@ -233,10 +235,10 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: FlagService-test.csv"
+            HEADER_MISSMATCH_MESSAGE
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
     @Test
@@ -255,10 +257,31 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: FlagService-test.csv"
+            HEADER_MISSMATCH_MESSAGE
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
+    }
+
+    @Test
+    @DisplayName("Status: Success - Valid Test for default values of default_status for flag_service table")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    public void testFlagServiceDefaultValuesSetForDefaultStatusAndAvailableExternally_Csv_Success() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/"
+                    + "flag_service_success_default_values_for_default_status_available_externally.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        //Validate Success Result
+        validateFlagServiceFile(jdbcTemplate, flagServiceSelectData, List.of(
+            FlagService.builder().ID("10").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
+                "RA0014").defaultStatus("Active").availableExternally("f").build()
+        ), 1);
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 
     private void testFlagServiceInsertion(String fileName, String status) throws Exception {
@@ -268,19 +291,24 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
         );
 
         camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+            .put(SCHEDULER_START_TIME, String.valueOf(Clock.systemDefaultZone().millis()));
         jobLauncherTestUtils.launchJob();
         //Validate Success Result
         validateFlagServiceFileLoad(List.of(
             FlagService.builder().ID("1").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0004").build(),
+                "RA0004").defaultStatus("Requested").availableExternally("t").build(),
             FlagService.builder().ID("2").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0008").build(),
+                "RA0008").defaultStatus("Active").availableExternally("t").build(),
             FlagService.builder().ID("3").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
-                "RA0009").build()
+                "RA0009").defaultStatus("Requested").availableExternally("f").build()
         ), 3);
         //Validates Success Audit
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, status, UPLOAD_FLAG_SERVICE_FILE_NAME);
+    }
+
+    private FlagService buildFlagServiceLoadObject() {
+        return FlagService.builder().ID("1").serviceId("xxxxx").hearingRelevant("f").requestReason("t").flagCode(
+            "RA0004").defaultStatus("Requested").availableExternally("t").build();
     }
 
     private void validateFlagServiceFileLoad(List<FlagService> expected, int size) {

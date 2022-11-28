@@ -10,13 +10,14 @@ route:
     truncate-sql:
       sql:truncate table flag_service restart identity?dataSource=dataSource
     insert-sql:
-      sql:insert into flag_service (id,service_id,hearing_relevant,request_reason,flag_code)
-      values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code)?batch=true&dataSource=dataSource
+      sql:insert into flag_service (id,service_id,hearing_relevant,request_reason,flag_code,default_status,available_externally)
+      values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code,:#default_status,:#available_externally)?batch=true&dataSource=dataSource
+
     blob-path:
       azure-blob://${azure.storage.account-name}/rd-common-data/FlagService.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: flagServiceProcessor
     mapper-class: flagServiceMapper
     csv-binder-object: FlagService
-    csv-headers-expected: ID,ServiceID,HearingRelevant,RequestReason,FlagCode
+    csv-headers-expected: ID,ServiceID,HearingRelevant,RequestReason,FlagCode,DefaultStatus,AvailableExternally
     header-validation-enabled: true
 
