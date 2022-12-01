@@ -1,4 +1,3 @@
-
 -- Create mv mv_list_of_values
 CREATE MATERIALIZED VIEW mv_list_of_values AS
 
