@@ -56,15 +56,6 @@ public interface IFlagCodeProcessor<T> {
         }
     }
 
-    default void setFileStatus(Exchange exchange, ApplicationContext applicationContext) {
-        var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-        var fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
-        fileStatus.setAuditStatus(PARTIAL_SUCCESS);
-        registerFileStatusBean(applicationContext, routeProperties.getFileName(), fileStatus,
-                               exchange.getContext()
-        );
-    }
-
     private Type getType() {
         var genericSuperClass = getClass().getGenericSuperclass();
         ParameterizedType parametrizedType = null;
