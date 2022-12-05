@@ -1,15 +1,5 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
-
-import java.io.FileInputStream;
-import java.util.Date;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
-import static org.springframework.util.ResourceUtils.getFile;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
-
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -34,6 +24,15 @@ import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctio
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
+
+import java.io.FileInputStream;
+import java.util.Date;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
+import static org.springframework.util.ResourceUtils.getFile;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
 @TestPropertySource(properties = {"spring.config.location=classpath:application-functional.yml"})
 @CamelSpringBootTest
