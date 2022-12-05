@@ -1,11 +1,5 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.binder;
 
-import javax.validation.constraints.NotEmpty;
-import java.io.Serializable;
-
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_PATTERN;
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_TIME_FORMAT;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,6 +11,12 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
+
+import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
+
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_PATTERN;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_TIME_FORMAT;
 
 
 @Component
