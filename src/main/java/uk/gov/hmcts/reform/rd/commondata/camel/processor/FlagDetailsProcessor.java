@@ -1,5 +1,18 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
+import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,20 +26,6 @@ import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Exchange;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
-import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 
 @Component
 @Slf4j

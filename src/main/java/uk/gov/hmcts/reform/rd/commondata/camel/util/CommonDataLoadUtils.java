@@ -1,5 +1,9 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.util;
 
+import org.apache.camel.Exchange;
+import org.springframework.context.ApplicationContext;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -9,10 +13,6 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registerFileStatusBean;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
-
-import org.apache.camel.Exchange;
-import org.springframework.context.ApplicationContext;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 
 public class CommonDataLoadUtils {
 

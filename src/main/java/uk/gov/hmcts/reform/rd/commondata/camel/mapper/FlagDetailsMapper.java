@@ -1,13 +1,13 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.mapper;
 
+import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.trim;
-
-import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 
 @Component
 public class FlagDetailsMapper implements IMapper {

@@ -233,6 +233,7 @@ public class CommonDataCamelConfig {
     CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask() {
         return new CommonDataCaseLinkingRouteTask();
     }
+
     @Bean
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask() {
         return new CommonDataFlagDetailsRouteTask();

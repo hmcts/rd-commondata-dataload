@@ -3,9 +3,7 @@ package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 
@@ -16,10 +14,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static org.apache.camel.util.ObjectHelper.isNotEmpty;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registerFileStatusBean;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ROUTER_NAME;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.filterDomainObjects;
 
