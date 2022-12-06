@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 import static org.springframework.util.ResourceUtils.getFile;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
@@ -81,9 +82,9 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
         //Validate Success Result
         validateFlagDetailsFileLoad(List.of(
             FlagDetails.builder().id("1").flagCode("CF0001").valueEn("Case").valueCy("").categoryId("0")
-                .mrdCreatedTime("07-04-2022 12:43:00").mrdUpdatedTime("17-06-2022 13:33:00").mrdDeletedTime("").build(),
+                .mrdCreatedTime("07-04-2022 12:43:00").mrdUpdatedTime("17-06-2022 13:33:00").build(),
             FlagDetails.builder().id("2").flagCode("PF0001").valueEn("Party").valueCy("").categoryId("0")
-                .mrdCreatedTime("07-04-2022 12:43:00").mrdUpdatedTime("17-06-2022 13:33:00").mrdDeletedTime("").build()
+                .mrdCreatedTime("07-04-2022 12:43:00").mrdUpdatedTime("17-06-2022 13:33:00").build()
           ));
         //Validates Success Audit
         validateFlagDetailsFileAudit(jdbcTemplate, auditSchedulerQuery, status, UPLOAD_FLAG_DETAILS_FILE_NAME);
@@ -97,4 +98,19 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
             .hasSize(2)
             .hasSameElementsAs(expected);
     }
+
+    @Test
+    @DisplayName("Status: PartialSuccess - Test for loading a valid Csv file which has a combination of "
+        + "valid entries and entries missing a mandatory field")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    public void testFlagDetailsCsv_WithMissingMandatoryValue_PartialSuccess() throws Exception {
+        String fileName = "flag_service_partial_success.csv";
+        testFlagDetailsInsertion(
+            fileName,
+            MappingConstants.PARTIAL_SUCCESS
+        );
+        var result = jdbcTemplate.queryForList(exceptionQuery);
+        assertEquals(2, result.size());
+    }
+
 }

@@ -1,0 +1,166 @@
+package uk.gov.hmcts.reform.rd.commondata.camel.processor;
+
+import com.google.common.collect.ImmutableList;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.support.DefaultExchange;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
+import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+
+@ExtendWith(MockitoExtension.class)
+class FlagDetailsProcessorTest {
+
+    @Spy
+    private FlagDetailsProcessor processor = new FlagDetailsProcessor();
+
+    CamelContext camelContext = new DefaultCamelContext();
+
+    Exchange exchange = new DefaultExchange(camelContext);
+
+    @Spy
+    JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer
+        = new JsrValidatorInitializer<>();
+
+    @Mock
+    JdbcTemplate jdbcTemplate;
+
+    @Mock
+    PlatformTransactionManager platformTransactionManager;
+
+    @Mock
+    ConfigurableListableBeanFactory configurableListableBeanFactory;
+
+    @Mock
+    ConfigurableApplicationContext applicationContext;
+
+    @BeforeEach
+    void init() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        setField(flagDetailsJsrValidatorInitializer, "validator", validator);
+        setField(flagDetailsJsrValidatorInitializer, "camelContext", camelContext);
+        setField(flagDetailsJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
+        setField(flagDetailsJsrValidatorInitializer, "platformTransactionManager",
+                 platformTransactionManager
+        );
+        setField(processor, "flagDetailsJsrValidatorInitializer",
+                 flagDetailsJsrValidatorInitializer
+        );
+        setField(processor, "logComponentName",
+                 "testlogger"
+        );
+        setField(processor, "applicationContext", applicationContext);
+        RouteProperties routeProperties = new RouteProperties();
+        routeProperties.setFileName("test");
+        exchange.getIn().setHeader(ROUTE_DETAILS, routeProperties);
+    }
+
+    @Test
+    @DisplayName("Test all valid flag details are processed")
+    void testProcessValidFile() throws Exception {
+        var expectedValidFlagDetails = getValidFlagDetails();
+        exchange.getIn().setBody(expectedValidFlagDetails);
+        doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+        List actualFlagDetailsList = (List) exchange.getMessage().getBody();
+
+        Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
+    }
+
+    @Test
+    @DisplayName("Test records with expired flag details record")
+    void testProcessValidFile_CombinationOfValidAndExpiredFlagDetails() throws Exception {
+        var flagDetailsList = new ArrayList<FlagDetails>();
+        flagDetailsList.addAll(getExpiredFlagDetails());
+        flagDetailsList.addAll(getValidFlagDetails());
+
+        exchange.getIn().setBody(flagDetailsList);
+        doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
+        doNothing().when(processor).audit(getExpiredFlagDetails(), exchange);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+        List actualFlagServiceList = (List) exchange.getMessage().getBody();
+
+        var expectedValidFlagServices = getValidFlagDetails();
+
+        Assertions.assertEquals(expectedValidFlagServices.size(), actualFlagServiceList.size());
+    }
+
+    @Test
+    @DisplayName("Test when no valid record Found")
+    void testProcessWhenNoValidFlagDetailsRecord() throws Exception {
+        var flagDetailsList = new ArrayList<>(getExpiredFlagDetails());
+        exchange.getIn().setBody(flagDetailsList);
+        doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
+        doNothing().when(processor).audit(getExpiredFlagDetails(), exchange);
+        Assertions.assertThrows(RouteFailedException.class, () -> processor.process(exchange));
+    }
+
+    private List<FlagDetails> getExpiredFlagDetails() {
+        return ImmutableList.of(
+            FlagDetails.builder()
+                .id("1")
+                .flagCode("ABC001")
+                .valueEn("ABC001")
+                .valueCy("ABC001")
+                .categoryId("01")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .mrdDeletedTime("17-06-2022 13:33:00")
+                .build());
+    }
+
+    private List<FlagDetails> getValidFlagDetails() {
+        return ImmutableList.of(
+            FlagDetails.builder()
+                .id("1")
+                .flagCode("ABC001")
+                .valueEn("ABC001")
+                .valueCy("ABC001")
+                .categoryId("01")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .build(),
+            FlagDetails.builder()
+                .id("2")
+                .flagCode("ABC002")
+                .valueEn("ABC002")
+                .valueCy("ABC002")
+                .categoryId("02")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .build()
+        );
+    }
+}
