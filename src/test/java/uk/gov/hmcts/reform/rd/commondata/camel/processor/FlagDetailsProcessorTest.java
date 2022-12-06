@@ -31,6 +31,7 @@ import javax.validation.ValidatorFactory;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 
@@ -105,16 +106,56 @@ class FlagDetailsProcessorTest {
         flagDetailsList.addAll(getValidFlagDetails());
 
         exchange.getIn().setBody(flagDetailsList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
-        doNothing().when(processor).audit(getExpiredFlagDetails(), exchange);
 
         processor.process(exchange);
         verify(processor, times(1)).process(exchange);
-        List actualFlagServiceList = (List) exchange.getMessage().getBody();
+        List actualFlagDetailsList = (List) exchange.getMessage().getBody();
 
-        var expectedValidFlagServices = getValidFlagDetails();
+        var expectedValidFlagDetails = getValidFlagDetails();
+        verify(processor, times(1)).auditRecord(getExpiredFlagDetails(), exchange);
 
-        Assertions.assertEquals(expectedValidFlagServices.size(), actualFlagServiceList.size());
+        Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
+    }
+
+    @Test
+    @DisplayName("Test records with valid mrd date flag details record")
+    void testProcessValidFile_CombinationOfValidFlagDetails() throws Exception {
+        var flagDetailsList = new ArrayList<FlagDetails>();
+        flagDetailsList.addAll(getValidMrdDeletedDate());
+        flagDetailsList.addAll(getValidFlagDetails());
+
+        exchange.getIn().setBody(flagDetailsList);
+        doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+        List actualFlagDetailsList = (List) exchange.getMessage().getBody();
+
+        Assertions.assertEquals(flagDetailsList.size(), actualFlagDetailsList.size());
+    }
+
+    @Test
+    @DisplayName("Test records with missing mandatory details")
+    void testProcessValidFile_InvalidFlagDetails() throws Exception {
+        var flagDetailsList = new ArrayList<FlagDetails>();
+        flagDetailsList.addAll(getInvalidFlagDetails());
+        flagDetailsList.addAll(getValidFlagDetails());
+
+        exchange.getIn().setBody(flagDetailsList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+        doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+        List actualFlagDetailsList = (List) exchange.getMessage().getBody();
+
+        var expectedValidFlagDetails = getValidFlagDetails();
+
+        Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
     }
 
     @Test
@@ -123,8 +164,19 @@ class FlagDetailsProcessorTest {
         var flagDetailsList = new ArrayList<>(getExpiredFlagDetails());
         exchange.getIn().setBody(flagDetailsList);
         doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
-        doNothing().when(processor).audit(getExpiredFlagDetails(), exchange);
+        doNothing().when(processor).auditRecord(getExpiredFlagDetails(), exchange);
         Assertions.assertThrows(RouteFailedException.class, () -> processor.process(exchange));
+    }
+
+    @Test
+    @DisplayName("Test record with Invalid mrd deleted date")
+    void testProcessWhenFlagDetailsWithInvalidExpiredDate() {
+        var flagDetailsList = new ArrayList<FlagDetails>();
+        flagDetailsList.addAll(getInvalidMrdDeletedDate());
+        flagDetailsList.addAll(getValidFlagDetails());
+        exchange.getIn().setBody(flagDetailsList);
+
+        Assertions.assertThrows(RuntimeException.class, () -> processor.process(exchange));
     }
 
     private List<FlagDetails> getExpiredFlagDetails() {
@@ -138,6 +190,46 @@ class FlagDetailsProcessorTest {
                 .mrdCreatedTime("17-06-2022 13:33:00")
                 .mrdUpdatedTime("17-06-2022 13:33:00")
                 .mrdDeletedTime("17-06-2022 13:33:00")
+                .build());
+    }
+
+    private List<FlagDetails> getInvalidFlagDetails() {
+        return ImmutableList.of(
+            FlagDetails.builder()
+                .id("1")
+                .valueEn("ABC001")
+                .valueCy("ABC001")
+                .categoryId("01")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .build());
+    }
+
+    private List<FlagDetails> getInvalidMrdDeletedDate() {
+        return ImmutableList.of(
+            FlagDetails.builder()
+                .id("1")
+                .flagCode("ABC001")
+                .valueEn("ABC001")
+                .valueCy("ABC001")
+                .categoryId("01")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .mrdDeletedTime("invalidDate")
+                .build());
+    }
+
+    private List<FlagDetails> getValidMrdDeletedDate() {
+        return ImmutableList.of(
+            FlagDetails.builder()
+                .id("1")
+                .flagCode("ABC001")
+                .valueEn("ABC001")
+                .valueCy("ABC001")
+                .categoryId("01")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .mrdDeletedTime("17-06-2024 13:33:00")
                 .build());
     }
 
@@ -160,7 +252,6 @@ class FlagDetailsProcessorTest {
                 .categoryId("02")
                 .mrdCreatedTime("17-06-2022 13:33:00")
                 .mrdUpdatedTime("17-06-2022 13:33:00")
-                .build()
-        );
+                .build());
     }
 }

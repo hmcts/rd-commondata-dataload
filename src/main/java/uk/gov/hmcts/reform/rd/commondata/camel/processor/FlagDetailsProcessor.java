@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.DATE_FORMAT;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_TIME_FORMAT;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
 
 @Component
@@ -74,7 +74,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                                                + "Please review and try again.");
         }
 
-        if (validatedFlagDetails.size() != jsrValidatedFlagDetails) {
+        if (filteredFlagDetails.size() != jsrValidatedFlagDetails) {
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
@@ -91,7 +91,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
         if (!CollectionUtils.isEmpty(expiredRecords)) {
             remove(expiredRecords, flagDetails);
 
-            audit(expiredRecords, exchange);
+            auditRecord(expiredRecords, exchange);
         }
 
         return List.copyOf(flagDetails);
@@ -114,7 +114,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
     }
 
     private boolean isDateExpired(String dateString) throws ParseException {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_TIME_FORMAT);
         Date dt = dateFormatter.parse(dateString);
 
         return dt.compareTo(new Date()) <= 0;
@@ -125,7 +125,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
         flagDetails.removeIf(flagDetailsDeleted::contains);
     }
 
-    public void audit(List<FlagDetails> expiredFlagDetailsList, Exchange exchange) {
+    public void auditRecord(List<FlagDetails> expiredFlagDetailsList, Exchange exchange) {
         if (nonNull(expiredFlagDetailsList) && !CollectionUtils.isEmpty(expiredFlagDetailsList)) {
 
             List<Pair<String, Long>> expiredDetailsList = new ArrayList<>();
