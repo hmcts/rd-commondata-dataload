@@ -97,11 +97,11 @@ public class BatchConfig {
     @Bean
     public Job runRoutesJob() {
         return jobBuilderFactory.get(jobName)
-            .start(stepCommonDataRoute())
+            .start(stepCommonDataFlagDetailsRoute())
             .listener(jobResultListener)
+            .on("*").to(stepCommonDataRoute())
             .on("*").to(stepCommonDataCategoriesRoute())
             .on("*").to(stepCommonDataCaseLinkingRoute())
-            .on("*").to(stepCommonDataFlagDetailsRoute())
             .end()
             .build();
     }

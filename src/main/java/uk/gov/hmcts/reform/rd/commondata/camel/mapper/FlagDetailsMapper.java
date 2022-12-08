@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.trim;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.getDateTimeStamp;
 
 @Component
 public class FlagDetailsMapper implements IMapper {
@@ -21,10 +22,10 @@ public class FlagDetailsMapper implements IMapper {
         flagDetailsParamMap.put("flag_code", trim(flagDetails.getFlagCode()));
         flagDetailsParamMap.put("value_en", trim(flagDetails.getValueEn()));
         flagDetailsParamMap.put("value_cy", trim(flagDetails.getValueCy()));
-        flagDetailsParamMap.put("category_id", trim(flagDetails.getCategoryId()));
-        flagDetailsParamMap.put("MRD_Created_Time", trim(flagDetails.getMrdCreatedTime()));
-        flagDetailsParamMap.put("MRD_Updated_Time", trim(flagDetails.getMrdUpdatedTime()));
-        flagDetailsParamMap.put("MRD_Deleted_Time", trim(flagDetails.getMrdDeletedTime()));
+        flagDetailsParamMap.put("category_id", Long.valueOf(trim(flagDetails.getCategoryId())));
+        flagDetailsParamMap.put("mrd_created_time", getDateTimeStamp(flagDetails.getMrdCreatedTime()));
+        flagDetailsParamMap.put("mrd_updated_time", getDateTimeStamp(flagDetails.getMrdUpdatedTime()));
+        flagDetailsParamMap.put("mrd_deleted_time", getDateTimeStamp(flagDetails.getMrdDeletedTime()));
         return flagDetailsParamMap;
     }
 }

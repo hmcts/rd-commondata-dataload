@@ -8,17 +8,16 @@ route:
     file-name: FlagDetails.csv
     table-name: flag_details
     truncate-sql:
-      sql:truncate table flag_service restart identity?dataSource=dataSource
-      truncate table flag_details restart identity?dataSource=dataSource
+      sql:truncate table flag_details restart identity cascade?dataSource=dataSource
     insert-sql:
       sql:insert into flag_details (id,flag_code,value_en,value_cy,category_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
-      values(:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
+      values (:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
 
     blob-path:
       azure-blob://${azure.storage.account-name}/rd-common-data/FlagDetails.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: flagDetailsProcessor
     mapper-class: flagDetailsMapper
     csv-binder-object: FlagDetails
-    csv-headers-expected: id,flag_code,value_cy,value_cy,category_id,MRD_Created_Time,MRD_Updated_Time,MRD_Deleted_Time
+    csv-headers-expected: id,flag_code,value_en,value_cy,category_id,MRD_Created_Time,MRD_Updated_Time,MRD_Deleted_Time
     header-validation-enabled: true
 

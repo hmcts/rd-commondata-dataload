@@ -13,6 +13,7 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.getDateTimeStamp;
 
 @ExtendWith(MockitoExtension.class)
 class FlagDetailsMapperTest {
@@ -27,7 +28,7 @@ class FlagDetailsMapperTest {
             .flagCode("ABC001")
             .valueEn("ABC001")
             .valueCy("ABC001")
-            .categoryId("01")
+            .categoryId("1")
             .mrdCreatedTime("17-06-2022 13:33:00")
             .mrdUpdatedTime("17-06-2022 13:33:00")
             .mrdDeletedTime("17-06-2022 13:33:00")
@@ -37,10 +38,10 @@ class FlagDetailsMapperTest {
         expected.put("flag_code", trim(flagDetails.getFlagCode()));
         expected.put("value_en", trim(flagDetails.getValueEn()));
         expected.put("value_cy", trim(flagDetails.getValueCy()));
-        expected.put("category_id", trim(flagDetails.getCategoryId()));
-        expected.put("MRD_Created_Time", trim(flagDetails.getMrdCreatedTime()));
-        expected.put("MRD_Updated_Time", trim(flagDetails.getMrdUpdatedTime()));
-        expected.put("MRD_Deleted_Time", trim(flagDetails.getMrdDeletedTime()));
+        expected.put("category_id", Long.valueOf(trim(flagDetails.getCategoryId())));
+        expected.put("mrd_created_time", getDateTimeStamp(trim(flagDetails.getMrdCreatedTime())));
+        expected.put("mrd_updated_time", getDateTimeStamp(trim(flagDetails.getMrdUpdatedTime())));
+        expected.put("mrd_deleted_time", getDateTimeStamp(trim(flagDetails.getMrdDeletedTime())));
         Map<String, Object> actual = flagDetailsMapper.getMap(flagDetails);
         verify(flagDetailsMapper, times(1)).getMap(flagDetails);
         Assertions.assertThat(actual).hasSize(8).isEqualTo(expected);

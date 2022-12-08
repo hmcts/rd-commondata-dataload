@@ -13,10 +13,9 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_TIME_FORMAT;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.getDateTimeStamp;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
 
 @Component
@@ -32,8 +31,8 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.s
 public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails>
     implements IFlagCodeProcessor<FlagDetails> {
 
-    public static final String EXPIRED_DATE = "MRD_Deleted_Time";
-    public static final String EXPIRED_DATE_ERROR_MSG = "Expired MRD delete date";
+    public static final String MISSING_ID_ERROR_MSG = "ID is missing";
+    public static final String EXPIRED_DATE_ERROR_MSG = "Record is expired";
 
     @Autowired
     JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer;
@@ -54,11 +53,9 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                  logComponentName, flagDetails.size()
         );
 
-        List<FlagDetails> filteredFlagDetails = removeExpiredRecords(flagDetails, exchange);
-
         var validatedFlagDetails = validate(
             flagDetailsJsrValidatorInitializer,
-            filteredFlagDetails
+            flagDetails
         );
 
         var jsrValidatedFlagDetails = validatedFlagDetails.size();
@@ -66,19 +63,22 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                  logComponentName, jsrValidatedFlagDetails
         );
 
+        List<FlagDetails> filteredFlagDetails = removeExpiredRecords(validatedFlagDetails, exchange);
+
+
         audit(flagDetailsJsrValidatorInitializer, exchange);
 
-        if (validatedFlagDetails.isEmpty()) {
+        if (validatedFlagDetails.isEmpty() || filteredFlagDetails.isEmpty()) {
             log.error("{}:: No valid Flag Details Record is found in the input file::", logComponentName);
             throw new RouteFailedException("No valid Flag Details Record found in the input file. "
                                                + "Please review and try again.");
         }
 
-        if (filteredFlagDetails.size() != jsrValidatedFlagDetails) {
+        if (flagDetails.size() != jsrValidatedFlagDetails) {
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
-        exchange.getMessage().setBody(validatedFlagDetails);
+        exchange.getMessage().setBody(filteredFlagDetails);
     }
 
     public List<FlagDetails> removeExpiredRecords(List<FlagDetails> flagDetailsList,
@@ -100,24 +100,21 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
     private List<FlagDetails> getExpiredRecords(List<FlagDetails> flagDetails) {
 
         var flagDetailsWithExpiredDates = flagDetails.stream()
-            .filter(flagDetail -> {
-                try {
-                    return StringUtils.isNotBlank(flagDetail.getMrdDeletedTime())
-                        && isDateExpired(flagDetail.getMrdDeletedTime());
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+            .filter(flagDetail -> StringUtils.isNotBlank(flagDetail.getMrdDeletedTime())
+            && isDateExpired(flagDetail.getMrdDeletedTime()))
             .collect(Collectors.toList());
 
         return List.copyOf(flagDetailsWithExpiredDates);
     }
 
-    private boolean isDateExpired(String dateString) throws ParseException {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_TIME_FORMAT);
-        Date dt = dateFormatter.parse(dateString);
+    private boolean isDateExpired(String dateString) {
 
-        return dt.compareTo(new Date()) <= 0;
+        Timestamp ts = getDateTimeStamp(dateString);
+        if (nonNull(ts)) {
+            return ts.compareTo(Timestamp.valueOf(LocalDateTime.now())) <= 0;
+        }
+
+        return false;
     }
 
     public void remove(List<FlagDetails> flagDetailsToBeDeleted, List<FlagDetails> flagDetails) {
@@ -134,7 +131,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                 expiredDetails.getRowId()
             )));
 
-            flagDetailsJsrValidatorInitializer.auditJsrExceptions(expiredDetailsList, EXPIRED_DATE,
+            flagDetailsJsrValidatorInitializer.auditJsrExceptions(expiredDetailsList,"",
                                                                   EXPIRED_DATE_ERROR_MSG, exchange
             );
 
