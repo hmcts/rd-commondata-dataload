@@ -49,7 +49,7 @@ withNightlyPipeline(type, product, component) {
   enableMutationTest()
   enableFortifyScan()
 
-  after('securityScan') {
+  afterSuccess('securityScan') {
     def time = "120"
     echo "Waiting ${time} seconds for deployment to complete prior starting functional testing"
     sleep time.toInteger() // seconds
@@ -71,7 +71,7 @@ withNightlyPipeline(type, product, component) {
     }
   }
 
-  after('mutationTest') {
+  afterSuccess('mutationTest') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/**/*'
     publishHTML target: [
@@ -84,7 +84,7 @@ withNightlyPipeline(type, product, component) {
     ]
   }
 
-  after('fortify-scan') {
+  afterSuccess('fortify-scan') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
   }
 }
