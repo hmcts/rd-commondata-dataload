@@ -38,6 +38,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.mapper.CategoriesMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagDetailsMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.CategoriesProcessor;
+import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagDetailsProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
@@ -74,6 +75,11 @@ public class CommonDataCamelConfig {
     @Bean
     public CategoriesProcessor listOfValuesProcessor() {
         return new CategoriesProcessor();
+    }
+
+    @Bean
+    public FlagDetailsProcessor flagDetailsProcessor() {
+        return new FlagDetailsProcessor();
     }
 
     @Bean

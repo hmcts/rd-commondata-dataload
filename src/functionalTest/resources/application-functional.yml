@@ -19,7 +19,7 @@ commondata-flag-details-start-route: direct:CommonData-FlagDetails
 archival-route: direct:CommonDataArchival
 archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
-archival-file-names: FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv,FlagDetails-test.csv
+archival-file-names: FlagDetails-test.csv,FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 #archival-date-format keep in dd-MM-yyyy as to delete in testing
 archival-date-format: dd-MM-yyyy
@@ -99,8 +99,7 @@ route:
     file-name: FlagDetails-test.csv
     table-name: flag_details
     truncate-sql:
-      sql:truncate table flag_service restart identity?dataSource=dataSource
-      truncate table flag_details restart identity?dataSource=dataSource
+      sql:truncate table flag_details restart identity cascade?dataSource=dataSource
     insert-sql:
       sql:insert into flag_details (id,flag_code,value_en,value_cy,category_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
       values(:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
@@ -109,7 +108,7 @@ route:
     processor-class: flagDetailsProcessor
     mapper-class: flagDetailsMapper
     csv-binder-object: FlagDetails
-    csv-headers-expected: id,flag_code,value_cy,value_cy,category_id,MRD_Created_Time,MRD_Updated_Time,MRD_Deleted_Time
+    csv-headers-expected: id,flag_code,value_en,value_cy,category_id,MRD_Created_Time,MRD_Updated_Time,MRD_Deleted_Time
     header-validation-enabled: true
 exception-select-query: select * from  dataload_exception_records
 ordered-exception-select-query: select * from  dataload_exception_records order by error_description
