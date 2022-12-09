@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
@@ -18,11 +20,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
@@ -55,6 +59,13 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest {
+
+    @Autowired
+    CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
+
+    @Autowired
+    @Qualifier("springJdbcTransactionManager")
+    protected PlatformTransactionManager platformTransactionManager;
 
     private static final String HEADER_MISMATCH_MESSAGE
         = "There is a mismatch in the headers of the csv file :: FlagDetails-test.csv";

@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.util.ResourceUtils.getFile;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
@@ -64,7 +65,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     public void testTaskletPartialSuccessAndJsr() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
@@ -116,7 +117,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    @Sql(executionPhase = BEFORE_TEST_METHOD, scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     void testTaskletFailureForInvalidFlagCode() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
