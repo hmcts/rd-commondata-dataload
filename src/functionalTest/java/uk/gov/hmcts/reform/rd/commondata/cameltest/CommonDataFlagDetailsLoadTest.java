@@ -56,9 +56,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest {
 
-    private static final String FLAG_DETAILS_TABLE_NAME = "flag_details";
     private static final String HEADER_MISMATCH_MESSAGE
-        = "There is a mismatch in the headers of the csv file :: FlagService-test.csv";
+        = "There is a mismatch in the headers of the csv file :: FlagDetails-test.csv";
     private static final String FAILURE_MESSAGE = "Failure";
 
     @BeforeEach
@@ -80,7 +79,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
 
     private void testFlagDetailsInsertion(String fileName, String status) throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
             new FileInputStream(getFile(String.format("classpath:sourceFiles/flagDetails/%s", fileName)))
         );
 
@@ -142,7 +141,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
 
         jobLauncherTestUtils.launchJob();
         //Validate Success Result
-        validateFlagDetailsFile(jdbcTemplate, flagServiceSelectData, List.of(
+        validateFlagDetailsFile(jdbcTemplate, flagDetailsSelectData, List.of(
             buildFlagDetailsLoadObject()
         ), 1);
         //Validates Success Audit
@@ -156,12 +155,12 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_DETAILS_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_details_failure_unknown_header.csv"))
+                "classpath:sourceFiles/flagDetails/flag_details_failure_unknown_header.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
-        var flagServices = jdbcTemplate.queryForList(flagDetailsSelectData);
-        assertEquals(0, flagServices.size());
+        var flagDetails = jdbcTemplate.queryForList(flagDetailsSelectData);
+        assertEquals(0, flagDetails.size());
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_DETAILS_FILE_NAME,
@@ -171,12 +170,12 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
         validateFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_DETAILS_FILE_NAME);
     }
 
-    protected void validateFlagDetailsFile(JdbcTemplate jdbcTemplate, String serviceSql,
+    protected void validateFlagDetailsFile(JdbcTemplate jdbcTemplate, String flagDetailsSql,
                                            List<FlagDetails> exceptedResult, int size) {
         var rowMapper = newInstance(FlagDetails.class);
-        var flagServices = jdbcTemplate.query(serviceSql, rowMapper);
-        assertEquals(size, flagServices.size());
-        assertEquals(exceptedResult, flagServices);
+        var flagDetails = jdbcTemplate.query(flagDetailsSql, rowMapper);
+        assertEquals(size, flagDetails.size());
+        assertEquals(exceptedResult, flagDetails);
     }
 
     private FlagDetails buildFlagDetailsLoadObject() {
@@ -238,7 +237,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_DETAILS_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_details_failure.csv"))
+                "classpath:sourceFiles/flagDetails/flag_details_failure.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -250,7 +249,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
             "No valid Flag Details Record found in the input file. Please review and try again."
         );
         validateFlagDetailsFileException(jdbcTemplate, exceptionQuery, pair, 1);
-        validateFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_SERVICE_FILE_NAME);
+        validateFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_DETAILS_FILE_NAME);
     }
 
     void validateFileAudit(JdbcTemplate jdbcTemplate, String auditSchedulerQuery, String status, String fileName) {
