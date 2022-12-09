@@ -172,7 +172,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Test
     @DisplayName("Status: Failure - Test for loading a file with a missing header.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_MissingHeader_Failure() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
@@ -194,7 +194,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Test
     @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case1.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_DupRecord_Case1() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
@@ -219,7 +219,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Test
     @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case2.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_DupRecord_Case2() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
@@ -244,7 +244,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Test
     @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case3.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_DupRecord_Case3() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,

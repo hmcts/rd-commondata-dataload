@@ -64,7 +64,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testTaskletPartialSuccessAndJsr() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
@@ -95,7 +95,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailure() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
@@ -116,7 +116,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailureForInvalidFlagCode() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
