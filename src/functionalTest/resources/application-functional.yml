@@ -12,14 +12,14 @@ spring:
 #Local integration testing these values should be actual
 #ACCOUNT_NAME: ${ACCOUNT_NAME}
 #ACCOUNT_KEY: ${ACCOUNT_KEY}
+commondata-flag-details-start-route: direct:CommonData-FlagDetails
 commondata-flag-service-start-route: direct:CommonData-FlagService
 commondata-categories-start-route: direct:CommonData-ListOfValues
 commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
-commondata-flag-details-start-route: direct:CommonData-FlagDetails
 archival-route: direct:CommonDataArchival
 archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
-archival-file-names: FlagDetails-test.csv,FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv
+archival-file-names: FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv,FlagDetails-test.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 #archival-date-format keep in dd-MM-yyyy as to delete in testing
 archival-date-format: dd-MM-yyyy
