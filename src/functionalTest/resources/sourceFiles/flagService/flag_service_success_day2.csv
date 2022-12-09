@@ -1,2 +1,2 @@
-ID,ServiceID,HearingRelevant,RequestReason,FlagCode
-4,day2,FALSE,true,RA0004
+ID,ServiceID,HearingRelevant,RequestReason,FlagCode,DefaultStatus,AvailableExternally
+4,day2,FALSE,true,RA0004,Requested,true

@@ -34,10 +34,12 @@ class FlagServiceTest {
             .hearingRelevant("FALSE")
             .requestReason("TRUE")
             .flagCode("TEST002")
+            .defaultStatus("Requested")
+            .availableExternally("true")
             .toString();
         Assertions.assertEquals(flagServiceBuilderString, "FlagService.FlagServiceBuilder("
             + "ID=2, serviceId=YYYY, hearingRelevant=FALSE, requestReason=TRUE"
-            + ", flagCode=TEST002)");
+            + ", flagCode=TEST002, defaultStatus=Requested, availableExternally=true)");
     }
 
     @Test
@@ -50,6 +52,8 @@ class FlagServiceTest {
         flagService.setRequestReason("FALSE");
         flagService.setFlagCode("TEST001");
         flagService.setHearingRelevant("WRONG");
+        flagService.setDefaultStatus("Requested");
+        flagService.setAvailableExternally("true");
         Set<ConstraintViolation<FlagService>> violations = validator.validate(flagService);
         Assertions.assertEquals(1, violations.size());
 
@@ -59,6 +63,8 @@ class FlagServiceTest {
         flagService1.setRequestReason("WRONG");
         flagService1.setFlagCode("TEST001");
         flagService1.setHearingRelevant("WRONG");
+        flagService.setDefaultStatus("Requested");
+        flagService.setAvailableExternally("true");
         Set<ConstraintViolation<FlagService>> violations1 = validator.validate(flagService1);
         Assertions.assertEquals(4, violations1.size());
 
