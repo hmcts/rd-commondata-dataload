@@ -117,7 +117,8 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(executionPhase = BEFORE_TEST_METHOD, scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(executionPhase = BEFORE_TEST_METHOD,
+        scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     void testTaskletFailureForInvalidFlagCode() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
