@@ -172,7 +172,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Test
     @DisplayName("Status: Failure - Test for loading a file with a missing header.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     void testListOfValuesCsv_MissingHeader_Failure() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_LIST_OF_VALUES_FILE_NAME,

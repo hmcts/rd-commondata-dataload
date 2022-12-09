@@ -109,6 +109,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file with different headers in different cases "
         + "in to a clean flag_details table")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testFlagDetailsCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
         String fileName = "flag_details_success_insensitive_headers.csv";
         testFlagDetailsInsertion(
@@ -119,7 +120,8 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file which has headers and data enclosed within quotes"
-        + " in to a clean list_of_values table")
+        + " in to a clean flag_details table")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testFlagDetailsCsv_WithQuotes_Success() throws Exception {
         String fileName = "flag_details_success_with_quotes.csv";
         testFlagDetailsInsertion(

@@ -79,7 +79,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
      * @throws Exception Exception
      */
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     void testTaskletSuccessDay1() throws Exception {
         testInsertion();
     }
@@ -90,7 +90,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
      * @throws Exception Exception
      */
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     void testTaskletSuccessWithInsertAndTruncateInsertDay2() throws Exception {
         testInsertion();
 
@@ -139,7 +139,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
     void testTaskletIdempotent() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
