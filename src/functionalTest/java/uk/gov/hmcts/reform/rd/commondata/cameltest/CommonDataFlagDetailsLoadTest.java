@@ -72,6 +72,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     private static final String FAILURE_MESSAGE = "Failure";
 
     @BeforeEach
+    @Sql(scripts = {"/testData/commondata_truncate_flag_details.sql"})
     public void init() {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()

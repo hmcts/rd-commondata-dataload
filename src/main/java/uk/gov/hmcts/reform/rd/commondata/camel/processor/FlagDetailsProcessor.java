@@ -31,7 +31,6 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.s
 public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails>
     implements IFlagCodeProcessor<FlagDetails> {
 
-    public static final String MISSING_ID_ERROR_MSG = "ID is missing";
     public static final String EXPIRED_DATE_ERROR_MSG = "Record is expired";
 
     @Autowired
