@@ -67,6 +67,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     protected PlatformTransactionManager platformTransactionManager;
 
     @BeforeEach
+    @Sql(scripts = "/testData/commondata_insert_flag_details.sql")
     public void init() {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
@@ -79,7 +80,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
      * @throws Exception Exception
      */
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletSuccessDay1() throws Exception {
         testInsertion();
     }
@@ -90,7 +91,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
      * @throws Exception Exception
      */
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletSuccessWithInsertAndTruncateInsertDay2() throws Exception {
         testInsertion();
 
@@ -139,7 +140,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletIdempotent() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,

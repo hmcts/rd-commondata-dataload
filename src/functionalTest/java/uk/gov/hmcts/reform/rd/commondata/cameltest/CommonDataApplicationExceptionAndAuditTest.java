@@ -58,6 +58,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
 
     @BeforeEach
+    @Sql(scripts = "/testData/commondata_insert_flag_details.sql")
     public void init() {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
@@ -65,7 +66,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testTaskletPartialSuccessAndJsr() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
@@ -117,8 +118,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     }
 
     @Test
-    @Sql(executionPhase = BEFORE_TEST_METHOD,
-        scripts = {"/testData/commondata_truncate.sql", "/testData/commondata_insert_flag_details.sql"})
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailureForInvalidFlagCode() throws Exception {
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,

@@ -1,3 +1,5 @@
+truncate flag_details;
+
 INSERT INTO flag_details (id,flag_code,value_en,value_cy,category_id,mrd_created_time,mrd_updated_time,mrd_deleted_time) VALUES
 	 (1,'CF0001','Case','',0,'2022-07-04 12:43:00','2022-10-05 10:16:12',NULL),
 	 (2,'PF0001','Party','',0,'2022-07-04 12:43:00','2022-10-05 10:16:12',NULL),
