@@ -67,7 +67,6 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     protected PlatformTransactionManager platformTransactionManager;
 
     @BeforeEach
-    @Sql(scripts = "/testData/commondata_insert_flag_details.sql")
     public void init() {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
