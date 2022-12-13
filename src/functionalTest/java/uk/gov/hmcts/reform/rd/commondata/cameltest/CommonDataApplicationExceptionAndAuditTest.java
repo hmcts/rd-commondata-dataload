@@ -67,15 +67,14 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testTaskletPartialSuccessAndJsr() throws Exception {
         commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
+        commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/flag_service_partial_success.csv"))
-        );
-
-        commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_DETAILS_FILE_NAME,
-            new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_details.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -104,15 +103,15 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailure() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_service_failure.csv"))
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
         );
 
         commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_details.csv"))
+                "classpath:sourceFiles/flagService/flag_service_failure.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -131,15 +130,15 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailureForInvalidFlagCode() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_service_failure_foreignkey_violation.csv"))
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
         );
 
         commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_details.csv"))
+                "classpath:sourceFiles/flagService/flag_service_failure_foreignkey_violation.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
