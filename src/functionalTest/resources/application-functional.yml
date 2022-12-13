@@ -12,14 +12,13 @@ spring:
 #Local integration testing these values should be actual
 #ACCOUNT_NAME: ${ACCOUNT_NAME}
 #ACCOUNT_KEY: ${ACCOUNT_KEY}
-commondata-flag-details-start-route: direct:CommonData-FlagDetails
 commondata-flag-service-start-route: direct:CommonData-FlagService
 commondata-categories-start-route: direct:CommonData-ListOfValues
 commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
 archival-route: direct:CommonDataArchival
 archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
-archival-file-names: FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv,FlagDetails-test.csv
+archival-file-names: FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 #archival-date-format keep in dd-MM-yyyy as to delete in testing
 archival-date-format: dd-MM-yyyy
@@ -37,8 +36,6 @@ commondata-categories-route-task: commonDataListOfValuesLoadTask
 commondata-categories-routes-to-execute: commondata-list-of-values-load
 commondata-caselinking-route-task: commonDataCaseLinkingReasonsTask
 commondata-caselinking-routes-to-execute: commondata-case-linking-reasons-load
-commondata-flag-details-route-task: commonDataFlagDetailsLoadTask
-commondata-flag-details-routes-to-execute: commondata-flag-details-load
 route:
   commondata-flag-service-load:
     id: commondata-flag-service-load
@@ -94,27 +91,10 @@ route:
     csv-binder-object: ListOfValues
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
     header-validation-enabled: true
-  commondata-flag-details-load:
-    id: commondata-flag-details-load
-    file-name: FlagDetails-test.csv
-    table-name: flag_details
-    truncate-sql:
-      sql:truncate table flag_details restart identity cascade?dataSource=dataSource
-    insert-sql:
-      sql:insert into flag_details (id,flag_code,value_en,value_cy,category_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
-      values(:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
-    blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/FlagDetails-test.csv?credentials=#credsreg&operation=updateBlockBlob
-    processor-class: flagDetailsProcessor
-    mapper-class: flagDetailsMapper
-    csv-binder-object: FlagDetails
-    csv-headers-expected: id,flag_code,value_en,value_cy,category_id,MRD_Created_Time,MRD_Updated_Time,MRD_Deleted_Time
-    header-validation-enabled: true
 exception-select-query: select * from  dataload_exception_records
 ordered-exception-select-query: select * from  dataload_exception_records order by error_description
 flag-service-select-sql: select * from flag_service
 list-of-values-select-sql: select * from list_of_values
-flag-details-select-sql: select * from flag_details
 select-dataload-scheduler: select *  from dataload_schedular_audit
 flag-code-query: select flag_code from flag_details
 select-dataload-scheduler-failure: select *  from dataload_schedular_audit where status='Failure'
