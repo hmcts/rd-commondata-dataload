@@ -19,4 +19,6 @@ public final class CommonDataLoadConstants {
     public static final String DELETE_CATEGORY_BY_STATUS =
         "DELETE FROM list_of_values WHERE TRIM(active) = ?";
     public static final String ACTIVE_Y = "Y";
+    public static final String DATE_PATTERN = "\\d{2}-\\d{2}-\\d{4}\\s\\d{2}:\\d{2}:\\d{2}";
+    public static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
 }

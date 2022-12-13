@@ -67,6 +67,11 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testTaskletPartialSuccessAndJsr() throws Exception {
         commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
+        commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/flag_service_partial_success.csv"))
@@ -98,6 +103,12 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailure() throws Exception {
         commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
+
+        commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/flag_service_failure.csv"))
@@ -119,6 +130,12 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testTaskletFailureForInvalidFlagCode() throws Exception {
         commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
+
+        commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/flag_service_failure_foreignkey_violation.csv"))
@@ -134,7 +151,6 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
-
     }
 
     @AfterEach

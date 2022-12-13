@@ -15,9 +15,11 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FLAG_CODE;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FLAG_CODE_NOT_EXISTS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.checkIfValueNotInListIfPresent;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
 
 @Component
 @Slf4j
@@ -74,7 +76,7 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
         }
 
         if (validatedFlagServices.size() != jsrValidatedFlagServices) {
-            setFileStatus(exchange, applicationContext);
+            setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
         exchange.getMessage().setBody(validatedFlagServices);
