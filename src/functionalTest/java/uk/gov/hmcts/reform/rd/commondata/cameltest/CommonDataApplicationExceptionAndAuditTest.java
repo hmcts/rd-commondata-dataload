@@ -57,7 +57,6 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
 
     @BeforeEach
-    @Sql(scripts = "/testData/commondata_insert_flag_details.sql")
     public void init() {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
@@ -71,6 +70,12 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/flag_service_partial_success.csv"))
+        );
+
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/flag_details.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -104,6 +109,12 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
                 "classpath:sourceFiles/flagService/flag_service_failure.csv"))
         );
 
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/flag_details.csv"))
+        );
+
         jobLauncherTestUtils.launchJob();
         var flagServices = jdbcTemplate.queryForList(flagServiceSelectData);
         assertEquals(0, flagServices.size());
@@ -125,6 +136,12 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
                 "classpath:sourceFiles/flagService/flag_service_failure_foreignkey_violation.csv"))
         );
 
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/flag_details.csv"))
+        );
+
         jobLauncherTestUtils.launchJob();
         var flagServices = jdbcTemplate.queryForList(flagServiceSelectData);
         assertEquals(0, flagServices.size());
@@ -135,7 +152,6 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
-
     }
 
     @AfterEach
