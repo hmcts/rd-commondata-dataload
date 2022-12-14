@@ -31,14 +31,18 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.CategoriesMapper;
+import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagDetailsMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.CategoriesProcessor;
+import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagDetailsProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSupport;
@@ -64,6 +68,12 @@ public class CommonDataCamelConfig {
     }
 
     @Bean
+    public JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer() {
+        return new JsrValidatorInitializer<>();
+    }
+
+
+    @Bean
     public FlagServiceProcessor flagServiceProcessor() {
         return new FlagServiceProcessor();
     }
@@ -71,6 +81,11 @@ public class CommonDataCamelConfig {
     @Bean
     public CategoriesProcessor listOfValuesProcessor() {
         return new CategoriesProcessor();
+    }
+
+    @Bean
+    public FlagDetailsProcessor flagDetailsProcessor() {
+        return new FlagDetailsProcessor();
     }
 
     @Bean
@@ -84,6 +99,11 @@ public class CommonDataCamelConfig {
     }
 
     @Bean
+    public FlagDetailsMapper flagDetailsMapper() {
+        return new FlagDetailsMapper();
+    }
+
+    @Bean
     public Categories listOfValues() {
         return new Categories();
     }
@@ -92,6 +112,11 @@ public class CommonDataCamelConfig {
     @Bean
     public FlagService flagService() {
         return new FlagService();
+    }
+
+    @Bean
+    public FlagDetails flagDetails() {
+        return new FlagDetails();
     }
 
     // Route configuration ends
@@ -219,6 +244,11 @@ public class CommonDataCamelConfig {
     @Bean
     CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask() {
         return new CommonDataCaseLinkingRouteTask();
+    }
+
+    @Bean
+    CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask() {
+        return new CommonDataFlagDetailsRouteTask();
     }
 
     @Bean
