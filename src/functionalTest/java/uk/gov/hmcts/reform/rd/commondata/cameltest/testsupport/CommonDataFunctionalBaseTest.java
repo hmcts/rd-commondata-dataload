@@ -43,9 +43,6 @@ import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 public abstract class CommonDataFunctionalBaseTest {
 
     @Autowired
-    protected static CamelContext camelContext;
-
-    @Autowired
     @Qualifier("springJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
 
