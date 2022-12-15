@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -55,6 +56,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
 class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
+
+    @Autowired
+    protected static CamelContext camelContext;
 
     @Value("${commondata-flag-service-start-route}")
     String startRoute;

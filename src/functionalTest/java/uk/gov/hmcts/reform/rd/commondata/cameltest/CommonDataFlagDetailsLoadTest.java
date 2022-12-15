@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -59,6 +60,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest {
+
+    @Autowired
+    protected static CamelContext camelContext;
 
     @Autowired
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
