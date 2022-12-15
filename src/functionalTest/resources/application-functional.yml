@@ -19,7 +19,7 @@ commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
 archival-route: direct:CommonDataArchival
 archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
-archival-file-names: FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv,FlagDetails-test.csv
+archival-file-names: FlagDetails-test.csv,FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 #archival-date-format keep in dd-MM-yyyy as to delete in testing
 archival-date-format: dd-MM-yyyy

@@ -5,7 +5,9 @@ import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,7 @@ import java.io.FileInputStream;
 import java.time.Clock;
 import java.util.Date;
 import java.util.List;
+import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,6 +63,9 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     @Qualifier("springJdbcTransactionManager")
     protected PlatformTransactionManager platformTransactionManager;
 
+    @Autowired
+    static DataSource dataSource;
+
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
     private static final String HEADER_MISSMATCH_MESSAGE
         = "There is a mismatch in the headers of the csv file :: FlagService-test.csv";
@@ -68,6 +74,13 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
+        camelContext.getGlobalOptions()
+            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+    }
+
+    @BeforeAll
+    @Sql(scripts = "/testData/commondata_insert_flag_details.sql")
+    public static void beforeAll() {
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
     }
@@ -325,4 +338,12 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
         //Delete Uploaded test file with Snapshot delete
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
+
+    @AfterAll
+    @Sql(scripts = "/testData/commondata_truncate_flag_details.sql")
+    static void afterAll() {
+        camelContext.getGlobalOptions()
+            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+    }
+
 }
