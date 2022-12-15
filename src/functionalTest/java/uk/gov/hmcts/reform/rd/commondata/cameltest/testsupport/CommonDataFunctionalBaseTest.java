@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport;
 
-import org.apache.camel.CamelContext;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
 import org.junit.jupiter.api.BeforeAll;
