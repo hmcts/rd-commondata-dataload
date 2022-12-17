@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport;
 
+import org.apache.camel.CamelContext;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,6 +43,9 @@ import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 public abstract class CommonDataFunctionalBaseTest {
 
     @Autowired
+    protected CamelContext camelContext;
+
+    @Autowired
     @Qualifier("springJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
 
@@ -78,6 +82,9 @@ public abstract class CommonDataFunctionalBaseTest {
     @Value("${exception-select-query}")
     protected String exceptionQuery;
 
+    @Value("${exception-records-select-query}")
+    protected String exceptionRecordsQuery;
+
     @Value("${ordered-exception-select-query}")
     protected String orderedExceptionQuery;
 
@@ -85,7 +92,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected String auditSchedulerQuery;
 
     @Autowired
-    protected static CommonDataBlobSupport commonDataBlobSupport;
+    protected CommonDataBlobSupport commonDataBlobSupport;
 
     @Autowired
     protected DataIngestionLibraryRunner dataIngestionLibraryRunner;
@@ -171,7 +178,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(3, result.size());
+        assertEquals(4, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());

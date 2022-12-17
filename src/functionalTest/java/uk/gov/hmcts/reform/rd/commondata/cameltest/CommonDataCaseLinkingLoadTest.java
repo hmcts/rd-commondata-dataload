@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -54,9 +53,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    protected static CamelContext camelContext;
-
-    @Autowired
     CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
 
     @Autowired
@@ -66,10 +62,15 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";
 
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
     }
 
     @Test
