@@ -108,6 +108,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
 
     private void deleteFile() throws Exception {
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME, false);
+        commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_DETAILS_FILE_NAME);
     }
 
     @Test
@@ -136,10 +137,10 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             "FlagService-test.csv file does not exist in azure storage account"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
         assertEquals(4, result.size());
-        assertEquals(3, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
+        assertEquals(4, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
         List<Map<String, Object>> flagCodes = jdbcTemplate.queryForList(flagServiceSelectData);
         assertThat(flagCodes).isNotEmpty().hasSize(3);
     }
