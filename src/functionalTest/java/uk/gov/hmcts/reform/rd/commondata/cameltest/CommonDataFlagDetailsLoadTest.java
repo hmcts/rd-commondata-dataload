@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -62,9 +61,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    protected static CamelContext camelContext;
-
-    @Autowired
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
 
     @Autowired
@@ -76,7 +72,6 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     private static final String FAILURE_MESSAGE = "Failure";
 
     @BeforeEach
-    @Sql(scripts = {"/testData/commondata_truncate_flag_details.sql"})
     public void init() {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
@@ -91,35 +86,6 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
             "flag_details_success.csv",
             MappingConstants.SUCCESS
         );
-    }
-
-    private void testFlagDetailsInsertion(String fileName, String status) throws Exception {
-        commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_DETAILS_FILE_NAME,
-            new FileInputStream(getFile(String.format("classpath:sourceFiles/flagDetails/%s", fileName)))
-        );
-
-        camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-        jobLauncherTestUtils.launchJob();
-        //Validate Success Result
-        validateFlagDetailsFileLoad(List.of(
-            FlagDetails.builder().id("1").flagCode("CF0001").valueEn("Case").valueCy("").categoryId("0")
-                .mrdCreatedTime("2022-04-07 12:43:00").mrdUpdatedTime("2022-06-17 13:33:00").build(),
-            FlagDetails.builder().id("2").flagCode("PF0001").valueEn("Party").valueCy("").categoryId("0")
-                .mrdCreatedTime("2022-04-07 12:43:00").mrdUpdatedTime("2022-06-17 13:33:00").build()
-          ));
-        //Validates Success Audit
-        validateFileAudit(jdbcTemplate, auditSchedulerQuery, status, UPLOAD_FLAG_DETAILS_FILE_NAME);
-    }
-
-    private void validateFlagDetailsFileLoad(List<FlagDetails> expected) {
-        var rowMapper = newInstance(FlagDetails.class);
-        var actual =
-            jdbcTemplate.query(flagDetailsSelectData, rowMapper);
-        assertThat(actual)
-            .hasSize(2)
-            .hasSameElementsAs(expected);
     }
 
     @Test
@@ -154,7 +120,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_DETAILS_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/categories/flag_details_success_leadingspace.csv"))
+                "classpath:sourceFiles/flagDetails/flag_details_success_leadingspace.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -184,7 +150,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
             UPLOAD_FLAG_DETAILS_FILE_NAME,
             HEADER_MISMATCH_MESSAGE
         );
-        validateFlagDetailsFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateFlagDetailsFileException(jdbcTemplate, orderedExceptionQuery, pair, 3);
         validateFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_DETAILS_FILE_NAME);
     }
 
@@ -211,7 +177,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
             fileName,
             MappingConstants.PARTIAL_SUCCESS
         );
-        var result = jdbcTemplate.queryForList(exceptionQuery);
+        var result = jdbcTemplate.queryForList(exceptionRecordsQuery);
         assertEquals(4, result.size());
 
         validateFileAudit(
@@ -231,7 +197,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
             fileName,
             MappingConstants.PARTIAL_SUCCESS
         );
-        var result = jdbcTemplate.queryForList(exceptionQuery);
+        var result = jdbcTemplate.queryForList(exceptionRecordsQuery);
         assertEquals(1, result.size());
 
         validateFileAudit(
@@ -264,9 +230,9 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
 
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_DETAILS_FILE_NAME,
-            "No valid Flag Details Record found in the input file. Please review and try again."
+            "No records have been defined in the CSV"
         );
-        validateFlagDetailsFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateFlagDetailsFileException(jdbcTemplate, orderedExceptionQuery, pair, 3);
         validateFileAudit(jdbcTemplate, auditSchedulerQuery, FAILURE_MESSAGE, UPLOAD_FLAG_DETAILS_FILE_NAME);
     }
 
@@ -286,6 +252,35 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
         var result = jdbcTemplate.queryForList(exceptionQuery);
         assertThat((String) result.get(index).get("error_description"),
                    containsString(pair.getValue1()));
+    }
+
+    private void testFlagDetailsInsertion(String fileName, String status) throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(String.format("classpath:sourceFiles/flagDetails/%s", fileName)))
+        );
+
+        camelContext.getGlobalOptions()
+            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        jobLauncherTestUtils.launchJob();
+        //Validate Success Result
+        validateFlagDetailsFileLoad(List.of(
+            FlagDetails.builder().id("1").flagCode("CF0001").valueEn("Case").valueCy("").categoryId("0")
+                .mrdCreatedTime("2022-04-07 12:43:00").mrdUpdatedTime("2022-06-17 13:33:00").build(),
+            FlagDetails.builder().id("2").flagCode("PF0001").valueEn("Party").valueCy("").categoryId("0")
+                .mrdCreatedTime("2022-04-07 12:43:00").mrdUpdatedTime("2022-06-17 13:33:00").build()
+        ));
+        //Validates Success Audit
+        validateFileAudit(jdbcTemplate, auditSchedulerQuery, status, UPLOAD_FLAG_DETAILS_FILE_NAME);
+    }
+
+    private void validateFlagDetailsFileLoad(List<FlagDetails> expected) {
+        var rowMapper = newInstance(FlagDetails.class);
+        var actual =
+            jdbcTemplate.query(flagDetailsSelectData, rowMapper);
+        assertThat(actual)
+            .hasSize(2)
+            .hasSameElementsAs(expected);
     }
 
     @AfterEach

@@ -112,6 +112,7 @@ route:
     header-validation-enabled: true
 exception-select-query: select * from  dataload_exception_records
 ordered-exception-select-query: select * from  dataload_exception_records order by error_description
+exception-records-select-query: select * from  dataload_exception_records where row_id is not null
 flag-service-select-sql: select * from flag_service
 list-of-values-select-sql: select * from list_of_values
 flag-details-select-sql: select * from flag_details

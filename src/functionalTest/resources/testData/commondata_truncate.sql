@@ -1,5 +1,6 @@
-truncate flag_service;
-truncate List_Of_Values;
+truncate flag_service CASCADE;
+truncate List_Of_Values CASCADE;
+truncate flag_details CASCADE;
 truncate dataload_schedular_audit;
-truncate dataload_exception_records;
+truncate dataload_exception_records ;
 commit;

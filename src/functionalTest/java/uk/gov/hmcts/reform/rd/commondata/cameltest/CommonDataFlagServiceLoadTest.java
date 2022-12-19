@@ -1,14 +1,11 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -38,7 +35,6 @@ import java.io.FileInputStream;
 import java.time.Clock;
 import java.util.Date;
 import java.util.List;
-import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,7 +47,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
-    initializers = ConfigFileApplicationContextInitializer.class)
+    initializers = ConfigDataApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
@@ -61,14 +57,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    protected static CamelContext camelContext;
-
-    @Autowired
     @Qualifier("springJdbcTransactionManager")
     protected PlatformTransactionManager platformTransactionManager;
-
-    @Autowired
-    static DataSource dataSource;
 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
     private static final String HEADER_MISSMATCH_MESSAGE
@@ -76,17 +66,15 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     private static final String FAILURE_MESSAGE = "Failure";
 
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-    }
-
-    @BeforeAll
-    @Sql(scripts = "/testData/commondata_insert_flag_details.sql")
-    public static void beforeAll() {
-        camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
     }
 
     @Test
@@ -340,14 +328,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     @AfterEach
     void tearDown() throws Exception {
         //Delete Uploaded test file with Snapshot delete
+        commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_DETAILS_FILE_NAME);
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
-
-    @AfterAll
-    @Sql(scripts = "/testData/commondata_truncate_flag_details.sql")
-    static void afterAll() {
-        camelContext.getGlobalOptions()
-            .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
-    }
-
 }
