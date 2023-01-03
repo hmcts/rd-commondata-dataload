@@ -28,4 +28,11 @@
     <cve>CVE-2022-45046</cve>
     <cve>CVE-2022-41881</cve>
   </suppress>
+  <suppress until="2024-01-01">
+    <notes><![CDATA[
+   netty 4.1.85
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/io\.netty/netty-.+@.*$</packageUrl>
+    <cve>CVE-2022-41881</cve>
+</suppress>
 </suppressions>
