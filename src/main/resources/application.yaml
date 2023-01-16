@@ -14,6 +14,8 @@ management:
 spring:
   application:
     name: commondata data load
+  main:
+    allow-circular-references: true
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

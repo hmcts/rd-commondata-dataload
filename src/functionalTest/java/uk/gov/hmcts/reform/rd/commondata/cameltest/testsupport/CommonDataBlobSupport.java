@@ -7,7 +7,7 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
@@ -23,7 +23,7 @@ import static java.util.Objects.isNull;
 
 @Component
 @ContextConfiguration(classes = {
-    AzureBlobConfig.class, BlobStorageCredentials.class}, initializers = ConfigFileApplicationContextInitializer.class)
+    AzureBlobConfig.class, BlobStorageCredentials.class}, initializers = ConfigDataApplicationContextInitializer.class)
 public class CommonDataBlobSupport {
 
 
