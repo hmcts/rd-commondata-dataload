@@ -95,6 +95,7 @@ public class CommonDataBlobSupport {
      * @return return true if file exist
      * @throws Exception Exception
      */
+
     public boolean isBlobPresent(String blob) throws Exception {
         CloudBlockBlob cloudBlockBlob = cloudBlobContainer.getBlockBlobReference(blob);
         return cloudBlockBlob.exists();

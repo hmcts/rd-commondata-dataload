@@ -185,6 +185,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
         assertEquals(timestamp, timestampNextRun);
     }
 
+
     @AfterEach
     void tearDown() throws Exception {
         //Delete Uploaded test file with Snapshot delete

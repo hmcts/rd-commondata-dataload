@@ -59,3 +59,5 @@ spring:
       - crd-case-linking-reasons-router
 mail:
   enabled: false
+
+
