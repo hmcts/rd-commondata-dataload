@@ -2,6 +2,8 @@ spring:
   flyway:
     locations: classpath:dbmigration
     enabled: true
+  main:
+      allow-circular-references: true
   batch:
     initialize-schema: always
     # set batch false in integration test and run batch manually with batch runner to set dynamic test property values
