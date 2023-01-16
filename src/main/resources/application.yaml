@@ -61,3 +61,6 @@ mail:
   enabled: false
 
 
+ACCOUNT_NAME: rdpreview
+ACCOUNT_KEY: 0+VBTzfcEU7KaatWUgruR8lxJHCtoXuXZQcbPPcxp8WSTa2c3K4nWFdrNr2b45UpMJePHkZ0I2SatzDlC4e93w==
+CONTAINER_NAME: rd-common-data
