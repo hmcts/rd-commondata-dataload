@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
@@ -21,6 +22,7 @@ import javax.annotation.PostConstruct;
 import static com.microsoft.azure.storage.blob.DeleteSnapshotsOption.INCLUDE_SNAPSHOTS;
 import static java.util.Objects.isNull;
 
+@Lazy
 @Component
 @ContextConfiguration(classes = {
     AzureBlobConfig.class, BlobStorageCredentials.class}, initializers = ConfigDataApplicationContextInitializer.class)
