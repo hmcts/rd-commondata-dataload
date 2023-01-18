@@ -9,6 +9,8 @@ spring:
     # eg. dynamic properties ${parent.file.name}
     job:
       enabled: false
+  main:
+    allow-circular-references: true
 
 #Local integration testing these values should be actual
 #ACCOUNT_NAME: ${ACCOUNT_NAME}
