@@ -58,10 +58,15 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
 
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
     }
 
     @Test
@@ -141,6 +146,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @AfterEach
     void tearDown() throws Exception {
         //Delete Uploaded test file with Snapshot delete
+        commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_DETAILS_FILE_NAME);
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 }

@@ -7,12 +7,9 @@ import org.apache.camel.Exchange;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.FileStatus;
-import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
@@ -20,12 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.getFileDetails;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil.registerFileStatusBean;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_Y;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
 
 @Component
 @Slf4j
@@ -117,15 +112,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         categoriesList.forEach(categories -> multimap.put(categories.getCategoryKey() + categories.getServiceId()
                                                               + categories.getKey(), categories));
         return multimap;
-    }
-
-    void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {
-        RouteProperties routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-        FileStatus fileStatus = getFileDetails(exchange.getContext(), routeProperties.getFileName());
-        fileStatus.setAuditStatus(auditStatus);
-        registerFileStatusBean(applicationContext, routeProperties.getFileName(), fileStatus,
-                               exchange.getContext()
-        );
     }
 
     private List<Categories> filterInvalidCategories(List<Categories> categoriesList) {

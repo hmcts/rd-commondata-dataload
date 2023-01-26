@@ -67,10 +67,16 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     protected PlatformTransactionManager platformTransactionManager;
 
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
     }
 
     /**
@@ -188,6 +194,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     @AfterEach
     void tearDown() throws Exception {
         //Delete Uploaded test file with Snapshot delete
+        commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_DETAILS_FILE_NAME);
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 
 @Configuration
@@ -33,6 +34,9 @@ public class BatchConfig {
     CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
 
     @Autowired
+    CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
+
+    @Autowired
     JobResultListener jobResultListener;
 
     @Autowired
@@ -44,6 +48,8 @@ public class BatchConfig {
     @Value("${commondata-categories-route-task}")
     String commonDataCategoriesTask;
 
+    @Value("${commondata-flag-details-route-task}")
+    String commonDataFlagDetailsTask;
 
     @Value("${commondata-caselinking-route-task}")
     String commonDataCaseLinkingTask;
@@ -77,6 +83,13 @@ public class BatchConfig {
             .build();
     }
 
+    @Bean
+    public Step stepCommonDataFlagDetailsRoute() {
+        return steps.get(commonDataFlagDetailsTask)
+            .tasklet(commonDataFlagDetailsRouteTask)
+            .build();
+    }
+
     /**
      * Returns Job bean.
      * @return Job
@@ -84,8 +97,9 @@ public class BatchConfig {
     @Bean
     public Job runRoutesJob() {
         return jobBuilderFactory.get(jobName)
-            .start(stepCommonDataRoute())
+            .start(stepCommonDataFlagDetailsRoute())
             .listener(jobResultListener)
+            .on("*").to(stepCommonDataRoute())
             .on("*").to(stepCommonDataCategoriesRoute())
             .on("*").to(stepCommonDataCaseLinkingRoute())
             .end()

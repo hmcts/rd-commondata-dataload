@@ -58,5 +58,6 @@ spring:
       - crd-flag-service-router
       - crd-list-of-values-router
       - crd-case-linking-reasons-router
+      - crd-flag-details-router
 mail:
   enabled: false
