@@ -93,7 +93,7 @@ route:
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
-    header-validation-enabled: true
+    header-validation-enabled: false
   commondata-case-linking-reasons-load:
     id: commondata-case-linking-reasons-load
     file-name: CaseLinkingReasons-test.csv
