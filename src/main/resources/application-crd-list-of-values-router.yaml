@@ -21,5 +21,5 @@ route:
     mapper-class: categoriesMapper
     csv-binder-object: Categories
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
-    header-validation-enabled: true
+    header-validation-enabled: false
 
