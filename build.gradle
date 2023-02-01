@@ -10,6 +10,7 @@ plugins {
   id "org.flywaydb.flyway" version "8.5.2"
   id "info.solidsoft.pitest" version '1.7.0'
   id 'uk.gov.hmcts.java' version '0.12.12'
+  id 'org.owasp.dependencycheck' version '8.0.1'
 }
 
 mainClassName = 'uk.gov.hmcts.reform.rd.commondata.CommonDataLoadApplication'
@@ -273,8 +274,10 @@ dependencies {
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.2'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
+  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
+  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.2') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.4') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
