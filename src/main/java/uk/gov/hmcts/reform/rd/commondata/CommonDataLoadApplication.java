@@ -33,10 +33,6 @@ public class CommonDataLoadApplication implements ApplicationRunner {
 
         ApplicationContext context = SpringApplication.run(CommonDataLoadApplication.class, args);
         //Sleep added to allow app-insights to flush the logs
-        Thread.sleep(7000);
-        int exitCode = SpringApplication.exit(context);
-        log.info("{}:: Application exiting with exit code {} ", logComponentName, exitCode);
-        System.exit(exitCode);
     }
 
     @Override
