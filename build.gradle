@@ -200,7 +200,7 @@ dependencyManagement {
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
     }
-    
+
     //CVE-2022-40152
     dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
             entry 'woodstox-core'
@@ -257,9 +257,9 @@ dependencies {
   implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
   implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '3.1.5'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.5'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.0'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '4.0.1'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '4.0.1'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.1'
 
   // Fix for CVE-2022-45047
   implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.2'
