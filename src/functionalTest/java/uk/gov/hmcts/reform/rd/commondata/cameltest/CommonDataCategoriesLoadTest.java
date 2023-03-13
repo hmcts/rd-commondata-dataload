@@ -298,6 +298,30 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
     }
 
+
+    @Test
+    @DisplayName("To validate UTF-8 LOV csv file with Unicode char in header.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_With_Unicode_Header() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_utf8_header.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+
+        assertEquals(3, listOfValues.size());
+        assertEquals("AdditionalFacilities",listOfValues.get(0).get("categorykey"));
+        assertEquals("AF-SSC",listOfValues.get(0).get("key"));
+        assertEquals("Same Sex Courtroom",listOfValues.get(0).get("value_en"));
+        assertEquals("Y",listOfValues.get(0).get("active"));
+
+
+
+    }
+
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
