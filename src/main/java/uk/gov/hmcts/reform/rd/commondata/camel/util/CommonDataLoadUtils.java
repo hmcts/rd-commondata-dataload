@@ -45,7 +45,7 @@ public class CommonDataLoadUtils {
      */
     public static <T> List<T> filterDomainObjects(List<T> domainObjects, Predicate<T> predicate) {
         return domainObjects.stream()
-            .filter(predicate).collect(Collectors.toList());
+            .filter(predicate).toList();
     }
 
     public static void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {

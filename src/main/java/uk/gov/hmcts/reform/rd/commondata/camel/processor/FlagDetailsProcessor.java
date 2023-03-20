@@ -101,7 +101,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
         var flagDetailsWithExpiredDates = flagDetails.stream()
             .filter(flagDetail -> StringUtils.isNotBlank(flagDetail.getMrdDeletedTime())
             && isDateExpired(flagDetail.getMrdDeletedTime()))
-            .collect(Collectors.toList());
+            .toList();
 
         return List.copyOf(flagDetailsWithExpiredDates);
     }
