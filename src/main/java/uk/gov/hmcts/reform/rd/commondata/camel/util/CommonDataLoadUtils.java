@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
@@ -42,9 +43,10 @@ public class CommonDataLoadUtils {
      * @param predicate     Function to compare Parent table record
      * @return Return List of unmatched Record.
      */
+    @SuppressWarnings("java:S6204")
     public static <T> List<T> filterDomainObjects(List<T> domainObjects, Predicate<T> predicate) {
         return domainObjects.stream()
-            .filter(predicate).toList();
+            .filter(predicate).collect(Collectors.toList());
     }
 
     public static void setFileStatus(Exchange exchange, ApplicationContext applicationContext, String auditStatus) {
