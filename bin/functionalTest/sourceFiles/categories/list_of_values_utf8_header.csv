@@ -1,0 +1,6 @@
+﻿CategoryKey,ServiceID,Key,Value_EN,Value_CY,Hinttext_EN,Hinttext_CY,Lov_Order,ParentCategory,ParentKey,Active
+AdditionalFacilities,,AF-VF,Video Facility,,,,,,,Y
+AdditionalFacilities,,AF-SSC,Same Sex Courtroom,,,,,,,Y
+AdditionalFacilities,,AF-WR,Witness Room,,,,,,,Y
+
+
