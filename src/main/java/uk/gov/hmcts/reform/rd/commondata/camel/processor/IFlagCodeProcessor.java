@@ -50,6 +50,7 @@ public interface IFlagCodeProcessor<T> {
         }
     }
 
+    @SuppressWarnings("java:S6201")
     private Type getType() {
         var genericSuperClass = getClass().getGenericSuperclass();
         ParameterizedType parametrizedType = null;
