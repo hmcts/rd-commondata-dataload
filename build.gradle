@@ -13,6 +13,7 @@ plugins {
   id 'org.owasp.dependencycheck' version '8.0.1'
 }
 
+
 mainClassName = 'uk.gov.hmcts.reform.rd.commondata.CommonDataLoadApplication'
 def jarName = 'rd-commondata-dataload.jar'
 
