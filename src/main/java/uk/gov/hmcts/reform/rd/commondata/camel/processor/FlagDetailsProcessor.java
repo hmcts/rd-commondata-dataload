@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
@@ -101,7 +100,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
         var flagDetailsWithExpiredDates = flagDetails.stream()
             .filter(flagDetail -> StringUtils.isNotBlank(flagDetail.getMrdDeletedTime())
             && isDateExpired(flagDetail.getMrdDeletedTime()))
-            .collect(Collectors.toList());
+            .toList();
 
         return List.copyOf(flagDetailsWithExpiredDates);
     }
@@ -130,7 +129,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                 expiredDetails.getRowId()
             )));
 
-            flagDetailsJsrValidatorInitializer.auditJsrExceptions(expiredDetailsList,"",
+            flagDetailsJsrValidatorInitializer.auditJsrExceptions(expiredDetailsList, "",
                                                                   EXPIRED_DATE_ERROR_MSG, exchange
             );
 

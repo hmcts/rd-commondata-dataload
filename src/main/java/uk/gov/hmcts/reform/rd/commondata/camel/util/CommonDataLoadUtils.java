@@ -43,6 +43,7 @@ public class CommonDataLoadUtils {
      * @param predicate     Function to compare Parent table record
      * @return Return List of unmatched Record.
      */
+    @SuppressWarnings("java:S6204")
     public static <T> List<T> filterDomainObjects(List<T> domainObjects, Predicate<T> predicate) {
         return domainObjects.stream()
             .filter(predicate).collect(Collectors.toList());
