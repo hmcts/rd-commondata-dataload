@@ -50,6 +50,14 @@ withPipeline(type, product, component) {
   nonServiceApp()
   syncBranchesWithMaster(branchesToSync)
 
+  before('functionalTest:preview') {
+    env.TEST_URL = "http://rd-commondata-dataload-preview.preview.platform.hmcts.net"
+  }
+
+  before('functionalTest:aat') {
+    env.TEST_URL = "http://rd-commondata-dataload-aat.aat.platform.hmcts.net"
+  }
+
   afterSuccess('functionalTest:preview') {
     steps.archiveArtifacts allowEmptyArchive: true
   }
