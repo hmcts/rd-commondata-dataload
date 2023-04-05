@@ -233,7 +233,7 @@ def versions = [
   flyway              : '6.5.5',
   camel               : '3.8.0',
   log4j               : '2.17.1',
-  springVersion       : '5.3.20',
+  springVersion       : '5.3.26',
   logback             : '1.2.10'
 
 ]
