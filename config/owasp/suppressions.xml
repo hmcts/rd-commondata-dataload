@@ -56,4 +56,18 @@ file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1
     <cve>CVE-2023-20859</cve>
     <cve>CVE-2023-28708</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jakarta.activation-api-2.1.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/jakarta\.activation/jakarta\.activation\-api@.*$</packageUrl>
+    <cve>CVE-2008-7271</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jakarta.activation-api-2.1.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/jakarta\.activation/jakarta\.activation\-api@.*$</packageUrl>
+    <cve>CVE-2010-4647</cve>
+  </suppress>
 </suppressions>
