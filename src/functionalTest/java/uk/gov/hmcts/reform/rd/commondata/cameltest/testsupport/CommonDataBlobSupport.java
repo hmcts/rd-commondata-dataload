@@ -16,7 +16,7 @@ import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import static com.microsoft.azure.storage.blob.DeleteSnapshotsOption.INCLUDE_SNAPSHOTS;
 import static java.util.Objects.isNull;
