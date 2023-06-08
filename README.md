@@ -29,7 +29,7 @@ Kubernetes scheduler triggers Apache Camel routes which process files stored in 
 
 ## Plugins
 
-The Judicial-data-load contains the following plugins:
+The Common-data-load contains the following plugins:
 
   * checkstyle
 
