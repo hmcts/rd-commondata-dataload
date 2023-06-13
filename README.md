@@ -106,6 +106,10 @@ If running locally for development or testing you will need to add (Application.
 
 ### Running the application
 
+Please Make sure you are connected to the VPN before running the Application.
+(https://portal.platform.hmcts.net/vdesk/webtop.eui?webtop=/Common/webtop_full&webtop_type=webtop_full)
+
+
 Create the image of the application by executing the following command:
 
 ```bash
@@ -125,6 +129,12 @@ by executing the following command:
   docker-compose up
 ```
 
+After, you can start the application from the current source files using Gradle as follows:
+
+```
+./gradlew clean bootRun
+```
+
 This will start the API container exposing the application's port
 (set to `8099` in this template app).
 
@@ -136,7 +146,7 @@ In order to test if the application is up, you can call its health endpoint:
 
 
 To build the project execute the following command:
-  ./gradlew build 
+  ./gradlew build
 
 
 The application exposes health endpoint (http://localhost:8099/health) and metrics endpoint
