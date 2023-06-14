@@ -136,7 +136,7 @@ After, you can start the application from the current source files using Gradle 
 ```
 
 This will start the API container exposing the application's port
-(set to `8099` in this template app).
+(set to `8100` in this template app).
 
 In order to test if the application is up, you can call its health endpoint:
 
