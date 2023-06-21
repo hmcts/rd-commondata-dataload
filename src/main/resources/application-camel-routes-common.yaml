@@ -18,3 +18,4 @@ component:
   name: Common Reference Data
 flag-code-query: select flag_code from flag_details
 list-of-values-query: select categorykey from list_of_values
+
