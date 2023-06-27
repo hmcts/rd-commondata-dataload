@@ -4,7 +4,7 @@ commondata-caselinking-routes-to-execute: commondata-case-linking-reasons-load
 route:
   commondata-case-linking-reasons-load:
     id: commondata-case-linking-reasons-load
-    file-name: OtherCatogeries.csv
+    file-name: OtherCategories.csv
     table-name: list_of_values
     insert-sql:
       sql:insert into list_of_values (categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,
@@ -15,7 +15,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/OtherCatogeries.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/rd-common-data/OtherCategories.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: categoriesProcessor
     mapper-class: categoriesMapper
     csv-binder-object: Categories
