@@ -135,7 +135,7 @@ public abstract class CommonDataFunctionalBaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-       if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
+        if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
         } else {
