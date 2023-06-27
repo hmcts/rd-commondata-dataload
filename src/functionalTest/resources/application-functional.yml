@@ -18,11 +18,11 @@ spring:
 commondata-flag-details-start-route: direct:CommonData-FlagDetails
 commondata-flag-service-start-route: direct:CommonData-FlagService
 commondata-categories-start-route: direct:CommonData-ListOfValues
-commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
+commondata-othercategories-start-route: direct:CommonData-OtherCategoriesReasons
 archival-route: direct:CommonDataArchival
 archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
 active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
-archival-file-names: FlagDetails-test.csv,FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv
+archival-file-names: FlagDetails-test.csv,FlagService-test.csv,ListOfValues-test.csv,OtherCategoriesReasons-test.csv
 archival-cred: credentials=#credsreg&operation=updateBlockBlob
 #archival-date-format keep in dd-MM-yyyy as to delete in testing
 archival-date-format: dd-MM-yyyy
@@ -38,8 +38,8 @@ commondata-flag-service-route-task: commonDataFlagServiceLoadTask
 commondata-flag-service-routes-to-execute: commondata-flag-service-load
 commondata-categories-route-task: commonDataListOfValuesLoadTask
 commondata-categories-routes-to-execute: commondata-list-of-values-load
-commondata-caselinking-route-task: commonDataCaseLinkingReasonsTask
-commondata-caselinking-routes-to-execute: commondata-case-linking-reasons-load
+commondata-othercategories-route-task: commonDataOtherCategoriesReasonsTask
+commondata-othercategories-routes-to-execute: commondata-other-categories-reasons-load
 commondata-flag-details-route-task: commonDataFlagDetailsLoadTask
 commondata-flag-details-routes-to-execute: commondata-flag-details-load
 route:
@@ -94,9 +94,9 @@ route:
     csv-binder-object: ListOfValues
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
     header-validation-enabled: false
-  commondata-case-linking-reasons-load:
-    id: commondata-case-linking-reasons-load
-    file-name: CaseLinkingReasons-test.csv
+  commondata-other-categories-reasons-load:
+    id: commondata-other-categories-reasons-load
+    file-name: OtherCategoriesReasons-test.csv
     table-name: List_Of_Values
     insert-sql:
       sql:insert into list_of_values (categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,
@@ -107,7 +107,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/rd-common-data/OtherCategoriesReasons-test.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
@@ -132,4 +132,3 @@ mail:
   enabled: false
 idempotent-flag-ingestion: true
 CONTAINER_NAME: rd-common-data
-

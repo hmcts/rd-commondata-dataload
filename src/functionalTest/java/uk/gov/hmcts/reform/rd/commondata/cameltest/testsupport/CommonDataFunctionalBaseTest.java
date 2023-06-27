@@ -23,10 +23,10 @@ import uk.gov.hmcts.reform.data.ingestion.camel.service.IEmailService;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.DataLoadUtil;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 import java.util.List;
 import java.util.Map;
@@ -110,7 +110,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
     @Autowired
-    protected CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
+    protected CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
 
     @Autowired
     protected CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
@@ -120,7 +120,7 @@ public abstract class CommonDataFunctionalBaseTest {
 
     public static final String UPLOAD_LIST_OF_VALUES_FILE_NAME = "ListOfValues-test.csv";
 
-    public static final String UPLOAD_CASE_LINKING_FILE_NAME = "CaseLinking-test.csv";
+    public static final String UPLOAD_OTHER_CATEGORIES_FILE_NAME = "OtherCategories-test.csv";
 
     public static final String UPLOAD_FLAG_DETAILS_FILE_NAME = "FlagDetails-test.csv";
 
@@ -135,7 +135,7 @@ public abstract class CommonDataFunctionalBaseTest {
 
     @BeforeAll
     public static void beforeAll() {
-        if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
+       if ("preview".equalsIgnoreCase(System.getenv("execution_environment"))) {
             System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
         } else {

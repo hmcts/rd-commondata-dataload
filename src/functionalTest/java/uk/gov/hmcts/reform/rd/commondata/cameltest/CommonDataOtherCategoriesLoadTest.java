@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants;
 import uk.gov.hmcts.reform.data.ingestion.configuration.AzureBlobConfig;
 import uk.gov.hmcts.reform.data.ingestion.configuration.BlobStorageCredentials;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
@@ -50,10 +50,10 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
 
-public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest {
+public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
+    CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
 
     @Autowired
     @Qualifier("springJdbcTransactionManager")
@@ -75,9 +75,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file in to a clean list_of_values table")
-    public void testCaseLinkingCsv_Success() throws Exception {
-        testCaseLinkingInsertion(
-            "case_linking_success.csv",
+    public void testOtherCategoriesCsv_Success() throws Exception {
+        testOtherCategoriesInsertion(
+            "other_categories_success.csv",
             MappingConstants.SUCCESS
         );
     }
@@ -85,9 +85,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file with different headers in different cases "
         + "in to a clean list_of_values table")
-    public void testCaseLinkingCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
-        String fileName = "case_linking_success_insensitive_headers.csv";
-        testCaseLinkingInsertion(
+    public void testOtherCategoriesCsv_TestCaseInsensitiveHeaders_Success() throws Exception {
+        String fileName = "other_categories_success_insensitive_headers.csv";
+        testOtherCategoriesInsertion(
             fileName,
             MappingConstants.SUCCESS
         );
@@ -96,9 +96,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Success - Test for loading a valid Csv file which has headers and data enclosed within quotes"
         + " in to a clean list_of_values table")
-    public void testCaseLinkingCsv_WithQuotes_Success() throws Exception {
-        String fileName = "case_linking_success_with_quotes.csv";
-        testCaseLinkingInsertion(
+    public void testOtherCategoriesCsv_WithQuotes_Success() throws Exception {
+        String fileName = "other_categories_success_with_quotes.csv";
+        testOtherCategoriesInsertion(
             fileName,
             MappingConstants.SUCCESS
         );
@@ -108,9 +108,9 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @DisplayName("Status: Success - Test for loading a valid Csv file which has a leading "
         + "trailing white space")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testCaseLinkingCsv_WithLeadingTrailingSpace_Success() throws Exception {
+    void testOtherCategoriesCsv_WithLeadingTrailingSpace_Success() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_CASE_LINKING_FILE_NAME,
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/categories/list_of_values_success_leadingspace.csv"))
         );
@@ -123,11 +123,11 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @DisplayName("Status: Success - Test for loading a valid Csv file which has a  numeric"
         + "value for CategoryKey field")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    public void testCaseLinkingCsv_WithNonNumericValueCategoryKey_Success() throws Exception {
+    public void testOtherCategoriesCsv_WithNonNumericValueCategoryKey_Success() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_CASE_LINKING_FILE_NAME,
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/caseLinking/case_linking_partial_success_categoryKey_numeric.csv"))
+                "classpath:sourceFiles/OtherCategories/other_categories_partial_success_categoryKey_numeric.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -137,11 +137,11 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Failure - Test for loading a file with an additional unknown header.")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testCaseLinkingCsv_UnknownHeader_Failure() throws Exception {
+    void testOtherCategoriesCsv_UnknownHeader_Failure() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_CASE_LINKING_FILE_NAME,
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/caseLinking/case_linking_failure_additional_header.csv"))
+                "classpath:sourceFiles/otherCategories/other_categories_failure_additional_header.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -149,8 +149,8 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
         assertEquals(0, listOfValues.size());
 
         Pair<String, String> pair = new Pair<>(
-            UPLOAD_CASE_LINKING_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: CaseLinking-test.csv"
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
+            "There is a mismatch in the headers of the csv file :: OtherCategories-test.csv"
         );
 
     }
@@ -158,11 +158,11 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @Test
     @DisplayName("Status: Failure - Test for loading a file with a missing header.")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testCaseLinkingCsv_MissingHeader_Failure() throws Exception {
+    void testOtherCategoriesCsv_MissingHeader_Failure() throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_CASE_LINKING_FILE_NAME,
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/caseLinking/case_linking_failure_unknown_header.csv"))
+                "classpath:sourceFiles/otherCategories/other_categories_failure_unknown_header.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
@@ -170,16 +170,16 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
         assertEquals(0, listOfValues.size());
 
         Pair<String, String> pair = new Pair<>(
-            UPLOAD_CASE_LINKING_FILE_NAME,
-            "There is a mismatch in the headers of the csv file :: CaseLinking-test.csv"
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
+            "There is a mismatch in the headers of the csv file :: OtherCategories-test.csv"
         );
 
     }
 
-    private void testCaseLinkingInsertion(String fileName, String status) throws Exception {
+    private void testOtherCategoriesInsertion(String fileName, String status) throws Exception {
         commonDataBlobSupport.uploadFile(
-            UPLOAD_CASE_LINKING_FILE_NAME,
-            new FileInputStream(getFile(String.format("classpath:sourceFiles/caseLinking/%s", fileName)))
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
+            new FileInputStream(getFile(String.format("classpath:sourceFiles/otherCategories/%s", fileName)))
         );
 
         camelContext.getGlobalOptions()
@@ -193,7 +193,7 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     @AfterEach
     void tearDown() throws Exception {
         //Delete Uploaded test file with Snapshot delete
-        commonDataBlobSupport.deleteBlob(UPLOAD_CASE_LINKING_FILE_NAME);
+        commonDataBlobSupport.deleteBlob(UPLOAD_OTHER_CATEGORIES_FILE_NAME);
     }
 
 
