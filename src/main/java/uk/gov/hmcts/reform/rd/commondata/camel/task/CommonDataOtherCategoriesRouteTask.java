@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class CommonDataCaseLinkingRouteTask extends BaseTasklet implements Tasklet {
+public class CommonDataOtherCategoriesRouteTask extends BaseTasklet implements Tasklet {
 
     @Value("${commondata-caselinking-start-route}")
     String startRoute;

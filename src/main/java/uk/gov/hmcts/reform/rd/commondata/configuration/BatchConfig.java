@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 @Configuration
 @EnableBatchProcessing
@@ -31,7 +31,7 @@ public class BatchConfig {
     CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
     @Autowired
-    CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
+    CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
 
     @Autowired
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
@@ -52,7 +52,7 @@ public class BatchConfig {
     String commonDataFlagDetailsTask;
 
     @Value("${commondata-caselinking-route-task}")
-    String commonDataCaseLinkingTask;
+    String commonDataOtherCategoriesTask;
 
     @Value("${batchjob-name}")
     String jobName;
@@ -77,9 +77,9 @@ public class BatchConfig {
 
 
     @Bean
-    public Step stepCommonDataCaseLinkingRoute() {
-        return steps.get(commonDataCaseLinkingTask)
-            .tasklet(commonDataCaseLinkingRouteTask)
+    public Step stepCommonDataOtherCategoriesRoute() {
+        return steps.get(commonDataOtherCategoriesTask)
+            .tasklet(commonDataOtherCategoriesRouteTask)
             .build();
     }
 
@@ -101,7 +101,7 @@ public class BatchConfig {
             .listener(jobResultListener)
             .on("*").to(stepCommonDataRoute())
             .on("*").to(stepCommonDataCategoriesRoute())
-            .on("*").to(stepCommonDataCaseLinkingRoute())
+            .on("*").to(stepCommonDataOtherCategoriesRoute())
             .end()
             .build();
     }
