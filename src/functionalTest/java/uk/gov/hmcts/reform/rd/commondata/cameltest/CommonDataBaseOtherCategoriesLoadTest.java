@@ -50,7 +50,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
 
-public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseTest {
+public class CommonDataBaseOtherCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
     CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
