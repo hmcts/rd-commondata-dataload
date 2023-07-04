@@ -286,7 +286,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
-  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.7'
+  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.9'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.3'
@@ -327,7 +327,7 @@ dependencies {
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
-  implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+  implementation group: 'com.google.guava', name: 'guava', version: '32.1.1-jre'
 
   implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.1'
 
@@ -445,7 +445,7 @@ configurations.all {
   resolutionStrategy.eachDependency { details ->
     if (details.requested.group == 'io.netty'
       && details.requested.name != 'netty-tcnative-boringssl-static' ) {
-      details.useVersion "4.1.86.Final"
+      details.useVersion "4.1.94.Final"
     }
 
     // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
