@@ -58,5 +58,6 @@ file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1
   </suppress>
   <suppress>
     <cve>CVE-2023-2976</cve>
+    <cve>CVE-2023-34462</cve>
   </suppress>
 </suppressions>
