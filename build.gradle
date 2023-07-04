@@ -133,7 +133,7 @@ pitest {
     'uk.gov.hmcts.reform.rd.commondata.CommonDataLoadApplication',
     'uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor',
     'uk.gov.hmcts.reform.rd.commondata.camel.binder.*',
-    'uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask'
+    'uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask'
   ]
   threads = 6
   enableDefaultIncrementalAnalysis = true
@@ -158,7 +158,7 @@ sonarqube {
 
     property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/rd/commondata/configuration/**," +
       "src/main/java/uk/gov/hmcts/reform/rd/commondata/CommonDataLoadApplication.java," +
-      "src/main/java/uk/gov/hmcts/reform/rd/commondata/camel/task/CommonDataCaseLinkingRouteTask.java,"+
+      "src/main/java/uk/gov/hmcts/reform/rd/commondata/camel/task/CommonDataOtherCategoriesRouteTask.java,"+
       "src/main/java/uk/gov/hmcts/reform/rd/commondata/camel/binder/**,"
   }
 }

@@ -1,9 +1,9 @@
-commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
-commondata-caselinking-route-task: commonDataCaseLinkingReasonsTask
-commondata-caselinking-routes-to-execute: commondata-case-linking-reasons-load
+commondata-othercategories-start-route: direct:CommonData-OtherCategoriesReasons
+commondata-othercategories-route-task: commonDataOtherCategoriesReasonsTask
+commondata-othercategories-routes-to-execute: commondata-other-categories-reasons-load
 route:
-  commondata-case-linking-reasons-load:
-    id: commondata-case-linking-reasons-load
+  commondata-other-categories-reasons-load:
+    id: commondata-other-categories-reasons-load
     file-name: OtherCategories.csv
     table-name: list_of_values
     insert-sql:
