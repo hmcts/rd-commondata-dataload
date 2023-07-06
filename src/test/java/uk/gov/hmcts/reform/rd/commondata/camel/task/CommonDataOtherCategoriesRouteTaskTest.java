@@ -25,9 +25,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 @ExtendWith(MockitoExtension.class)
-class CommonDataCaseLinkingRouteTaskTest {
+class CommonDataOtherCategoriesRouteTaskTest {
     @Spy
-    CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask = new CommonDataCaseLinkingRouteTask();
+    CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask = new CommonDataOtherCategoriesRouteTask();
 
     DataLoadRoute dataLoadRoute = mock(DataLoadRoute.class);
 
@@ -37,20 +37,20 @@ class CommonDataCaseLinkingRouteTaskTest {
 
     @BeforeEach
     void init() {
-        setField(commonDataCaseLinkingRouteTask, "logComponentName", "testlogger");
-        setField(commonDataCaseLinkingRouteTask, "dataLoadRoute", dataLoadRoute);
-        setField(commonDataCaseLinkingRouteTask, "commonDataExecutor", commonDataExecutor);
-        setField(commonDataCaseLinkingRouteTask, "camelContext", camelContext);
+        setField(commonDataOtherCategoriesRouteTask, "logComponentName", "testlogger");
+        setField(commonDataOtherCategoriesRouteTask, "dataLoadRoute", dataLoadRoute);
+        setField(commonDataOtherCategoriesRouteTask, "commonDataExecutor", commonDataExecutor);
+        setField(commonDataOtherCategoriesRouteTask, "camelContext", camelContext);
     }
 
     @Test
     void testExecute() {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
-        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCaseLinkingRouteTask
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataOtherCategoriesRouteTask
             .execute(anyString(), anyList(), anyBoolean()));
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
-        verify(commonDataCaseLinkingRouteTask, times(1))
+        verify(commonDataOtherCategoriesRouteTask, times(1))
             .execute(anyString(), anyList(), anyBoolean());
     }
 
@@ -58,10 +58,10 @@ class CommonDataCaseLinkingRouteTaskTest {
     void testExecute_NoAuditPreference() {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
-        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCaseLinkingRouteTask
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataOtherCategoriesRouteTask
             .execute(anyString(), anyList(), isNull()));
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
-        verify(commonDataCaseLinkingRouteTask, times(1))
+        verify(commonDataOtherCategoriesRouteTask, times(1))
             .execute(anyString(), anyList(), isNull());
     }
 
@@ -69,10 +69,10 @@ class CommonDataCaseLinkingRouteTaskTest {
     void execute() {
         doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
         when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
-        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCaseLinkingRouteTask
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataOtherCategoriesRouteTask
             .execute(anyString(), anyList(), anyBoolean()));
         verify(dataLoadRoute,times(1)).startRoute(anyString(),anyList());
-        verify(commonDataCaseLinkingRouteTask, times(1))
+        verify(commonDataOtherCategoriesRouteTask, times(1))
             .execute(anyString(), anyList(), anyBoolean());
     }
 }
