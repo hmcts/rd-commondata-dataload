@@ -314,8 +314,8 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         assertEquals(3, listOfValues.size());
         assertEquals("AdditionalFacilities",listOfValues.get(0).get("categorykey"));
-        assertEquals("AF-SSC",listOfValues.get(0).get("key"));
-        assertEquals("Same Sex Courtroom",listOfValues.get(0).get("value_en"));
+        assertEquals("AF-WR",listOfValues.get(0).get("key"));
+        assertEquals("Witness Room",listOfValues.get(0).get("value_en"));
         assertEquals("Y",listOfValues.get(0).get("active"));
 
 
