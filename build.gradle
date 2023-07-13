@@ -388,7 +388,7 @@ dependencies {
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.3'
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.7'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
-//  implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.0.Final'
+  implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.0.Final'
 
   testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
 
