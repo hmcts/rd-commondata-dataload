@@ -1,6 +1,9 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
 import com.google.common.collect.ImmutableList;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -23,9 +26,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
