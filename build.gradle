@@ -70,6 +70,8 @@ tasks.withType(Test) {
   }
 }
 
+tasks.withType(Copy).all { duplicatesStrategy 'exclude' }
+
 test {
   failFast = true
 }
