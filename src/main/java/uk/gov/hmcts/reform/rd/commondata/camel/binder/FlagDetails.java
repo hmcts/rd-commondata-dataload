@@ -12,7 +12,6 @@ import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 
 import java.io.Serializable;
 
