@@ -5,7 +5,7 @@ import org.apache.camel.Exchange;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
-import uk.gov.hmcts.reform.rd.commondata.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

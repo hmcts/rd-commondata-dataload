@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
-import uk.gov.hmcts.reform.rd.commondata.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
