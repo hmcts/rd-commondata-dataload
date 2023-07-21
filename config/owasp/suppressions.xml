@@ -56,18 +56,9 @@ file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1
     <notes>Suppressing disputed CVE: https://github.com/FasterXML/jackson-databind/issues/3972</notes>
     <cve>CVE-2023-35116</cve>
   </suppress>
+
   <suppress>
-    <notes><![CDATA[
-   file name: jakarta.activation-api-2.1.1.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/jakarta\.activation/jakarta\.activation\-api@.*$</packageUrl>
-    <cve>CVE-2008-7271</cve>
-  </suppress>
-  <suppress>
-    <notes><![CDATA[
-   file name: jakarta.activation-api-2.1.1.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/jakarta\.activation/jakarta\.activation\-api@.*$</packageUrl>
-    <cve>CVE-2010-4647</cve>
+    <notes>Removing this once fixed by DTSRD-794</notes>
+    <cve>CVE-2023-34442</cve>
   </suppress>
 </suppressions>
