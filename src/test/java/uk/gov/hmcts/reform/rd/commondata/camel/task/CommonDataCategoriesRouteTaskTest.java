@@ -16,9 +16,9 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.DataLoadRoute;
+import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
-import uk.gov.hmcts.reform.rd.commondata.camel.validator.JsrValidatorInitializer;
 
 import java.sql.ResultSet;
 import java.util.Collections;

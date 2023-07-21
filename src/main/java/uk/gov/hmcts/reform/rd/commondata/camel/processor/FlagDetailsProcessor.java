@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
