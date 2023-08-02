@@ -63,4 +63,8 @@ file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1
     <notes>Removing this once fixed by DTSRD-794</notes>
     <cve>CVE-2023-34442</cve>
   </suppress>
+
+  <suppress>
+    <cve>CVE-2023-34035</cve>
+  </suppress>
 </suppressions>
