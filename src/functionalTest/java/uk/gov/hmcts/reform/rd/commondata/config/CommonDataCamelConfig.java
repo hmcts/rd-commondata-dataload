@@ -204,6 +204,11 @@ public class CommonDataCamelConfig {
         return platformTransactionManager;
     }
 
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return txManager();
+    }
+
     @Bean(name = "springJdbcTransactionManager")
     public PlatformTransactionManager springJdbcTransactionManager() {
         DataSourceTransactionManager platformTransactionManager
