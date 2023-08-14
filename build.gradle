@@ -241,7 +241,7 @@ def versions = [
   gradlePitest        : '1.5.1',
   pitest              : '1.7.4',
   flyway              : '9.19.4',
-  camel               : '4.0.0-RC2',
+  camel               : '4.0.0',
   log4j               : '2.17.1',
   springVersion       : '6.0.8',
   logback             : '1.4.7'
