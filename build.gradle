@@ -199,8 +199,8 @@ dependencyManagement {
       entry 'guava'
     }
 
-    // CVE-2023-28709
-    dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.11') {
+    // CVE-2023-41080
+    dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.13') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
