@@ -62,10 +62,15 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";
 
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         SpringStarter.getInstance().restart();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
     }
 
     @Test

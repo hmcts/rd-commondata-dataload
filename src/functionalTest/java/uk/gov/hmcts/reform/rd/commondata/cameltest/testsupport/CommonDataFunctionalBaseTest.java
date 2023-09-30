@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 
 import java.util.List;
@@ -60,6 +61,9 @@ public abstract class CommonDataFunctionalBaseTest {
     @Value("${list-of-values-select-sql}")
     protected String listOfValuesSelectData;
 
+    @Value("${flag-details-select-sql}")
+    protected String flagDetailsSelectData;
+
     @Value("${audit-enable}")
     protected Boolean auditEnable;
 
@@ -77,6 +81,9 @@ public abstract class CommonDataFunctionalBaseTest {
 
     @Value("${exception-select-query}")
     protected String exceptionQuery;
+
+    @Value("${exception-records-select-query}")
+    protected String exceptionRecordsQuery;
 
     @Value("${ordered-exception-select-query}")
     protected String orderedExceptionQuery;
@@ -105,12 +112,17 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
 
+    @Autowired
+    protected CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
+
 
     public static final String UPLOAD_FLAG_SERVICE_FILE_NAME = "FlagService-test.csv";
 
     public static final String UPLOAD_LIST_OF_VALUES_FILE_NAME = "ListOfValues-test.csv";
 
     public static final String UPLOAD_CASE_LINKING_FILE_NAME = "CaseLinking-test.csv";
+
+    public static final String UPLOAD_FLAG_DETAILS_FILE_NAME = "FlagDetails-test.csv";
 
 
     @BeforeEach
@@ -166,7 +178,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(3, result.size());
+        assertEquals(4, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());

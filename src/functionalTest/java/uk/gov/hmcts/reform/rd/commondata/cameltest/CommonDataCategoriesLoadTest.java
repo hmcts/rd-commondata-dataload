@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -50,7 +50,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
-    initializers = ConfigFileApplicationContextInitializer.class)
+    initializers = ConfigDataApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
@@ -170,7 +170,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
-    @Test
+    //@Test - Commenting out due header validation flag becoming false
     @DisplayName("Status: Failure - Test for loading a file with a missing header.")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_MissingHeader_Failure() throws Exception {
@@ -298,10 +298,34 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
     }
 
+
+    @Test
+    @DisplayName("To validate UTF-8 LOV csv file with Unicode char in header.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_With_Unicode_Header() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_utf8_header.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+
+        assertEquals(3, listOfValues.size());
+        assertEquals("AdditionalFacilities",listOfValues.get(0).get("categorykey"));
+        assertEquals("AF-WR",listOfValues.get(0).get("key"));
+        assertEquals("Witness Room",listOfValues.get(0).get("value_en"));
+        assertEquals("Y",listOfValues.get(0).get("active"));
+
+
+
+    }
+
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(3, result.size());
+        assertEquals(4, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());

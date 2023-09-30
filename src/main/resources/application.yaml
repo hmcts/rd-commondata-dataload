@@ -14,6 +14,8 @@ management:
 spring:
   application:
     name: commondata data load
+  main:
+    allow-circular-references: true
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -24,7 +26,8 @@ spring:
           lob:
             non_contextual_creation: true
   batch:
-    initialize-schema: always
+    jdbc:
+      initialize-schema: always
     #run spring batch job manually as need to validate idempotent condition in code
     #rather than giving control to spring
     job:
@@ -55,5 +58,6 @@ spring:
       - crd-flag-service-router
       - crd-list-of-values-router
       - crd-case-linking-reasons-router
+      - crd-flag-details-router
 mail:
   enabled: false

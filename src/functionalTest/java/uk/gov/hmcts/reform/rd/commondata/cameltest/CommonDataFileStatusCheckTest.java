@@ -16,7 +16,7 @@ import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -48,7 +48,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
-    initializers = ConfigFileApplicationContextInitializer.class)
+    initializers = ConfigDataApplicationContextInitializer.class)
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
@@ -100,14 +100,15 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(3, result.size());
-        assertEquals(3, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
+        assertEquals(4, result.size());
+        assertEquals(4, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
         List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(flagServiceSelectData);
         assertFalse(judicialUserRoleType.isEmpty());
     }
 
     private void deleteFile() throws Exception {
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME, false);
+        commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_DETAILS_FILE_NAME);
     }
 
     @Test
@@ -136,10 +137,10 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             "FlagService-test.csv file does not exist in azure storage account"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(3, result.size());
-        assertEquals(3, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
+        assertEquals(4, result.size());
+        assertEquals(4, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
         List<Map<String, Object>> flagCodes = jdbcTemplate.queryForList(flagServiceSelectData);
         assertThat(flagCodes).isNotEmpty().hasSize(3);
     }
@@ -153,6 +154,11 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
     private void uploadFiles(String time) throws Exception {
         camelContext.getGlobalOptions().put(SCHEDULER_START_TIME, time);
         commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_DETAILS_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagDetails/flag_details.csv"))
+        );
+        commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             new FileInputStream(getFile(
                 "classpath:sourceFiles/flagService/flag_service_success.csv"))
@@ -161,7 +167,8 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        //Delete Uploaded test file with Snapshot delet
+        //Delete Uploaded test file with Snapshot delete
+        commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_DETAILS_FILE_NAME);
         commonDataBlobSupport.deleteBlob(UPLOAD_FLAG_SERVICE_FILE_NAME);
     }
 }

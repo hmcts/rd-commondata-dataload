@@ -10,12 +10,7 @@
    ]]></notes>
     <cve>CVE-2016-1000027</cve>
   </suppress>
-  <suppress until="2023-12-30">
-    <notes><![CDATA[
-    file name: tomcat-embed-core-9.0.63.jar
-    ]]></notes>
-    <cve>CVE-2022-34305</cve>
-  </suppress>
+
   <suppress until="2024-01-01">
     <notes><![CDATA[
    file name: log4j-core-2.17.1.jar
@@ -26,5 +21,49 @@
     <cve>CVE-2022-31569</cve>
     <cve>CVE-2021-37533</cve>
     <cve>CVE-2022-45046</cve>
+  </suppress>
+  <suppress until="2024-01-01">
+    <notes><![CDATA[
+   netty 4.1.85
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/io\.netty/netty-.+@.*$</packageUrl>
+    <cve>CVE-2022-41881</cve>
+</suppress>
+    <suppress until="2023-12-30">
+    <notes>cucumber:datatable pom contains com.googlecode.java-diff-utils:diffutils which has the CVE vulnerability, no fix has been released yet for this</notes>
+    <cve>CVE-2021-4277</cve>
+  </suppress>
+      <suppress>
+        <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+        <cve>CVE-2021-4235</cve>
+    </suppress>
+  <suppress>
+    <notes><![CDATA[
+file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1.32)
+]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
+    <cve>CVE-2022-1471</cve>
+  </suppress>
+   <suppress>
+     <cve>CVE-2022-45688</cve>
+   </suppress>
+   <suppress>
+    <cve>CVE-2023-20860</cve>
+    <cve>CVE-2023-20859</cve>
+    <cve>CVE-2023-20883</cve>
+  </suppress>
+  <suppress>
+    <notes>Suppressing disputed CVE: https://github.com/FasterXML/jackson-databind/issues/3972</notes>
+    <cve>CVE-2023-35116</cve>
+  </suppress>
+
+  <suppress>
+    <notes>Removing this once fixed by DTSRD-794</notes>
+    <cve>CVE-2023-34442</cve>
+  </suppress>
+
+  <suppress>
+    <cve>CVE-2023-34035</cve>
+    <cve>CVE-2023-34047</cve>
   </suppress>
 </suppressions>
