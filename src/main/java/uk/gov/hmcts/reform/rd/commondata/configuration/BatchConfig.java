@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 @Configuration
 @EnableBatchProcessing
@@ -26,6 +27,9 @@ public class BatchConfig {
 
     @Autowired
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
+
+    @Autowired
+    CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
 
     @Autowired
     CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
@@ -53,6 +57,9 @@ public class BatchConfig {
 
     @Value("${commondata-caselinking-route-task}")
     String commonDataCaseLinkingTask;
+
+    @Value("${commondata-othercategories-route-task}")
+    String commonDataOtherCategoriesTask;
 
     @Value("${batchjob-name}")
     String jobName;
@@ -90,6 +97,13 @@ public class BatchConfig {
             .build();
     }
 
+    @Bean
+    public Step stepOtherCategoriesRoute() {
+        return steps.get(commonDataOtherCategoriesTask)
+            .tasklet(commonDataOtherCategoriesRouteTask)
+            .build();
+    }
+
     /**
      * Returns Job bean.
      * @return Job
@@ -102,6 +116,7 @@ public class BatchConfig {
             .on("*").to(stepCommonDataRoute())
             .on("*").to(stepCommonDataCategoriesRoute())
             .on("*").to(stepCommonDataCaseLinkingRoute())
+            .on("*").to(stepOtherCategoriesRoute())
             .end()
             .build();
     }
