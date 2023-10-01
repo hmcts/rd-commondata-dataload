@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +24,13 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.s
 
 @Component
 @Slf4j
-public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<Categories> {
+public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCategories> {
 
     @Value("${logging-component-name}")
     private String logComponentName;
 
     @Autowired
-    JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
+    JsrValidatorInitializer<OtherCategories> lovServiceJsrValidatorInitializer;
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
@@ -39,18 +39,18 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<Categor
     @Override
     public void process(Exchange exchange) {
 
-        List<Categories> categoriesList;
+        List<OtherCategories> categoriesList;
 
         categoriesList = (exchange.getIn().getBody() instanceof List)
-            ? (List<Categories>) exchange.getIn().getBody()
-            : singletonList((Categories) exchange.getIn().getBody());
+            ? (List<OtherCategories>) exchange.getIn().getBody()
+            : singletonList((OtherCategories) exchange.getIn().getBody());
 
         log.info(" {} Categories Records count before Validation {}::", logComponentName,
                  categoriesList.size()
         );
 
-        Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList);
-        List<Categories> finalCategoriesList = getValidCategories(filteredCategories);
+        Multimap<String, OtherCategories> filteredCategories = convertToMultiMap(categoriesList);
+        List<OtherCategories> finalCategoriesList = getValidCategories(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
                  finalCategoriesList.size()
@@ -65,7 +65,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<Categor
         }
         exchange.getMessage().setBody(finalCategoriesList);
 
-        List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
+        List<OtherCategories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
@@ -84,20 +84,20 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<Categor
 
     }
 
-    private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
-                                                  List<Categories> finalCategoriesList) {
-        List<Categories> invalidCategories = new ArrayList<>(orgCategoryList);
+    private List<OtherCategories> getInvalidCategories(List<OtherCategories> orgCategoryList,
+                                                  List<OtherCategories> finalCategoriesList) {
+        List<OtherCategories> invalidCategories = new ArrayList<>(orgCategoryList);
 
         invalidCategories.removeAll(finalCategoriesList);
 
         return invalidCategories;
     }
 
-    private List<Categories> getValidCategories(Multimap<String, Categories> multimap) {
+    private List<OtherCategories> getValidCategories(Multimap<String, OtherCategories> multimap) {
 
-        List<Categories> finalCategories = new ArrayList<>();
+        List<OtherCategories> finalCategories = new ArrayList<>();
         multimap.asMap().forEach((key, collection) -> {
-            List<Categories> categoriesList = collection.stream().toList();
+            List<OtherCategories> categoriesList = collection.stream().toList();
             if (categoriesList.size() > 1) {
                 finalCategories.addAll(filterInvalidCategories(categoriesList));
             } else {
@@ -107,19 +107,19 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<Categor
         return finalCategories;
     }
 
-    private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList) {
-        Multimap<String, Categories> multimap = ArrayListMultimap.create();
+    private Multimap<String, OtherCategories> convertToMultiMap(List<OtherCategories> categoriesList) {
+        Multimap<String, OtherCategories> multimap = ArrayListMultimap.create();
         categoriesList.forEach(categories -> multimap.put(categories.getCategoryKey() + categories.getServiceId()
                                                               + categories.getKey(), categories));
         return multimap;
     }
 
-    private List<Categories> filterInvalidCategories(List<Categories> categoriesList) {
-        List<Categories> validCategories = new ArrayList<>();
+    private List<OtherCategories> filterInvalidCategories(List<OtherCategories> categoriesList) {
+        List<OtherCategories> validCategories = new ArrayList<>();
 
         boolean activeProcessed = false;
 
-        for (Categories category : categoriesList) {
+        for (OtherCategories category : categoriesList) {
             if ((ACTIVE_Y.equalsIgnoreCase(category.getActive())
                 && !activeProcessed)) {
                 validCategories.add(category);

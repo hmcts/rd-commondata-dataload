@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.rd.commondata.camel.mapper;
 
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class OtherCategoriesMapper implements IMapper {
 
     @Override
     public Map<String, Object> getMap(Object categoriesObj) {
-        Categories categories = (Categories) categoriesObj;
+        OtherCategories categories = (OtherCategories) categoriesObj;
         Map<String, Object> categoriesRow = new HashMap<>();
         categoriesRow.put("categoryKey", trim(categories.getCategoryKey()));
         categoriesRow.put("serviceId", trim(categories.getServiceId()));
