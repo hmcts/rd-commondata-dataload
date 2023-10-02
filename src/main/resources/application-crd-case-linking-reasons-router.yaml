@@ -1,6 +1,7 @@
 commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
 commondata-caselinking-route-task: commonDataCaseLinkingReasonsTask
 commondata-caselinking-routes-to-execute: commondata-case-linking-reasons-load
+commondata-caselinking-route-disable: ${caselinking-route-disable:false}
 route:
   commondata-case-linking-reasons-load:
     id: commondata-case-linking-reasons-load

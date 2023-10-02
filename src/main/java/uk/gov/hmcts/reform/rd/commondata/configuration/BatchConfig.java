@@ -6,6 +6,8 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.flow.FlowExecutionStatus;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -57,6 +59,9 @@ public class BatchConfig {
 
     @Value("${commondata-caselinking-route-task}")
     String commonDataCaseLinkingTask;
+
+    @Value("${commondata-caselinking-route-disable}")
+    boolean isDisabledCaseLinkingRoute;
 
     @Value("${commondata-othercategories-route-task}")
     String commonDataOtherCategoriesTask;
@@ -115,9 +120,16 @@ public class BatchConfig {
             .listener(jobResultListener)
             .on("*").to(stepCommonDataRoute())
             .on("*").to(stepCommonDataCategoriesRoute())
-            .on("*").to(stepCommonDataCaseLinkingRoute())
             .on("*").to(stepOtherCategoriesRoute())
-            .end()
+            .on("*").to(checkCaseLinkingRouteStatus())
+            .from(checkCaseLinkingRouteStatus()).on("STOPPED").end()
+            .from(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute()).end()
             .build();
     }
+
+    @Bean
+    public JobExecutionDecider checkCaseLinkingRouteStatus() {
+        return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute? "STOPPED": "ENABLED");
+    }
+
 }
