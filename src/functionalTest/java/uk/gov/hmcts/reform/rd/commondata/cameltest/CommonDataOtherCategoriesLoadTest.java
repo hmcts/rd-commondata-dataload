@@ -141,7 +141,7 @@ public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseT
         commonDataBlobSupport.uploadFile(
             UPLOAD_OTHER_CATEGORIES_FILE_NAME,
             new FileInputStream(getFile(
-                "classpath:sourceFiles/otherCategories/other_categories_failure_additional_header.csv"))
+                "classpath:sourceFiles/otherCategories/other_categories_failure_additional_headers.csv"))
         );
 
         jobLauncherTestUtils.launchJob();
