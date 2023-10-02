@@ -60,7 +60,7 @@ public class BatchConfig {
     @Value("${commondata-caselinking-route-task}")
     String commonDataCaseLinkingTask;
 
-    @Value("${commondata-caselinking-route-disable}")
+    @Value("${commondata-caselinking-route-disable:false}")
     boolean isDisabledCaseLinkingRoute;
 
     @Value("${commondata-othercategories-route-task}")
@@ -129,7 +129,7 @@ public class BatchConfig {
 
     @Bean
     public JobExecutionDecider checkCaseLinkingRouteStatus() {
-        return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute? "STOPPED": "ENABLED");
+        return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute ? "STOPPED" : "ENABLED");
     }
 
 }
