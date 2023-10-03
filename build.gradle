@@ -234,7 +234,7 @@ def versions = [
   junit               : '5.10.0',
   junitPlatform       : '1.10.0',
   reformLogging       : '6.0.1',
-  springBoot          : '3.1.2',
+  springBoot          : '3.1.4',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.2.12',
   lombok              : '1.18.22',
@@ -243,7 +243,7 @@ def versions = [
   flyway              : '9.21.1',
   camel               : '4.0.1',
   log4j               : '2.20.0',
-  springVersion       : '6.0.11',
+  springVersion       : '6.0.12',
   logback             : '1.4.7'
 ]
 
@@ -296,7 +296,7 @@ dependencies {
 
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.5'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
-  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-9') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-10') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
