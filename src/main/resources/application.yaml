@@ -20,6 +20,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
+    open-in-view: false
     properties:
       hibernate:
         jdbc:
@@ -61,3 +62,10 @@ spring:
       - crd-flag-details-router
 mail:
   enabled: false
+
+logging:
+  level:
+    root: "trace"
+    org.springframework: "trace"
+    org.springframework.web: "trace"
+    org.hibernate: "trace"

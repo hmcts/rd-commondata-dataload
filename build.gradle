@@ -241,7 +241,7 @@ def versions = [
   gradlePitest        : '1.5.1',
   pitest              : '1.7.4',
   flyway              : '9.21.1',
-  camel               : '4.0.0',
+  camel               : '4.0.1',
   log4j               : '2.20.0',
   springVersion       : '6.0.11',
   logback             : '1.4.7'
@@ -289,13 +289,14 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
-  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
+//  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
+  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.15.2', ext: 'pom'
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.9'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.5'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
-  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-7') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-9') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
@@ -308,7 +309,8 @@ dependencies {
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.11.0'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
-  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
+//  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
+  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-bom', version: versions.camel, ext: 'pom'
 //  implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
@@ -391,13 +393,13 @@ dependencies {
 
   testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
   testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
-  testImplementation group: 'org.apache.camel', name: 'camel-test-infra-core', version: '4.0.0'
+  testImplementation group: 'org.apache.camel', name: 'camel-test-infra-core', version: '4.0.0', classifier: 'tests'
   testImplementation group: 'org.apache.camel', name: 'camel-test-infra-postgres', version: '4.0.0'
 //  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers', version: '3.14.9'
 //  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers-spring', version: '3.14.9'
 //  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers-spring-junit5', version: '3.14.9'
-  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.18.3'
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.18.3'
+  testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.19.1' //version: '1.17.6' //, version: '1.18.3'
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.19.1' //version: '1.17.6' //, version: '1.18.3'
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '5.0.2'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
   implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
@@ -464,8 +466,16 @@ configurations.all {
 
     // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
     if (details.requested.group == 'com.azure'
-      && details.requested.name == 'azure_storage_blobs') {
-      details.useVersion "12.22.3"
+      && (details.requested.name == 'azure_storage_blobs')
+       || details.requested.name == 'azure-storage-blob') {
+      details.useVersion "12.24.0"
+    }
+
+    if (//details.requested.group == 'com.fasterxml.jackson'
+      details.requested.name == 'jackson-core'
+      || details.requested.name == 'jackson-databind'
+    ) {
+      details.useVersion "2.15.2"
     }
   }
 }

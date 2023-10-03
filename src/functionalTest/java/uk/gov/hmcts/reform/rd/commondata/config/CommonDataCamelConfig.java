@@ -3,17 +3,30 @@ package uk.gov.hmcts.reform.rd.commondata.config;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.spring.boot.SpringBootCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
+import org.apache.camel.test.infra.core.CamelContextExtension;
+import org.apache.camel.test.infra.core.DefaultCamelContextExtension;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.CommonCsvFieldProcessor;
@@ -50,6 +63,10 @@ import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSup
 import javax.sql.DataSource;
 
 @Configuration
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@SpringBootConfiguration
+//@TestConfiguration (proxyBeanMethods = false)
+@Testcontainers
 public class CommonDataCamelConfig {
 
     @Bean
@@ -158,24 +175,84 @@ public class CommonDataCamelConfig {
     }
     // processor configuration starts
 
+//    @RegisterExtension
+//    protected static CamelContextExtension contextExtension = new DefaultCamelContextExtension();
 
     // db configuration starts
-    private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
-        .withDatabaseName("dbcommondata_test");
+//    @Bean
+//    @ServiceConnection
+//    public PostgreSQLContainer postgres() {
+//        return testPostgres;
+//    }
+//        return new PostgreSQLContainer("postgres")
+//                .withDatabaseName("dbcommondata_test");
+
+    @Container
+    @RegisterExtension
+    @ServiceConnection
+    static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
+            .withDatabaseName("dbcommondata")
+            ;
+//        .withUsername("dbcommondata")
+//        .withPassword("dbcommondata")
+
+//    static class TestPostgresContainer extends PostgreSQLContainer<TestPostgresContainer> {
+//
+//        TestPostgresContainer(String containerName) {
+//            super(containerName);
+//        }
+//
+//        @Override
+//        protected void configure() {
+//            withUrlParam("loggerLevel", "ALL");
+//            addEnv("POSTGRES_DB", getDatabaseName());
+//            addEnv("POSTGRES_USER", getUsername());
+//            addEnv("POSTGRES_PASSWORD", getPassword());
+//        }
+//    }
+
+//    @DynamicPropertySource
+//    static void registerPgProperties(DynamicPropertyRegistry registry) {
+////        registry.add("spring.datasource.url", testPostgres::getJdbcUrl);
+//        registry.add("spring.datasource.url", () -> "jdbc:tc:postgres:11:///dbcommondata");
+////        registry.add("spring.datasource.username", testPostgres::getUsername);
+////        registry.add("spring.datasource.password", testPostgres::getPassword);
+//    }
 
     static {
-        testPostgres.start();
+//        testPostgres.start();
+//        try {
+//            Thread.sleep(60_000l);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+//        testPostgres.stop();
     }
+
+//    public static void restartPostgres() {
+//        testPostgres.stop();
+//        testPostgres.start();
+//    }
+
+//    @PreDestroy
+//    public void stop() {
+//        testPostgres.stop();
+//    }
 
     @Bean
     public DataSource dataSource() {
-        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
-        return dataSourceBuilder.build();
+//        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
+//        return dataSourceBuilder.build();
+        return springJdbcDataSource();
     }
 
     private DataSourceBuilder getDataSourceBuilder() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
+//        if (testPostgres.isRunning())
+//            testPostgres.stop();
+//        if (!testPostgres.isRunning())
+//            testPostgres.start();
         dataSourceBuilder.url(testPostgres.getJdbcUrl());
         dataSourceBuilder.username(testPostgres.getUsername());
         dataSourceBuilder.password(testPostgres.getPassword());
@@ -194,6 +271,12 @@ public class CommonDataCamelConfig {
         jdbcTemplate.setDataSource(springJdbcDataSource());
         return jdbcTemplate;
     }
+
+//    @Bean
+//    public DataSource defaultDataSource() {
+//        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
+//        return dataSourceBuilder.build();
+//    }
     // db configuration ends
 
     // transaction configuration starts
@@ -207,6 +290,9 @@ public class CommonDataCamelConfig {
     @Bean
     public PlatformTransactionManager transactionManager() {
         return txManager();
+//        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(defaultDataSource());
+//        transactionManager.setDataSource(defaultDataSource());
+//        return transactionManager;
     }
 
     @Bean(name = "springJdbcTransactionManager")
@@ -220,7 +306,7 @@ public class CommonDataCamelConfig {
     @Bean(name = "PROPAGATION_REQUIRED")
     public SpringTransactionPolicy getSpringTransaction() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
-        springTransactionPolicy.setTransactionManager(txManager());
+        springTransactionPolicy.setTransactionManager(transactionManager());
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
         return springTransactionPolicy;
     }
@@ -228,7 +314,7 @@ public class CommonDataCamelConfig {
     @Bean(name = "PROPAGATION_REQUIRES_NEW")
     public SpringTransactionPolicy propagationRequiresNew() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
-        springTransactionPolicy.setTransactionManager(txManager());
+        springTransactionPolicy.setTransactionManager(transactionManager());
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return springTransactionPolicy;
     }
@@ -275,7 +361,9 @@ public class CommonDataCamelConfig {
 
     @Bean
     public CamelContext camelContext(ApplicationContext applicationContext) {
-        return new SpringCamelContext(applicationContext);
+//        return contextExtension.getContext();
+//        return new SpringCamelContext(applicationContext);
+        return new SpringBootCamelContext(applicationContext, true);
     }
     // camel related configuration ends
 

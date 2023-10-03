@@ -11,6 +11,10 @@ spring:
       enabled: false
   main:
     allow-circular-references: true
+  jpa:
+    open-in-view: false
+#  datasource:
+#    url: jdbc:tc:postgres:///dbcommondata
 
 #Local integration testing these values should be actual
 #ACCOUNT_NAME: ${ACCOUNT_NAME}
@@ -126,6 +130,12 @@ truncate-audit: truncate dataload_schedular_audit
 truncate-exception: truncate dataload_exception_records
 jdbc-batch-size: 10
 logging-component-name: RD_Common_Data
+logging:
+  level:
+    root: "trace"
+    org.springframework: "trace"
+    org.springframework.web: "trace"
+    org.hibernate: "trace"
 component:
   name: Common Reference Data
 mail:

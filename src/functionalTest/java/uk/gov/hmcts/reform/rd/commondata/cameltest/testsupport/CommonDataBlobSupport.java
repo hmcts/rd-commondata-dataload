@@ -56,8 +56,8 @@ public class CommonDataBlobSupport {
             .endpoint(uri)
             .credential(credential)
             .buildClient();
-        cloudBlobContainer = blobServiceClient.createBlobContainer("rd-common-data");
-        cloudBlobArchContainer = blobServiceClient.createBlobContainer("rd-common-data-archive");
+        cloudBlobContainer = blobServiceClient.createBlobContainerIfNotExists("rd-common-data");
+        cloudBlobArchContainer = blobServiceClient.createBlobContainerIfNotExists("rd-common-data-archive");
     }
 
     /**

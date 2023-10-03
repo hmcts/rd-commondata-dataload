@@ -48,7 +48,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-@SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
+@SqlConfig(dataSource = "dataSource", //
+   transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @ExtendWith(SpringExtension.class)
 @WithTags({@WithTag("testType:Functional")})
