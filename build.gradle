@@ -294,7 +294,8 @@ dependencies {
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.9'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
-  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.5'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.1.4'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
   implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-10') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
@@ -461,7 +462,7 @@ configurations.all {
 //    }
     if (details.requested.group == 'org.springframework.security'
       && details.requested.name == 'spring-security-crypto' ) {
-      details.useVersion "6.1.2"
+      details.useVersion "6.1.4"
     }
 
     // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
