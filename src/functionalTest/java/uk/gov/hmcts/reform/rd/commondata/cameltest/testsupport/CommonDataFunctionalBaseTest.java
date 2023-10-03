@@ -5,7 +5,6 @@ import org.apache.camel.test.spring.junit5.DisableJmx;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -145,8 +144,6 @@ public abstract class CommonDataFunctionalBaseTest {
         TestContextManager testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
         SpringStarter.getInstance().init(testContextManager);
-
-//        camelConfig.restartPostgres();
     }
 
     @BeforeAll
@@ -236,10 +233,4 @@ public abstract class CommonDataFunctionalBaseTest {
             containsString(pair.getValue1())
         );
     }
-
-//    @AfterAll
-//    public static void exit() {
-//        // crude attempt to resolve hanging test execution
-//        System.exit(0);
-//    }
 }

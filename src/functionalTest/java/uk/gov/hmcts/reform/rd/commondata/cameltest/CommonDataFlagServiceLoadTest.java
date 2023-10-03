@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,8 +51,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-@SqlConfig(dataSource = "dataSource", //
- transactionManager = "txManager",
+@SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
 public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest {
