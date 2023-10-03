@@ -401,7 +401,7 @@ dependencies {
 //  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers-spring-junit5', version: '3.14.9'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.19.1' //version: '1.17.6' //, version: '1.18.3'
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.19.1' //version: '1.17.6' //, version: '1.18.3'
-  testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '5.0.2'
+  testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '5.0.3'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
   implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
 
