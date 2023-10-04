@@ -101,7 +101,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
         assertEquals(5, result.size());
-        assertEquals(4, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
+        assertEquals(5, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
         List<Map<String, Object>> judicialUserRoleType = jdbcTemplate.queryForList(flagServiceSelectData);
         assertFalse(judicialUserRoleType.isEmpty());
     }
@@ -140,7 +140,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
         assertEquals(5, result.size());
-        assertEquals(4, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
+        assertEquals(5, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());
         List<Map<String, Object>> flagCodes = jdbcTemplate.queryForList(flagServiceSelectData);
         assertThat(flagCodes).isNotEmpty().hasSize(3);
     }
