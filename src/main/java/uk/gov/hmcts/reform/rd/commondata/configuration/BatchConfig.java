@@ -120,10 +120,11 @@ public class BatchConfig {
             .listener(jobResultListener)
             .on("*").to(stepCommonDataRoute())
             .on("*").to(stepCommonDataCategoriesRoute())
-            .on("*").to(stepOtherCategoriesRoute())
             .on("*").to(checkCaseLinkingRouteStatus())
-            .from(checkCaseLinkingRouteStatus()).on("STOPPED").end()
-            .from(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute()).end()
+            .from(checkCaseLinkingRouteStatus()).on("STOPPED").to(stepOtherCategoriesRoute())
+            .from(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute())
+            .on("*").to(stepOtherCategoriesRoute())
+            .end()
             .build();
     }
 
