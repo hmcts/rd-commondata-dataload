@@ -41,8 +41,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
@@ -332,8 +330,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     protected void validateFlagDetailsFileFailureException(JdbcTemplate jdbcTemplate, String exceptionQuery,
                                                            Pair<String, String> pair, int index) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertThat((String) result.get(index).get("error_description"),
-                   containsString(pair.getValue1()));
+        assertTrue(result.stream().map(a -> a.get("error_description").toString()).toList().contains(pair.getValue1()));
     }
 
     @SuppressWarnings("unchecked")
