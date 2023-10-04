@@ -163,7 +163,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             buildFlagServiceLoadObject()
         ), 1);
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertEquals(5, result.size());
+        assertEquals(6, result.size());
     }
 
     @Test
