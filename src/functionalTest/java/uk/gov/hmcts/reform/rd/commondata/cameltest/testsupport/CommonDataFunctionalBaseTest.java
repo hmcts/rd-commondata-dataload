@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTas
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
+import uk.gov.hmcts.reform.rd.commondata.config.CommonDataSpringBatchConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -47,10 +49,12 @@ import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 
 @ExtendWith(SpringExtension.class)
 @Testcontainers
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisableJmx
-@ImportTestcontainers(CommonDataCamelConfig.class)
+@ImportTestcontainers({CommonDataCamelConfig.class, CommonDataSpringBatchConfig.class})
 @MockEndpoints
+//@EnableBatchProcessing
+@SpringBatchTest
 public abstract class CommonDataFunctionalBaseTest {
 
     @Autowired

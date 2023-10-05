@@ -11,6 +11,7 @@ spring:
       enabled: false
   main:
     allow-circular-references: true
+    allow-bean-definition-overriding: true
   jpa:
     open-in-view: false
 #  datasource:
@@ -132,10 +133,10 @@ jdbc-batch-size: 10
 logging-component-name: RD_Common_Data
 logging:
   level:
-    root: "trace"
-    org.springframework: "trace"
-    org.springframework.web: "trace"
-    org.hibernate: "trace"
+    root: "info"
+    org.springframework: "info"
+    org.springframework.web: "info"
+    org.hibernate: "info"
 component:
   name: Common Reference Data
 mail:
