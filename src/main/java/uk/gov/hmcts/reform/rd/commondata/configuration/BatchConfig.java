@@ -118,12 +118,12 @@ public class BatchConfig {
         return jobBuilderFactory.get(jobName)
             .start(stepCommonDataFlagDetailsRoute())
             .listener(jobResultListener)
-            .next(stepCommonDataRoute())
-            .next(stepOtherCategoriesRoute())
-            //.next(checkCaseLinkingRouteStatus())
-            //.from(checkCaseLinkingRouteStatus()).on("STOPPED").to(stepCommonDataCategoriesRoute())
-            .next(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute())
-            .next(stepCommonDataCategoriesRoute())
+            .on("*").to(stepCommonDataRoute())
+            .on("*").to(stepOtherCategoriesRoute())
+            .on("*").to(checkCaseLinkingRouteStatus())
+            .from(checkCaseLinkingRouteStatus()).on("STOPPED").to(stepCommonDataCategoriesRoute())
+            .from(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute())
+            .on("*").to(stepCommonDataCategoriesRoute())
             .end()
             .build();
     }
