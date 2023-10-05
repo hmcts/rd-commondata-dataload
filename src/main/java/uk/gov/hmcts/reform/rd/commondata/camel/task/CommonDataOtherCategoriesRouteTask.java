@@ -22,7 +22,7 @@ public class CommonDataOtherCategoriesRouteTask extends BaseTasklet implements T
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        return super.execute(startRoute, routesToExecute, Boolean.TRUE);
+        return super.execute(startRoute, routesToExecute, Boolean.FALSE);
     }
 
 }

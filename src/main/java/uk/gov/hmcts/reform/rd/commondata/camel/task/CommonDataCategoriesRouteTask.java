@@ -42,7 +42,7 @@ public class CommonDataCategoriesRouteTask extends BaseTasklet implements Taskle
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        RepeatStatus repeatStatus = super.execute(startRoute, routesToExecute, Boolean.FALSE);
+        RepeatStatus repeatStatus = super.execute(startRoute, routesToExecute, Boolean.TRUE);
 
         auditAndDeleteCategories();
         return repeatStatus;
