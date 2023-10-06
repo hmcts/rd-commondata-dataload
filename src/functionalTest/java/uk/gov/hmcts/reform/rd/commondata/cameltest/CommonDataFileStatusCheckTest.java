@@ -96,7 +96,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
         jobLauncherTestUtils.launchJob(params);
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
-            "not loaded due to file stale error"
+            "(.+?) not loaded due to file stale error"
         );
         validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);

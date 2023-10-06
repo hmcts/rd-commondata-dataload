@@ -1,6 +1,8 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport;
 
 import org.apache.camel.CamelContext;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.text.MatchesPattern;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
 import org.junit.jupiter.api.BeforeAll;
@@ -221,6 +223,10 @@ public abstract class CommonDataFunctionalBaseTest {
                                                     Pair<String, String> pair,
                                                     int index) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertTrue(result.stream().map(a -> a.get("error_description").toString()).toList().contains(pair.getValue1()));
+
+        String errorDescription = result.stream().map(a -> a.get("error_description").toString()).filter(e -> e.startsWith("FlagService-test.csv")).findFirst().get();
+        MatcherAssert.assertThat(errorDescription,MatchesPattern.matchesPattern(pair.getValue1()));
+
+
     }
 }
