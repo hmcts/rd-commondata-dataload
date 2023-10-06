@@ -310,9 +310,8 @@ dependencies {
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.11.0'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
-//  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-bom', version: versions.camel, ext: 'pom'
-//  implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+  implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
