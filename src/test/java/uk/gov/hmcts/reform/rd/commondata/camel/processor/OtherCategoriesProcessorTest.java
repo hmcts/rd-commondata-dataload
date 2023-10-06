@@ -27,7 +27,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

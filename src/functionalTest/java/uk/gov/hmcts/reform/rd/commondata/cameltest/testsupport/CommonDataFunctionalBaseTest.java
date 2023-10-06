@@ -32,9 +32,9 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataSpringBatchConfig;
-import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 import java.util.List;
 import java.util.Map;
