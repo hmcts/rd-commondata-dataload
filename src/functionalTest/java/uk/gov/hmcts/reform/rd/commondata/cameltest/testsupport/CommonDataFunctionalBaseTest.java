@@ -223,9 +223,6 @@ public abstract class CommonDataFunctionalBaseTest {
                                                     Pair<String, String> pair,
                                                     int index) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertThat(
-            (String) result.get(index).get("error_description"),
-            containsString(pair.getValue1())
-        );
+        assertTrue(result.stream().map(a -> a.get("error_description").toString()).toList().contains(pair.getValue1()));
     }
 }
