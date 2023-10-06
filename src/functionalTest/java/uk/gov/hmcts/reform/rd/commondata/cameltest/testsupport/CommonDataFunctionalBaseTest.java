@@ -34,6 +34,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataSpringBatchConfig;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 import java.util.List;
 import java.util.Map;
@@ -127,6 +128,10 @@ public abstract class CommonDataFunctionalBaseTest {
     protected CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
 
     @Autowired
+    protected CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
+
+
+    @Autowired
     protected CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
 
     @Autowired
@@ -139,6 +144,9 @@ public abstract class CommonDataFunctionalBaseTest {
     public static final String UPLOAD_CASE_LINKING_FILE_NAME = "CaseLinking-test.csv";
 
     public static final String UPLOAD_FLAG_DETAILS_FILE_NAME = "FlagDetails-test.csv";
+
+
+    public static final String UPLOAD_OTHER_CATEGORIES_FILE_NAME = "OtherCategories-test.csv";
 
 
     @BeforeEach
@@ -194,7 +202,7 @@ public abstract class CommonDataFunctionalBaseTest {
     protected void validateFlagServiceFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(4, result.size());
+        assertEquals(5, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(fileName)).findFirst();
         assertTrue(auditEntry.isPresent());

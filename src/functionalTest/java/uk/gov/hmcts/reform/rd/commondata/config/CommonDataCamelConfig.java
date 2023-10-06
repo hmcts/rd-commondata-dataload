@@ -49,6 +49,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
+import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSupport;
 
@@ -255,6 +256,13 @@ public class CommonDataCamelConfig {
     CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask() {
         return new CommonDataCaseLinkingRouteTask();
     }
+
+    @Bean
+    CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask() {
+        return new CommonDataOtherCategoriesRouteTask();
+    }
+
+
 
     @Bean
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask() {
