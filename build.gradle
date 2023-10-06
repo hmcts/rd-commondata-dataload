@@ -308,7 +308,7 @@ dependencies {
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.11.0'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
-  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-bom', version: versions.camel, ext: 'pom'
+  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
@@ -390,11 +390,6 @@ dependencies {
 
   testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
   testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
-  testImplementation group: 'org.apache.camel', name: 'camel-test-infra-core', version: '4.0.0', classifier: 'tests'
-  testImplementation group: 'org.apache.camel', name: 'camel-test-infra-postgres', version: '4.0.0'
-//  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers', version: '3.14.9'
-//  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers-spring', version: '3.14.9'
-//  testImplementation group: 'org.apache.camel', name: 'camel-testcontainers-spring-junit5', version: '3.14.9'
   testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.19.1' //version: '1.17.6' //, version: '1.18.3'
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.19.1' //version: '1.17.6' //, version: '1.18.3'
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '5.0.3'
