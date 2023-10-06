@@ -224,7 +224,8 @@ public abstract class CommonDataFunctionalBaseTest {
                                                     int index) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
 
-        String errorDescription = result.stream().map(a -> a.get("error_description").toString()).filter(e -> e.startsWith("FlagService-test.csv")).findFirst().get();
+        String errorDescription = result.stream().map(a -> a.get("error_description").toString())
+            .filter(e -> e.startsWith("FlagService-test.csv")).findFirst().get();
         MatcherAssert.assertThat(errorDescription,MatchesPattern.matchesPattern(pair.getValue1()));
 
 
