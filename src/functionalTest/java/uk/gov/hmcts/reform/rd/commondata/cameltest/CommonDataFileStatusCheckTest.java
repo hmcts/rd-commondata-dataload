@@ -98,7 +98,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
             UPLOAD_FLAG_SERVICE_FILE_NAME,
             "(.+?) not loaded due to file stale error"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair);
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
         assertEquals(5, result.size());
         assertEquals(5, jdbcTemplate.queryForList(commonDataAuditSqlFailure).size());

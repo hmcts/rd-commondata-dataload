@@ -164,7 +164,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 3);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
