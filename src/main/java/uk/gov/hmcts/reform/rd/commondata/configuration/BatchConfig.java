@@ -106,8 +106,8 @@ public class BatchConfig {
 
     @Bean
     public Step stepOtherCategoriesRoute() {
-        return steps.get(commonDataOtherCategoriesTask)
-            .tasklet(commonDataOtherCategoriesRouteTask)
+        return new StepBuilder(commonDataOtherCategoriesTask, jobRepository)
+            .tasklet(commonDataOtherCategoriesRouteTask, transactionManager)
             .build();
     }
 
