@@ -14,8 +14,8 @@ spring:
     allow-bean-definition-overriding: true
   jpa:
     open-in-view: false
-#  datasource:
-#    url: jdbc:tc:postgres:///dbcommondata
+  datasource:
+    url: jdbc:tc:postgres:///dbcommondata
 
 #Local integration testing these values should be actual
 #ACCOUNT_NAME: ${ACCOUNT_NAME}
