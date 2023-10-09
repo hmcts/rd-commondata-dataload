@@ -5,7 +5,6 @@ import org.apache.camel.component.bean.validator.HibernateValidationProviderReso
 import org.apache.camel.spring.boot.SpringBootCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -168,7 +167,6 @@ public class CommonDataCamelConfig {
 
     // db configuration starts
 
-    @RegisterExtension
     @ServiceConnection
     static final PostgreSQLContainer testPostgres =
         (PostgreSQLContainer) new PostgreSQLContainer(
@@ -190,7 +188,6 @@ public class CommonDataCamelConfig {
         return dataSourceBuilder;
     }
 
-    @Bean("springJdbcDataSource")
     public DataSource springJdbcDataSource() {
         DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
         return dataSourceBuilder.build();
@@ -219,10 +216,7 @@ public class CommonDataCamelConfig {
 
     @Bean(name = "springJdbcTransactionManager")
     public PlatformTransactionManager springJdbcTransactionManager() {
-        DataSourceTransactionManager platformTransactionManager
-            = new DataSourceTransactionManager(springJdbcDataSource());
-        platformTransactionManager.setDataSource(springJdbcDataSource());
-        return platformTransactionManager;
+        return txManager();
     }
 
     @Bean(name = "PROPAGATION_REQUIRED")
