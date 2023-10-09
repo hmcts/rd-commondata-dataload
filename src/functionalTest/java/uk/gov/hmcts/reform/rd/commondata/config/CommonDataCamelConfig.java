@@ -168,11 +168,13 @@ public class CommonDataCamelConfig {
 
     // db configuration starts
 
-    @Container
+//    @Container
     @RegisterExtension
     @ServiceConnection
-    static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
-            .withDatabaseName("dbcommondata");
+    static final PostgreSQLContainer testPostgres =
+        (PostgreSQLContainer) new PostgreSQLContainer("postgres")
+            .withDatabaseName("dbcommondata")
+            .withReuse(true);
 
     @Bean
     public DataSource dataSource() {
