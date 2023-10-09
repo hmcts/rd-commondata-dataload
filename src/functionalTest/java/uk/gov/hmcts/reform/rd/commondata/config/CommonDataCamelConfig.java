@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
@@ -167,12 +168,12 @@ public class CommonDataCamelConfig {
 
     // db configuration starts
 
+    @Container
     @ServiceConnection
     static final PostgreSQLContainer testPostgres =
-        (PostgreSQLContainer) new PostgreSQLContainer(
+            new PostgreSQLContainer(
                 DockerImageName.parse("postgres").withTag("15.4"))
-            .withDatabaseName("dbcommondata")
-            .withReuse(true);
+            .withDatabaseName("dbcommondata");
 
     @Bean
     public DataSource dataSource() {
