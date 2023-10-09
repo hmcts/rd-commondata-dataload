@@ -168,7 +168,6 @@ public class CommonDataCamelConfig {
 
     // db configuration starts
 
-//    @Container
     @RegisterExtension
     @ServiceConnection
     static final PostgreSQLContainer testPostgres =
