@@ -459,7 +459,7 @@ configurations.all {
     if (details.requested.group == 'com.azure'
       && details.requested.name == 'azure-identity'
     ) {
-      details.useVersion "1.10.2"
+      details.useVersion "1.10.3"
     }
 
 //    // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
