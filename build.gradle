@@ -240,7 +240,7 @@ def versions = [
   lombok              : '1.18.22',
   gradlePitest        : '1.5.1',
   pitest              : '1.7.4',
-  flyway              : '9.21.1',
+  flyway              : '9.22.3',
   camel               : '4.0.1',
   log4j               : '2.20.0',
   springVersion       : '6.0.12',
