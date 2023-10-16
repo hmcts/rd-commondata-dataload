@@ -72,4 +72,10 @@ file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1
     <notes>Remove once apache camel 4.0.0 Final available</notes>
     <cve>CVE-2022-30187</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: azure-identity-1.10.3.jar
+   ]]> vulnerable up to 1.10.2, but still spuriously reported for 1.10.3</notes>
+    <cve>CVE-2023-36415</cve>
+  </suppress>
 </suppressions>
