@@ -455,6 +455,13 @@ configurations.all {
       details.useVersion "4.1.100.Final"
     }
 
+    // Fix for CVE-2023-36414 and CVE-2023-36415
+    if (details.requested.group == 'com.azure'
+      && details.requested.name == 'azure-identity'
+    ) {
+      details.useVersion "1.10.2"
+    }
+
 //    // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
 //    if (details.requested.group == 'com.ibm.icu') {
 //      details.useVersion "66.1"
