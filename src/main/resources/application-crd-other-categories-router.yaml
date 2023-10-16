@@ -15,7 +15,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/OtherCategories.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-blob://${azure.storage.account-name}/rd-common-data/OtherCategories.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: otherCategoriesProcessor
     mapper-class: otherCategoriesMapper
     csv-binder-object: otherCategories
