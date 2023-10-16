@@ -14,7 +14,7 @@ route:
       values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code,:#default_status,:#available_externally)?batch=true&dataSource=dataSource
 
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/FlagService.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data/FlagService.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: flagServiceProcessor
     mapper-class: flagServiceMapper
     csv-binder-object: FlagService

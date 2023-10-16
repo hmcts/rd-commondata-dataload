@@ -16,7 +16,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?batch=true&dataSource=dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons.csv?credentials=#credsreg&operation=updateBlockBlob
     processor-class: categoriesProcessor
     mapper-class: categoriesMapper
     csv-binder-object: Categories
