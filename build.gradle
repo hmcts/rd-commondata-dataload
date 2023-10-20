@@ -196,7 +196,7 @@ dependencyManagement {
     }
 
     // CVE-2023-28709
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.80') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.81') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
@@ -442,11 +442,6 @@ applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 // Fix for CVE-2021-21295 & need to be removed with new Azure blob version
 configurations.all {
   resolutionStrategy.eachDependency { details ->
-    if (details.requested.group == 'io.netty'
-      && details.requested.name != 'netty-tcnative-boringssl-static' ) {
-      details.useVersion "4.1.94.Final"
-    }
-
     // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
     if (details.requested.group == 'com.ibm.icu') {
       details.useVersion "66.1"
@@ -472,6 +467,20 @@ dependencyManagement {
       entry 'jackson-databind'
       entry 'jackson-core'
       entry 'jackson-annotations'
+    }
+
+    //        Resolves CVE-2023-4586
+    dependencySet(group: 'io.netty', version: '4.1.100.Final') {
+      entry 'netty-buffer'
+      entry 'netty-codec'
+      entry 'netty-codec-http'
+      entry 'netty-codec-socks'
+      entry 'netty-common'
+      entry 'netty-handler'
+      entry 'netty-handler-proxy'
+      entry 'netty-resolver'
+      entry 'netty-transport'
+      entry 'netty-transport-native-unix-common'
     }
   }
 }
