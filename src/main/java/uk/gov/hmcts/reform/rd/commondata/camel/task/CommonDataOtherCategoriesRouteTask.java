@@ -12,16 +12,17 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class CommonDataCaseLinkingRouteTask extends BaseTasklet implements Tasklet {
+public class CommonDataOtherCategoriesRouteTask extends BaseTasklet implements Tasklet {
 
-    @Value("${commondata-caselinking-start-route}")
+    @Value("${commondata-othercategories-start-route}")
     String startRoute;
 
-    @Value("${commondata-caselinking-routes-to-execute}")
+    @Value("${commondata-othercategories-routes-to-execute}")
     List<String> routesToExecute;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        return super.execute(startRoute, routesToExecute, Boolean.FALSE);
+        return super.execute(startRoute, routesToExecute, Boolean.TRUE);
     }
+
 }
