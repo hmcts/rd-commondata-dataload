@@ -67,6 +67,7 @@ file name: launchdarkly-java-server-sdk-5.10.2.jar (shaded: org.yaml:snakeyaml:1
   <suppress>
     <cve>CVE-2023-34035</cve>
     <cve>CVE-2023-34047</cve>
+    <cve>CVE-2023-5072</cve>
   </suppress>
   <suppress>
     <notes>Remove once apache camel 4.0.0 Final available</notes>
