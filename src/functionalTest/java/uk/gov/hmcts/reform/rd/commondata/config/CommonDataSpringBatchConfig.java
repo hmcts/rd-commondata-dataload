@@ -26,41 +26,41 @@ public class CommonDataSpringBatchConfig {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    @Bean
-    public DefaultDataFieldMaxValueIncrementerFactory incrementerFactory() {
-        return new DefaultDataFieldMaxValueIncrementerFactory(dataSource);
-    }
-
-    @Bean
-    public JobRepositoryFactoryBean jobRepositoryFactoryBean() {
-        final var jobRepositoryFactoryBean = new JobRepositoryFactoryBean();
-        jobRepositoryFactoryBean.setDataSource(dataSource);
-        jobRepositoryFactoryBean.setIncrementerFactory(incrementerFactory());
-        jobRepositoryFactoryBean.setTransactionManager(transactionManager);
-
-        return jobRepositoryFactoryBean;
-    }
-
-    @Bean
-    public TaskExecutor taskExecutor() {
-        //return new SimpleAsyncTaskExecutor();
-        return new SyncTaskExecutor();
-    }
-
-    @Bean
-    public JobRepository jobRepository() throws Exception {
-        return jobRepositoryFactoryBean().getObject();
-    }
-
-    @Bean
-    public JobLauncher jobLauncher() throws Exception {
-        final var jobLauncher = new TaskExecutorJobLauncher();
-
-        jobLauncher.setTaskExecutor(taskExecutor());
-
-        jobLauncher.setJobRepository(jobRepository());
-
-        return jobLauncher;
-    }
+//    @Bean
+//    public DefaultDataFieldMaxValueIncrementerFactory incrementerFactory() {
+//        return new DefaultDataFieldMaxValueIncrementerFactory(dataSource);
+//    }
+//
+//    @Bean
+//    public JobRepositoryFactoryBean jobRepositoryFactoryBean() {
+//        final var jobRepositoryFactoryBean = new JobRepositoryFactoryBean();
+//        jobRepositoryFactoryBean.setDataSource(dataSource);
+//        jobRepositoryFactoryBean.setIncrementerFactory(incrementerFactory());
+//        jobRepositoryFactoryBean.setTransactionManager(transactionManager);
+//
+//        return jobRepositoryFactoryBean;
+//    }
+//
+//    @Bean
+//    public TaskExecutor taskExecutor() {
+//        //return new SimpleAsyncTaskExecutor();
+//        return new SyncTaskExecutor();
+//    }
+//
+//    @Bean
+//    public JobRepository jobRepository() throws Exception {
+//        return jobRepositoryFactoryBean().getObject();
+//    }
+//
+//    @Bean
+//    public JobLauncher jobLauncher() throws Exception {
+//        final var jobLauncher = new TaskExecutorJobLauncher();
+//
+//        jobLauncher.setTaskExecutor(taskExecutor());
+//
+//        jobLauncher.setJobRepository(jobRepository());
+//
+//        return jobLauncher;
+//    }
 
 }
