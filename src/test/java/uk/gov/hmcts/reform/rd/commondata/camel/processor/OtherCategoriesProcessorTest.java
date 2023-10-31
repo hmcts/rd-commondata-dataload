@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
 import java.util.ArrayList;
@@ -133,6 +134,23 @@ public class OtherCategoriesProcessorTest {
         Assertions.assertEquals(1, actualLovServiceList.size());
     }
 
+    @Test
+    @DisplayName("Test for LOV 'D' records Case3")
+    void testListOfValuesCsv_DupRecord_Case4() throws Exception {
+        var lovServiceList = new ArrayList<OtherCategories>();
+        lovServiceList.addAll(getLovServicesCase4());
+
+        exchange.getIn().setBody(lovServiceList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(0, actualLovServiceList.size());
+    }
+
     private List<OtherCategories> getLovServicesCase1() {
         return ImmutableList.of(
             OtherCategories.builder()
@@ -206,6 +224,29 @@ public class OtherCategoriesProcessorTest {
                 .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
+                .active("D")
+                .build()
+        );
+    }
+
+    private List<OtherCategories> getLovServicesCase4() {
+        return ImmutableList.of(
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
+                .build(),
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-002")
                 .active("D")
                 .build()
         );

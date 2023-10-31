@@ -42,7 +42,6 @@ class FlagDetailsMapperTest {
         expected.put("mrd_created_time", getDateTimeStamp(trim(flagDetails.getMrdCreatedTime())));
         expected.put("mrd_updated_time", getDateTimeStamp(trim(flagDetails.getMrdUpdatedTime())));
         expected.put("mrd_deleted_time", getDateTimeStamp(trim(flagDetails.getMrdDeletedTime())));
-        //expected.put("test", getDateTimeStamp(null));
         Map<String, Object> actual = flagDetailsMapper.getMap(flagDetails);
         verify(flagDetailsMapper, times(1)).getMap(flagDetails);
         Assertions.assertThat(actual).hasSize(8).isEqualTo(expected);
