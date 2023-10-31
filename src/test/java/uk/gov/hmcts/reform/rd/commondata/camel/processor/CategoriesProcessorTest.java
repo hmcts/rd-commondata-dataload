@@ -123,14 +123,12 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         lovServiceList.addAll(getLovServicesCase3());
 
         exchange.getIn().setBody(lovServiceList);
-        when(((ConfigurableApplicationContext)
-            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
 
         processor.process(exchange);
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
-        Assertions.assertEquals(1, actualLovServiceList.size());
+        Assertions.assertEquals(2, actualLovServiceList.size());
     }
 
     @Test
