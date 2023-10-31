@@ -17,7 +17,8 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.f
 class CommonDataLoadUtilsTest {
 
     @Test
-    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException,
+        InvocationTargetException, InstantiationException {
         Constructor<CommonDataLoadUtils> constructor = CommonDataLoadUtils.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
