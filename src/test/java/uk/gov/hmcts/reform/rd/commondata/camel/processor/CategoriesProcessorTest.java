@@ -52,7 +52,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     @Mock
     PlatformTransactionManager platformTransactionManager;
 
-    @Mock
+    @Spy
     ConfigurableListableBeanFactory configurableListableBeanFactory;
 
     @Mock
@@ -133,6 +133,23 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         Assertions.assertEquals(1, actualLovServiceList.size());
     }
 
+    @Test
+    @DisplayName("Test for LOV 'D' records Case3")
+    void testListOfValuesCsv_DupRecord_Case4() throws Exception {
+        var lovServiceList = new ArrayList<Categories>();
+        lovServiceList.addAll(getLovServicesCase4());
+
+        exchange.getIn().setBody(lovServiceList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(0, actualLovServiceList.size());
+    }
+
     private List<Categories> getLovServicesCase1() {
         return ImmutableList.of(
             Categories.builder()
@@ -201,11 +218,34 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .build(),
             Categories.builder()
                 .categoryKey("caseSubType")
+                .serviceId("BBA2")
+                .key("BBA3-008AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesCase4() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
                 .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
+                .active("D")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-002")
                 .active("D")
                 .build()
         );
