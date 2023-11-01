@@ -27,6 +27,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -114,6 +116,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(1, actualLovServiceList.size());
+        assertFalse(actualLovServiceList.isEmpty());
+
     }
 
     @Test
@@ -146,6 +150,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(0, actualLovServiceList.size());
+        assertTrue(actualLovServiceList.isEmpty());
+
     }
 
     private List<Categories> getLovServicesCase1() {

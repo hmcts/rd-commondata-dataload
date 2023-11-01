@@ -19,7 +19,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
-import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
 import java.util.ArrayList;
@@ -28,6 +27,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,6 +116,8 @@ public class OtherCategoriesProcessorTest {
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(1, actualLovServiceList.size());
+        assertFalse(actualLovServiceList.isEmpty());
+
     }
 
     @Test
@@ -149,6 +152,8 @@ public class OtherCategoriesProcessorTest {
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(0, actualLovServiceList.size());
+        assertTrue(actualLovServiceList.isEmpty());
+
     }
 
     private List<OtherCategories> getLovServicesCase1() {
