@@ -57,7 +57,7 @@ public class OtherCategoriesProcessorTest {
     @Mock
     PlatformTransactionManager platformTransactionManager;
 
-    @Mock
+    @Spy
     ConfigurableListableBeanFactory configurableListableBeanFactory;
 
     @Mock

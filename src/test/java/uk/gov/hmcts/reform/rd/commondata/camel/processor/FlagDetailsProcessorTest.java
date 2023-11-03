@@ -20,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,6 +64,7 @@ class FlagDetailsProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -82,6 +86,7 @@ class FlagDetailsProcessorTest {
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
         exchange.getIn().setHeader(ROUTE_DETAILS, routeProperties);
+
     }
 
     @Test
@@ -96,6 +101,7 @@ class FlagDetailsProcessorTest {
         List actualFlagDetailsList = (List) exchange.getMessage().getBody();
 
         Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
+
     }
 
     @Test
@@ -118,6 +124,10 @@ class FlagDetailsProcessorTest {
         verify(processor, times(1)).auditRecord(getExpiredFlagDetails(), exchange);
 
         Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
+
+        verify(flagDetailsJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(any(),anyString(),anyString(),any());
+
     }
 
     @Test
@@ -135,6 +145,8 @@ class FlagDetailsProcessorTest {
         List actualFlagDetailsList = (List) exchange.getMessage().getBody();
 
         Assertions.assertEquals(flagDetailsList.size(), actualFlagDetailsList.size());
+
+
     }
 
     @Test
@@ -156,6 +168,7 @@ class FlagDetailsProcessorTest {
         var expectedValidFlagDetails = getValidFlagDetails();
 
         Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
+
     }
 
     @Test
@@ -166,6 +179,7 @@ class FlagDetailsProcessorTest {
         doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
         doNothing().when(processor).auditRecord(getExpiredFlagDetails(), exchange);
         Assertions.assertThrows(RouteFailedException.class, () -> processor.process(exchange));
+
     }
 
     @Test
