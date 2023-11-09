@@ -30,9 +30,12 @@ class CommonDataExecutorTest {
 
     ProducerTemplate producerTemplate = mock(ProducerTemplate.class);
 
+    CommonDataDRecords commonDataDRecords = mock(CommonDataDRecords.class);
+
     @BeforeEach
     void init() {
         setField(commonDataExecutorSpy, "auditService", auditService);
+        setField(commonDataExecutorSpy, "commonDataDRecords", commonDataDRecords);
     }
 
     @Test

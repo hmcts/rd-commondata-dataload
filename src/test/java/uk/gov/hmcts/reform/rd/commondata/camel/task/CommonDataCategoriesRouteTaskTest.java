@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.task;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,9 +56,6 @@ class CommonDataCategoriesRouteTaskTest {
         setField(commonDataCategoriesRouteTask, "dataLoadRoute", dataLoadRoute);
         setField(commonDataCategoriesRouteTask, "commonDataExecutor", commonDataExecutor);
         setField(commonDataCategoriesRouteTask, "camelContext", camelContext);
-        setField(commonDataCategoriesRouteTask, "jdbcTemplate", jdbcTemplate);
-        setField(commonDataCategoriesRouteTask, "lovServiceJsrValidatorInitializer",
-                 lovServiceJsrValidatorInitializer);
     }
 
     @Test
@@ -95,11 +91,7 @@ class CommonDataCategoriesRouteTaskTest {
         Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask.execute(any(), any()));
         verify(dataLoadRoute,times(1)).startRoute(any(),any());
         verify(commonDataCategoriesRouteTask, times(1)).execute(any(), any());
-        verify(lovServiceJsrValidatorInitializer,times(1))
-            .auditJsrExceptions(ArgumentMatchers.any(), any(), anyString(), any(Exchange.class));
-        verify(jdbcTemplate, times(1))
-            .query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString());
-        verify(jdbcTemplate, times(1)).update(anyString(), anyString());
+
     }
 
     @Test
@@ -126,11 +118,7 @@ class CommonDataCategoriesRouteTaskTest {
         Assertions.assertEquals(RepeatStatus.FINISHED, commonDataCategoriesRouteTask.execute(any(), any()));
         verify(dataLoadRoute,times(1)).startRoute(any(),any());
         verify(commonDataCategoriesRouteTask, times(1)).execute(any(), any());
-        verify(lovServiceJsrValidatorInitializer,times(1))
-            .auditJsrExceptions(ArgumentMatchers.any(), any(), anyString(), any(Exchange.class));
-        verify(jdbcTemplate, times(1))
-            .query(anyString(), ArgumentMatchers.<RowMapper<Categories>>any(), anyString());
-        verify(jdbcTemplate, times(1)).update(anyString(), anyString());
+
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
+import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 
@@ -16,6 +17,8 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FLAG_CODE;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FLAG_CODE_NOT_EXISTS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.checkIfValueNotInListIfPresent;
@@ -79,6 +82,8 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
+        var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(validatedFlagServices);
     }
 

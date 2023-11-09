@@ -64,4 +64,16 @@ class CommonDataFlagServiceRouteTaskTest {
         verify(commonDataFlagServiceRouteTask, times(1))
             .execute(anyString(), anyList(), isNull());
     }
+
+    @Test
+    void testExecute1() {
+        doNothing().when(dataLoadRoute).startRoute(anyString(), anyList());
+        when(commonDataExecutor.execute(any(), anyString(), anyString())).thenReturn("success");
+        Assertions.assertEquals(RepeatStatus.FINISHED, commonDataFlagServiceRouteTask.execute(any(), any()));
+        verify(dataLoadRoute,times(1)).startRoute(any(),any());
+        verify(commonDataFlagServiceRouteTask, times(1)).execute(any(), any());
+
+    }
+
+
 }

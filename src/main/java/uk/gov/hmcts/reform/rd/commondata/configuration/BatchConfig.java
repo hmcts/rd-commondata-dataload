@@ -119,11 +119,11 @@ public class BatchConfig {
             .start(stepCommonDataFlagDetailsRoute())
             .listener(jobResultListener)
             .on("*").to(stepCommonDataRoute())
-            .on("*").to(stepCommonDataCategoriesRoute())
-            .on("*").to(checkCaseLinkingRouteStatus())
-            .from(checkCaseLinkingRouteStatus()).on("STOPPED").to(stepOtherCategoriesRoute())
-            .from(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute())
             .on("*").to(stepOtherCategoriesRoute())
+            .on("*").to(checkCaseLinkingRouteStatus())
+            .from(checkCaseLinkingRouteStatus()).on("STOPPED").to(stepCommonDataCategoriesRoute())
+            .from(checkCaseLinkingRouteStatus()).on("ENABLED").to(stepCommonDataCaseLinkingRoute())
+            .on("*").to(stepCommonDataCategoriesRoute())
             .end()
             .build();
     }
