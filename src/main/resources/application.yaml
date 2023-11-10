@@ -23,6 +23,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
+        default_schema: dbcommondata
         jdbc:
           lob:
             non_contextual_creation: true
@@ -41,7 +42,7 @@ spring:
     import: "optional:configtree:/mnt/secrets/rd/"
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5458}/${POSTGRES_NAME:dbcommondata}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5459}/${POSTGRES_NAME:dbcommondata}?currentSchema=dbcommondata
     username: ${POSTGRES_USERNAME:dbcommondata}
     password: ${POSTGRES_PASSWORD:dbcommondata}
     properties:
@@ -60,14 +61,9 @@ spring:
       - crd-list-of-values-router
       - crd-case-linking-reasons-router
       - crd-flag-details-router
-      - crd-other-categories-router
-
 mail:
   enabled: false
 
-logging:
-  level:
-    root: "trace"
-    org.springframework: "trace"
-    org.springframework.web: "trace"
-    org.hibernate: "trace"
+ACCOUNT_NAME: rdpreview
+ACCOUNT_KEY: 0+VBTzfcEU7KaatWUgruR8lxJHCtoXuXZQcbPPcxp8WSTa2c3K4nWFdrNr2b45UpMJePHkZ0I2SatzDlC4e93w==
+CONTAINER_NAME: rd-common-data
