@@ -42,7 +42,7 @@ spring:
     import: "optional:configtree:/mnt/secrets/rd/"
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5459}/${POSTGRES_NAME:dbcommondata}?currentSchema=dbcommondata
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5459}/${POSTGRES_NAME:dbcommondata}
     username: ${POSTGRES_USERNAME:dbcommondata}
     password: ${POSTGRES_PASSWORD:dbcommondata}
     properties:
