@@ -23,10 +23,16 @@ import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,7 +58,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     @Mock
     PlatformTransactionManager platformTransactionManager;
 
-    @Mock
+    @Spy
     ConfigurableListableBeanFactory configurableListableBeanFactory;
 
     @Mock
@@ -114,6 +120,11 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(1, actualLovServiceList.size());
+        assertFalse(actualLovServiceList.isEmpty());
+        verify(lovServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(any(),anyString(),anyString(),any());
+
+
     }
 
     @Test
@@ -123,6 +134,21 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         lovServiceList.addAll(getLovServicesCase3());
 
         exchange.getIn().setBody(lovServiceList);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(2, actualLovServiceList.size());
+    }
+
+    @Test
+    @DisplayName("Test for LOV 'D' records Case3")
+    void testListOfValuesCsv_DupRecord_Case4() throws Exception {
+        var lovServiceList = new ArrayList<Categories>();
+        lovServiceList.addAll(getLovServicesCase4());
+
+        exchange.getIn().setBody(lovServiceList);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
 
@@ -130,7 +156,25 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
-        Assertions.assertEquals(1, actualLovServiceList.size());
+        Assertions.assertEquals(0, actualLovServiceList.size());
+        assertTrue(actualLovServiceList.isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("Test for LOV Duplicate records Case2")
+    void testListOfValuesCsv_DupRecord_Case_Null() {
+        var lovServiceList = new ArrayList<OtherCategories>();
+        lovServiceList.addAll(Collections.emptyList());
+
+        exchange.getIn().setBody(lovServiceList);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(0, actualLovServiceList.size());
+        assertTrue(actualLovServiceList.isEmpty());
     }
 
     private List<Categories> getLovServicesCase1() {
@@ -201,11 +245,34 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .build(),
             Categories.builder()
                 .categoryKey("caseSubType")
+                .serviceId("BBA2")
+                .key("BBA3-008AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesCase4() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
                 .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
+                .active("D")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-002")
                 .active("D")
                 .build()
         );

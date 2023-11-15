@@ -25,8 +25,13 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,7 +57,7 @@ public class OtherCategoriesProcessorTest {
     @Mock
     PlatformTransactionManager platformTransactionManager;
 
-    @Mock
+    @Spy
     ConfigurableListableBeanFactory configurableListableBeanFactory;
 
     @Mock
@@ -114,6 +119,11 @@ public class OtherCategoriesProcessorTest {
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(1, actualLovServiceList.size());
+
+        verify(lovServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(any(),anyString(),anyString(),any());
+
+        assertFalse(actualLovServiceList.isEmpty());
     }
 
     @Test
@@ -131,6 +141,41 @@ public class OtherCategoriesProcessorTest {
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(1, actualLovServiceList.size());
+    }
+
+    @Test
+    @DisplayName("Test for LOV 'D' records Case3")
+    void testListOfValuesCsv_DupRecord_Case4() throws Exception {
+        var lovServiceList = new ArrayList<OtherCategories>();
+        lovServiceList.addAll(getLovServicesCase4());
+
+        exchange.getIn().setBody(lovServiceList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(0, actualLovServiceList.size());
+        assertTrue(actualLovServiceList.isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("Test for LOV Duplicate records Case2")
+    void testListOfValuesCsv_DupRecord_Case_Null() {
+        var lovServiceList = new ArrayList<OtherCategories>();
+        lovServiceList.addAll(Collections.emptyList());
+
+        exchange.getIn().setBody(lovServiceList);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(0, actualLovServiceList.size());
+        assertTrue(actualLovServiceList.isEmpty());
     }
 
     private List<OtherCategories> getLovServicesCase1() {
@@ -206,6 +251,29 @@ public class OtherCategoriesProcessorTest {
                 .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
+                .active("D")
+                .build()
+        );
+    }
+
+    private List<OtherCategories> getLovServicesCase4() {
+        return ImmutableList.of(
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-001")
+                .active("D")
+                .build(),
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-002")
                 .active("D")
                 .build()
         );

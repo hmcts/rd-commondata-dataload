@@ -23,6 +23,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
+        default_schema: dbcommondata
         jdbc:
           lob:
             non_contextual_creation: true
@@ -41,14 +42,14 @@ spring:
     import: "optional:configtree:/mnt/secrets/rd/"
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5458}/${POSTGRES_NAME:dbcommondata}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5458}/${POSTGRES_NAME:dbcommondata}${POSTGRES_CONNECTION_OPTIONS:?}
     username: ${POSTGRES_USERNAME:dbcommondata}
     password: ${POSTGRES_PASSWORD:dbcommondata}
     properties:
       charSet: UTF-8
     hikari:
       max-lifetime: 600000
-      maximum-pool-size: 5
+      maximumPoolSize: ${HIKARI_MAX_POOL_SIZE:50}
       idle-timeout: 30000
       minimum-idle: 1
 

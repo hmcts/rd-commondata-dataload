@@ -5,12 +5,25 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.checkIfValueNotInListIfPresent;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.filterDomainObjects;
 
 class CommonDataLoadUtilsTest {
+
+    @Test
+    public void testConstructorIsPrivate() throws NoSuchMethodException, IllegalAccessException,
+        InvocationTargetException, InstantiationException {
+        Constructor<CommonDataLoadUtils> constructor = CommonDataLoadUtils.class.getDeclaredConstructor();
+        assertTrue(Modifier.isPrivate(constructor.getModifiers()));
+        constructor.setAccessible(true);
+        constructor.newInstance();
+    }
 
     @Test
     void testCheckIfValueNotInListIfPresent() {
@@ -24,7 +37,7 @@ class CommonDataLoadUtilsTest {
 
     @Test
     void testCheckIfValueNotInListIfPresent_IdNotInList() {
-        Assertions.assertTrue(checkIfValueNotInListIfPresent("abc", ImmutableList.of("123")));
+        assertTrue(checkIfValueNotInListIfPresent("abc", ImmutableList.of("123")));
     }
 
     @Test

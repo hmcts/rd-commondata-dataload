@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
@@ -166,7 +164,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 3);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
@@ -337,10 +335,8 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
                                                     Pair<String, String> pair,
                                                     int index) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertThat(
-            (String) result.get(index).get("error_description"),
-            containsString(pair.getValue1())
-        );
+        assertTrue(result.stream().map(a -> a.get("error_description").toString()).toList().contains(pair.getValue1()));
+
     }
 
 

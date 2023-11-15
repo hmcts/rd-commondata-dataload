@@ -25,6 +25,11 @@ public class CommonDataExecutor extends RouteExecutor {
     @Autowired
     AuditServiceImpl auditService;
 
+
+    @Autowired
+    CommonDataDRecords commonDataDRecords;
+
+
     /**
      * Execute Route and Insert data in Audit Table.
      *
@@ -43,6 +48,7 @@ public class CommonDataExecutor extends RouteExecutor {
             log.error("{}:: {} failed:: {}", logComponentName, schedulerName, errorMessage);
             return FAILURE;
         } finally {
+            commonDataDRecords.auditAndDeleteCategories();
             var isReadyToAudit = camelContext.getGlobalOption(IS_READY_TO_AUDIT);
             if (isNotBlank(isReadyToAudit) && Boolean.TRUE.toString().equalsIgnoreCase(isReadyToAudit)) {
                 auditService.auditSchedulerStatus(camelContext);
