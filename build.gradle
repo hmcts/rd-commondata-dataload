@@ -190,7 +190,7 @@ dependencyCheck {
 
 dependencyManagement {
   dependencies {
-    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
+    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.77'
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
@@ -289,7 +289,7 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.5'
-  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
+  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.77'
 
   implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.5') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
