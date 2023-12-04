@@ -188,36 +188,6 @@ dependencyCheck {
   }
 }
 
-dependencyManagement {
-  dependencies {
-    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
-    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
-      entry 'guava'
-    }
-
-    // CVE-2023-28709
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.81') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-el'
-      entry 'tomcat-embed-websocket'
-    }
-
-    //CVE-2022-40152
-    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
-            entry 'woodstox-core'
-    }
-    //CVE-2023-24998
-    dependencySet(group: 'commons-fileupload', version: '1.5') {
-      entry 'commons-fileupload'
-    }
-    //CVE-2021-22044
-    dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
-        entry 'spring-cloud-starter-openfeign'
-        entry 'spring-cloud-openfeign-core'
-    }
-  }
-}
-
 repositories {
   mavenLocal()
   mavenCentral()
@@ -240,7 +210,8 @@ def versions = [
   camel               : '3.8.0',
   log4j               : '2.17.1',
   springVersion       : '5.3.27',
-  logback             : '1.2.10'
+  logback             : '1.2.10',
+  bouncycastle        : '1.77'
 ]
 
 ext.libraries = [
@@ -252,6 +223,37 @@ ext.libraries = [
     "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
   ]
 ]
+
+dependencyManagement {
+  dependencies {
+    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
+    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
+      entry 'guava'
+    }
+
+    // CVE-2023-28709
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.81') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
+
+    //CVE-2022-40152
+    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
+      entry 'woodstox-core'
+    }
+    //CVE-2023-24998
+    dependencySet(group: 'commons-fileupload', version: '1.5') {
+      entry 'commons-fileupload'
+    }
+    //CVE-2021-22044
+    dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
+      entry 'spring-cloud-starter-openfeign'
+      entry 'spring-cloud-openfeign-core'
+    }
+  }
+}
+
 dependencies {
   implementation (group: 'org.springframework.boot', name: 'spring-boot-starter-web'){
     exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -289,7 +291,7 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.5'
-  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
+  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
 
   implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.5') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
@@ -400,8 +402,27 @@ dependencies {
 }
 
 configurations.all {
+  resolutionStrategy.eachDependency { details ->
+    if (details.requested.group == 'org.bouncycastle'
+      && (details.requested.name == 'bcpkix-jdk18on'
+      || details.requested.name == 'bcprov-jdk18on')
+    ){
+      details.useVersion versions.bouncycastle
+    }
+  }
 
   exclude group: 'org.codehaus.jettison', module: 'jettison'
+}
+
+dependencies {
+  modules {
+    module("org.bouncycastle:bcpkix-jdk15on") {
+      replacedBy("org.bouncycastle:bcpkix-jdk18on")
+    }
+    module("org.bouncycastle:bcprov-jdk15on") {
+      replacedBy("org.bouncycastle:bcprov-jdk18on")
+    }
+  }
 }
 
 gradle.startParameter.continueOnFailure = true
