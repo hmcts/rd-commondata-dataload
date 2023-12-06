@@ -210,7 +210,7 @@ def versions = [
   camel               : '3.8.0',
   log4j               : '2.17.1',
   springVersion       : '5.3.27',
-  logback             : '1.2.10',
+  logback             : '1.2.13',
   bouncycastle        : '1.77'
 ]
 
