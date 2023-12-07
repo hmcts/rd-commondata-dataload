@@ -247,7 +247,7 @@ dependencyManagement {
       entry 'commons-fileupload'
     }
     //CVE-2021-22044
-    dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
+    dependencySet(group: 'org.springframework.cloud', version: '3.1.8') {
       entry 'spring-cloud-starter-openfeign'
       entry 'spring-cloud-openfeign-core'
     }
@@ -268,8 +268,8 @@ dependencies {
   implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
   implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '3.1.5'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.5'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '3.1.8'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.8'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.7'
 
   // Fix for CVE-2022-45047, CVE-2023-35887
