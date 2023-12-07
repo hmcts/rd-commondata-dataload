@@ -192,36 +192,6 @@ dependencyCheck {
   }
 }
 
-dependencyManagement {
-  dependencies {
-    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
-    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
-      entry 'guava'
-    }
-
-    // CVE-2023-28709
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.81') {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-el'
-      entry 'tomcat-embed-websocket'
-    }
-
-    //CVE-2022-40152
-    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
-            entry 'woodstox-core'
-    }
-    //CVE-2023-24998
-    dependencySet(group: 'commons-fileupload', version: '1.5') {
-      entry 'commons-fileupload'
-    }
-    //CVE-2021-22044
-    dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
-        entry 'spring-cloud-starter-openfeign'
-        entry 'spring-cloud-openfeign-core'
-    }
-  }
-}
-
 repositories {
   mavenLocal()
   mavenCentral()
@@ -281,7 +251,7 @@ dependencyManagement {
       entry 'commons-fileupload'
     }
     //CVE-2021-22044
-    dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
+    dependencySet(group: 'org.springframework.cloud', version: '4.0.3') {
       entry 'spring-cloud-starter-openfeign'
       entry 'spring-cloud-openfeign-core'
     }
@@ -558,8 +528,8 @@ dependencyManagement {
       entry 'jackson-annotations'
     }
 
-    // Resolves CVE-2023-4586
-    dependencySet(group: 'io.netty', version: '4.1.100.Final') {
+    //        Resolves CVE-2023-4586
+    dependencySet(group: 'io.netty', version: '4.1.101.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-codec-http'
