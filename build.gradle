@@ -116,7 +116,7 @@ pmd {
 }
 
 jacoco {
-  toolVersion = "0.8.7"
+  toolVersion = "0.8.11"
 }
 
 jacocoTestReport {
@@ -194,20 +194,20 @@ dependencyCheck {
 
 dependencyManagement {
   dependencies {
-    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
+    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.68'
     dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
 
-    // CVE-2023-41080
-    dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.14') {
+    // CVE-2023-28709
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.81') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
     }
 
     //CVE-2022-40152
-    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.1') {
+    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
             entry 'woodstox-core'
     }
     //CVE-2023-24998
@@ -237,14 +237,15 @@ def versions = [
   springBoot          : '3.2.0',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.2.12',
-  lombok              : '1.18.22',
+  lombok              : '1.18.30',
   gradlePitest        : '1.5.1',
   pitest              : '1.15.0',
   flyway              : '9.22.3',
   camel               : '4.0.2',
   log4j               : '2.22.0',
   springVersion       : '6.0.12',
-  logback             : '1.4.7'
+  logback             : '1.4.7',
+  bouncycastle        : '1.77'
 ]
 
 ext.libraries = [
@@ -256,6 +257,37 @@ ext.libraries = [
     "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
   ]
 ]
+
+dependencyManagement {
+  dependencies {
+    dependency group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
+    dependencySet(group: 'com.google.guava', version: '30.1.1-jre') {
+      entry 'guava'
+    }
+
+    // CVE-2023-28709
+    dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.14') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
+
+    //CVE-2022-40152
+    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.1') {
+      entry 'woodstox-core'
+    }
+    //CVE-2023-24998
+    dependencySet(group: 'commons-fileupload', version: '1.5') {
+      entry 'commons-fileupload'
+    }
+    //CVE-2021-22044
+    dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
+      entry 'spring-cloud-starter-openfeign'
+      entry 'spring-cloud-openfeign-core'
+    }
+  }
+}
+
 dependencies {
   implementation (group: 'org.springframework.boot', name: 'spring-boot-starter-web'){
     exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -273,7 +305,7 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '4.0.3'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '4.0.3'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.0'  // Fix for CVE-2023-34040
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.7'
 
   // Fix for CVE-2022-45047, CVE-2023-35887
   implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.3'
@@ -295,7 +327,7 @@ dependencies {
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.1.4'
-  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: '1.72'
+  implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
   implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-10') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -310,7 +342,7 @@ dependencies {
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
-  implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+  implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
 
   implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
 
@@ -408,11 +440,30 @@ dependencies {
 }
 
 configurations.all {
+  resolutionStrategy.eachDependency { details ->
+    if (details.requested.group == 'org.bouncycastle'
+      && (details.requested.name == 'bcpkix-jdk18on'
+      || details.requested.name == 'bcprov-jdk18on')
+    ){
+      details.useVersion versions.bouncycastle
+    }
+  }
 
   exclude group: 'org.codehaus.jettison', module: 'jettison'
   exclude group: 'org.apache.groovy', module: 'groovy'
   exclude group: 'org.apache.groovy', module: 'groovy-xml'
   exclude group: 'org.apache.groovy', module: 'groovy-json'
+}
+
+dependencies {
+  modules {
+    module("org.bouncycastle:bcpkix-jdk15on") {
+      replacedBy("org.bouncycastle:bcpkix-jdk18on")
+    }
+    module("org.bouncycastle:bcprov-jdk15on") {
+      replacedBy("org.bouncycastle:bcprov-jdk18on")
+    }
+  }
 }
 
 gradle.startParameter.continueOnFailure = true
