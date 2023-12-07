@@ -234,7 +234,7 @@ def versions = [
   junit               : '5.10.1',
   junitPlatform       : '1.10.0',
   reformLogging       : '6.0.1',
-  springBoot          : '3.2.0',
+  springBoot          : '3.1.6',
   springfoxSwagger    : '2.9.2',
   serenity            : '2.2.12',
   lombok              : '1.18.30',
@@ -243,8 +243,8 @@ def versions = [
   flyway              : '9.22.3',
   camel               : '4.0.2',
   log4j               : '2.22.0',
-  springVersion       : '6.0.12',
-  logback             : '1.4.7',
+  springVersion       : '6.0.14',
+  logback             : '1.4.14',
   bouncycastle        : '1.77'
 ]
 
@@ -266,7 +266,7 @@ dependencyManagement {
     }
 
     // CVE-2023-28709
-    dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.14') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.16') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
