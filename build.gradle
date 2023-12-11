@@ -326,7 +326,6 @@ dependencies {
   implementation group: 'org.springframework', name: 'spring-tx'
   implementation group: 'org.springframework', name: 'spring-web'
   implementation group: 'org.springframework', name: 'spring-webmvc'
-  implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
