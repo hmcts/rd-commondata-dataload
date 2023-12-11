@@ -210,7 +210,6 @@ def versions = [
   gradlePitest        : '1.5.1',
   pitest              : '1.15.0',
   flyway              : '9.22.3',
-  camel               : '4.0.2',
   log4j               : '2.22.0',
   logback             : '1.4.14',
   bouncycastle        : '1.77',
@@ -219,6 +218,7 @@ def versions = [
 
 ext {
   springCloudVersion = '2023.0.0'
+  camelVersion = '4.2.0'
 }
 
 ext.libraries = [
@@ -315,9 +315,7 @@ dependencies {
 
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.15.0'
-  implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
-  implementation group: 'org.apache.camel.springboot', name: 'camel-jdbc-starter', version: versions.camel
-  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
+  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
 
@@ -551,5 +549,6 @@ dependencyManagement {
 
   imports {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    mavenBom "org.apache.camel.springboot:camel-spring-boot-bom:${camelVersion}"
   }
 }
