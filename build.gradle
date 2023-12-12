@@ -317,6 +317,7 @@ dependencies {
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.15.1'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
+  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-jdbc-starter'
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
 
