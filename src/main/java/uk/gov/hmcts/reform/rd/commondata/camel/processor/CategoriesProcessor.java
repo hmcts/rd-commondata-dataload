@@ -38,7 +38,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
     public static final Set<String> ZERO_BYTE_CHARACTERS = Set.of("\u200B", " ", "U+00A0", "BOB");
-    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE = "Zero byte characters identified - check source file";
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -75,7 +76,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         processExceptionRecords(exchange, categoriesList, finalCategoriesList);
     }
 
-    private void processExceptionRecords(Exchange exchange, List<Categories> categoriesList, List<Categories> finalCategoriesList) {
+    private void processExceptionRecords(Exchange exchange,
+                                         List<Categories> categoriesList,
+                                         List<Categories> finalCategoriesList) {
 
         List<Pair<String, Long>> zeroByteCharacterRecords = identifyRecordsWithZeroByteCharacters(categoriesList);
         if (!zeroByteCharacterRecords.isEmpty()) {

@@ -32,7 +32,9 @@ import javax.validation.ValidatorFactory;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +50,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
     Exchange exchange = new DefaultExchange(camelContext);
 
-    List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(Pair.of("BFA1-001AD", null),
+    private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(Pair.of("BFA1-001AD", null),
                                                                    Pair.of("BFA1-PAD", null),
                                                                    Pair.of("BFA1-DC\u200BX", null));
 
@@ -201,7 +203,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     }
 
 
-        private List<Categories> getLovServicesCase1() {
+    private List<Categories> getLovServicesCase1() {
         return ImmutableList.of(
             Categories.builder()
                 .categoryKey("caseSubType")
