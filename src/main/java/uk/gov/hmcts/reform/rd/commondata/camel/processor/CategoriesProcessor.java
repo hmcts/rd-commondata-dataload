@@ -37,7 +37,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
-    public static final Set<String> ZERO_BYTE_CHARACTERS = Set.of("\u200B", " ", "U+00A0", "BOB");
+    public static final Set<String> ZERO_BYTE_CHARACTERS = Set.of("\u200B", " ");
     public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
         "Zero byte characters identified - check source file";
 
