@@ -272,10 +272,10 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.7'
 
   // Fix for CVE-2022-45047, CVE-2023-35887
-  implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.9.3'
-  implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.9.3'
-  implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.9.3'
-  implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.9.3'
+  implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.11.0'
+  implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.11.0'
+  implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.11.0'
+  implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.11.0'
 
   implementation ('com.github.hmcts:properties-volume-spring-boot-starter:0.1.0'){
     exclude group: 'org.glassfish', module: 'jakarta.el'
