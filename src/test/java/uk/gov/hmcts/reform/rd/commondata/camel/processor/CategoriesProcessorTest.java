@@ -5,6 +5,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.DefaultExchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,8 +32,7 @@ import javax.validation.ValidatorFactory;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +47,10 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     CamelContext camelContext = new DefaultCamelContext();
 
     Exchange exchange = new DefaultExchange(camelContext);
+
+    List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(Pair.of("BFA1-001AD", null),
+                                                                   Pair.of("BFA1-PAD", null),
+                                                                   Pair.of("BFA1-DC\u200BX", null));
 
     @Spy
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer
@@ -102,7 +106,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(2, actualLovServiceList.size());
-
     }
 
     @Test
@@ -177,7 +180,28 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         assertTrue(actualLovServiceList.isEmpty());
     }
 
-    private List<Categories> getLovServicesCase1() {
+    @Test
+    @DisplayName("Test for 0 byte characters in record")
+    void testListOfValuesCsv_0byte_characters() {
+        var lovServiceList = new ArrayList<Categories>();
+        lovServiceList.addAll(getLovServicesCase5());
+
+        exchange.getIn().setBody(lovServiceList);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(5, actualLovServiceList.size());
+        verify(lovServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
+                                eq(null),
+                                eq("Zero byte characters identified - check source file"),
+                                eq(exchange));
+    }
+
+
+        private List<Categories> getLovServicesCase1() {
         return ImmutableList.of(
             Categories.builder()
                 .categoryKey("caseSubType")
@@ -191,7 +215,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
             Categories.builder()
                 .categoryKey("caseSubType")
                 .serviceId("BBA4")
-                .key("BBA4-001AD")
+                .key("BBA4-\u200B001AD")
                 .valueEN("ADVANCE PAYMENT new")
                 .parentCategory("caseType")
                 .parentKey("BBA4-001")
@@ -274,6 +298,56 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .parentCategory("caseType")
                 .parentKey("BBA3-002")
                 .active("D")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesCase5() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BFA1")
+                .key("BFA1-001AD")
+                .valueEN("Refusal of application under the EEA regulations \u200B")
+                .parentCategory("caseType")
+                .parentKey("BFA1-001")
+                .active("Y")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BFA1")
+                .key("BFA1-PAD")
+                .valueEN("ADVANCE PAYMENT ")
+                .parentCategory("caseType")
+                .parentKey("BFA1-002")
+                .active("Y")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BFA1")
+                .key("BFA1-EAD")
+                .valueEN("Refusal of application under the EEA regulations")
+                .parentCategory("caseType")
+                .parentKey("BFA1-002")
+                .active("Y")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BFA1")
+                .key("BFA1-PAX")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BFA1-002")
+                .active("Y")
+                .build(),
+            Categories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BFA1")
+                .key("BFA1-DC\u200BX")
+                .valueEN("Revocation of a protection status")
+                .parentCategory("caseType")
+                .parentKey("BFA1-002")
+                .active("Y")
                 .build()
         );
     }

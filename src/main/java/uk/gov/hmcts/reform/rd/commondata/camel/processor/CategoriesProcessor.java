@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
@@ -36,7 +37,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
-
+    public static final Set<String> ZERO_BYTE_CHARACTERS = Set.of("\u200B", " ", "U+00A0", "BOB");
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE = "Zero byte characters identified - check source file";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -70,14 +72,28 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
+        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
+    }
+
+    private void processExceptionRecords(Exchange exchange, List<Categories> categoriesList, List<Categories> finalCategoriesList) {
+
+        List<Pair<String, Long>> zeroByteCharacterRecords = identifyRecordsWithZeroByteCharacters(categoriesList);
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            lovServiceJsrValidatorInitializer.auditJsrExceptions(
+                zeroByteCharacterRecords,
+                null,
+                ZERO_BYTE_CHARACTER_ERROR_MESSAGE,
+                exchange
+            );
+        }
+
         List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
-            invalidCategories.forEach(categories -> invalidCategoryIds.add(Pair.of(
-                categories.getKey(),
-                categories.getRowId()
-            )));
+            invalidCategories.forEach(categories -> invalidCategoryIds.add(
+                createExceptionRecordPair(categories)
+            ));
 
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
@@ -86,7 +102,32 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                 exchange
             );
         }
+    }
 
+    private Pair<String,Long> createExceptionRecordPair(Categories category) {
+        return Pair.of(
+            category.getKey(),
+            category.getRowId()
+        );
+    }
+
+    private List<Pair<String, Long>> identifyRecordsWithZeroByteCharacters(List<Categories> categoriesList) {
+
+        return categoriesList.stream()
+            .filter(category ->
+                        checkStringForZeroByteCharacters(category.toString())
+            )
+            .map(
+                this::createExceptionRecordPair
+            )
+            .toList();
+    }
+
+    private boolean checkStringForZeroByteCharacters(String string) {
+        return ZERO_BYTE_CHARACTERS.stream()
+            .anyMatch(
+                string::contains
+        );
     }
 
     private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
