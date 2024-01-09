@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.test.spring.junit5.DisableJmx;
-import org.apache.camel.test.spring.junit5.MockEndpoints;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.text.MatchesPattern;
 import org.javatuples.Pair;
@@ -11,16 +9,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.test.JobLauncherTestUtils;
-import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ExceptionProcessor;
@@ -35,7 +30,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTas
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
-import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -49,13 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 
 @ExtendWith(SpringExtension.class)
-@Testcontainers
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@DisableJmx
-@ImportTestcontainers({CommonDataCamelConfig.class})
-@MockEndpoints
-//@EnableBatchProcessing
-@SpringBatchTest
 public abstract class CommonDataFunctionalBaseTest {
 
     @Autowired
@@ -135,8 +122,6 @@ public abstract class CommonDataFunctionalBaseTest {
     @Autowired
     protected CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
 
-    @Autowired
-    protected CommonDataCamelConfig camelConfig;
 
     public static final String UPLOAD_FLAG_SERVICE_FILE_NAME = "FlagService-test.csv";
 
