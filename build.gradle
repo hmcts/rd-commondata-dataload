@@ -214,12 +214,13 @@ def versions = [
   logback             : '1.4.14',
   bouncycastle        : '1.77',
   springHystrix       : '2.2.10.RELEASE',
+  camel               : '3.8.0',
   sshd                : '2.11.0'
 ]
 
 ext {
   springCloudVersion = '2023.0.0'
-  camelVersion = '4.2.0'
+  camelVersion = '4.3.0'
 }
 
 ext.libraries = [
@@ -303,7 +304,7 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.0'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security'
-  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '6.1.4'
+  implementation group: 'org.springframework.security', name: 'spring-security-core'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
   implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-10') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
@@ -487,22 +488,6 @@ configurations.all {
       && details.requested.name == 'azure-identity'
     ) {
       details.useVersion "1.10.3"
-    }
-
-//    // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
-//    if (details.requested.group == 'com.ibm.icu') {
-//      details.useVersion "66.1"
-//    }
-    if (details.requested.group == 'org.springframework.security'
-      && details.requested.name == 'spring-security-crypto' ) {
-      details.useVersion "6.2.0"
-    }
-
-    // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
-    if (details.requested.group == 'com.azure'
-      && (details.requested.name == 'azure_storage_blobs')
-       || details.requested.name == 'azure-storage-blob') {
-      details.useVersion "12.24.0"
     }
 
     if (//details.requested.group == 'com.fasterxml.jackson'
