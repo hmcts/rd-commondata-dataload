@@ -2,13 +2,11 @@ package uk.gov.hmcts.reform.rd.commondata.config;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
-import org.apache.camel.spring.boot.SpringBootCamelContext;
+import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
 import org.mockito.Mockito;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.CommonCsvFieldProcessor;
@@ -57,8 +52,6 @@ import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSup
 import javax.sql.DataSource;
 
 @Configuration
-@SpringBootConfiguration
-@Testcontainers
 public class CommonDataCamelConfig {
 
     @Bean
@@ -173,17 +166,17 @@ public class CommonDataCamelConfig {
     }
 
     // db configuration starts
+    private static final PostgreSQLContainer testPostgres = new PostgreSQLContainer("postgres")
+        .withDatabaseName("dbcommondata_test");
 
-    @Container
-    @ServiceConnection
-    static final PostgreSQLContainer testPostgres =
-            new PostgreSQLContainer(
-                DockerImageName.parse("postgres").withTag("15.4"))
-            .withDatabaseName("dbcommondata");
+    static {
+        testPostgres.start();
+    }
 
     @Bean
     public DataSource dataSource() {
-        return springJdbcDataSource();
+        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
+        return dataSourceBuilder.build();
     }
 
     private DataSourceBuilder getDataSourceBuilder() {
@@ -195,6 +188,7 @@ public class CommonDataCamelConfig {
         return dataSourceBuilder;
     }
 
+    @Bean("springJdbcDataSource")
     public DataSource springJdbcDataSource() {
         DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
         return dataSourceBuilder.build();
@@ -216,20 +210,18 @@ public class CommonDataCamelConfig {
         return platformTransactionManager;
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return txManager();
-    }
-
     @Bean(name = "springJdbcTransactionManager")
     public PlatformTransactionManager springJdbcTransactionManager() {
-        return txManager();
+        DataSourceTransactionManager platformTransactionManager
+            = new DataSourceTransactionManager(springJdbcDataSource());
+        platformTransactionManager.setDataSource(springJdbcDataSource());
+        return platformTransactionManager;
     }
 
     @Bean(name = "PROPAGATION_REQUIRED")
     public SpringTransactionPolicy getSpringTransaction() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
-        springTransactionPolicy.setTransactionManager(transactionManager());
+        springTransactionPolicy.setTransactionManager(txManager());
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
         return springTransactionPolicy;
     }
@@ -237,7 +229,7 @@ public class CommonDataCamelConfig {
     @Bean(name = "PROPAGATION_REQUIRES_NEW")
     public SpringTransactionPolicy propagationRequiresNew() {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
-        springTransactionPolicy.setTransactionManager(transactionManager());
+        springTransactionPolicy.setTransactionManager(txManager());
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return springTransactionPolicy;
     }
@@ -291,7 +283,7 @@ public class CommonDataCamelConfig {
 
     @Bean
     public CamelContext camelContext(ApplicationContext applicationContext) {
-        return new SpringBootCamelContext(applicationContext, true);
+        return new SpringCamelContext(applicationContext);
     }
     // camel related configuration ends
 

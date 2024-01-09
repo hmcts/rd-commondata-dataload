@@ -276,7 +276,6 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix'
 
   // Fix for CVE-2022-45047, CVE-2023-35887
   implementation group: 'org.apache.sshd', name: 'sshd-common', version: versions.sshd
