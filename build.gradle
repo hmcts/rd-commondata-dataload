@@ -214,7 +214,7 @@ def versions = [
   logback             : '1.4.14',
   bouncycastle        : '1.77',
   springHystrix       : '2.2.10.RELEASE',
-  camel               : '3.8.0',
+  camel               : '4.3.0',
   sshd                : '2.11.0',
   testContainer_postgresql: '1.17.6'
 ]
