@@ -46,8 +46,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @TestPropertySource(properties = {"spring.config.location=classpath:application-functional.yml"})
 @CamelSpringBootTest
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {CommonDataCamelConfig.class,
-    CamelTestContextBootstrapper.class,
+@ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigDataApplicationContextInitializer.class)
 @SpringBootTest
