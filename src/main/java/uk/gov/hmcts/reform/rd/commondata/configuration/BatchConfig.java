@@ -140,17 +140,17 @@ public class BatchConfig {
         return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute ? "STOPPED" : "ENABLED");
     }
 
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager transactionManager() {
-        return new ResourcelessTransactionManager();
-    }
-
-    @Bean(name = "jobRepository")
-    public JobRepository jobRepository(DataSource dataSource) throws Exception {
-        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setTransactionManager(transactionManager());
-        factory.afterPropertiesSet();
-        return factory.getObject();
-    }
+//    @Bean(name = "transactionManager")
+//    public PlatformTransactionManager transactionManager() {
+//        return new ResourcelessTransactionManager();
+//    }
+//
+//    @Bean(name = "jobRepository")
+//    public JobRepository jobRepository(DataSource dataSource) throws Exception {
+//        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+//        factory.setDataSource(dataSource);
+//        factory.setTransactionManager(transactionManager());
+//        factory.afterPropertiesSet();
+//        return factory.getObject();
+//    }
 }
