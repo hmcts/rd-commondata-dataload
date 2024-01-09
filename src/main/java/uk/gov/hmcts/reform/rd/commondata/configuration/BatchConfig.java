@@ -8,11 +8,13 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
@@ -20,6 +22,8 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTas
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableBatchProcessing
@@ -136,4 +140,21 @@ public class BatchConfig {
         return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute ? "STOPPED" : "ENABLED");
     }
 
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+        DataSourceTransactionManager platformTransactionManager
+            = new DataSourceTransactionManager(dataSource);
+        platformTransactionManager.setDataSource(dataSource);
+        return platformTransactionManager;
+    }
+
+    @Bean(name = "jobRepository")
+    public JobRepository jobRepository(DataSource dataSource,
+                                       PlatformTransactionManager transactionManager) throws Exception {
+        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+        factory.setDataSource(dataSource);
+        factory.setTransactionManager(transactionManager);
+        factory.afterPropertiesSet();
+        return factory.getObject();
+    }
 }
