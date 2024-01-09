@@ -29,7 +29,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataFunctionalBaseTest;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.SpringStarter;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
-import uk.gov.hmcts.reform.rd.commondata.config.CommonDataSpringBatchConfig;
 import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
 
 import java.io.FileInputStream;
@@ -46,7 +45,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @TestPropertySource(properties = {"spring.config.location=classpath:application-functional.yml"})
 @CamelSpringBootTest
 @MockEndpoints("log:*")
-@ContextConfiguration(classes = {CommonDataCamelConfig.class, CommonDataSpringBatchConfig.class,
+@ContextConfiguration(classes = {CommonDataCamelConfig.class,
     CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigDataApplicationContextInitializer.class)

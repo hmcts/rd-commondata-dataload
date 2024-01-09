@@ -36,7 +36,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.config.CommonDataCamelConfig;
-import uk.gov.hmcts.reform.rd.commondata.config.CommonDataSpringBatchConfig;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 @Testcontainers
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisableJmx
-@ImportTestcontainers({CommonDataCamelConfig.class, CommonDataSpringBatchConfig.class})
+@ImportTestcontainers({CommonDataCamelConfig.class})
 @MockEndpoints
 //@EnableBatchProcessing
 @SpringBatchTest
