@@ -62,5 +62,9 @@ spring:
       - crd-flag-details-router
       - crd-other-categories-router
 
+zero-byte-characters: >
+  \u200B,
+   
+
 mail:
   enabled: false

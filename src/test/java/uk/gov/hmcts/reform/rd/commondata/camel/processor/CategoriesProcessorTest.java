@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,6 +50,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     CamelContext camelContext = new DefaultCamelContext();
 
     Exchange exchange = new DefaultExchange(camelContext);
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
 
     private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(Pair.of("BFA1-001AD", null),
                                                                    Pair.of("BFA1-PAD", null),
@@ -57,6 +59,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     @Spy
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer
         = new JsrValidatorInitializer<>();
+
+    @Spy
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
 
     @Mock
     JdbcTemplate jdbcTemplate;
@@ -75,6 +80,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
+        setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
         setField(lovServiceJsrValidatorInitializer, "validator", validator);
         setField(lovServiceJsrValidatorInitializer, "camelContext", camelContext);
         // setField(processor, "jdbcTemplate", jdbcTemplate);
@@ -87,6 +93,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         );
         setField(processor, "logComponentName",
                  "testlogger"
+        );
+        setField(processor, "dataQualityCheckConfiguration",
+                 dataQualityCheckConfiguration
         );
         //setField(processor, "flagCodeQuery", "test");
         setField(processor, "applicationContext", applicationContext);

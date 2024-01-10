@@ -13,10 +13,10 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
@@ -32,12 +32,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
     @Value("${logging-component-name}")
     private String logComponentName;
-
     @Autowired
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
+    @Autowired
+    DataQualityCheckConfiguration dataQualityCheckConfiguration;
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
-    public static final Set<String> ZERO_BYTE_CHARACTERS = Set.of("\u200B", " ");
     public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
         "Zero byte characters identified - check source file";
 
@@ -127,7 +127,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     }
 
     private boolean checkStringForZeroByteCharacters(String string) {
-        return ZERO_BYTE_CHARACTERS.stream()
+        return dataQualityCheckConfiguration.zeroByteCharacters.stream()
             .anyMatch(
                 string::contains
         );
