@@ -296,6 +296,34 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
     }
 
+    @Test
+    @DisplayName("Status: PartialSucess - Test for 0 byte characters.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_0_byte_character() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_0_byte_character.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(3, listOfValues.size());
+
+        String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            zer0ByteCharacterErrorMsg
+        );
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 0);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 2);
+        validateCategoriesFileAudit(
+            jdbcTemplate,
+            auditSchedulerQuery,
+            "PartialSuccess",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
+    }
 
     @Test
     @DisplayName("To validate UTF-8 LOV csv file with Unicode char in header.")
