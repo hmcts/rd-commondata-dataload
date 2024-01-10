@@ -48,6 +48,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRou
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataDRecords;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSupport;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import javax.sql.DataSource;
 
@@ -83,6 +84,11 @@ public class CommonDataCamelConfig {
     @Bean
     public CategoriesProcessor listOfValuesProcessor() {
         return new CategoriesProcessor();
+    }
+
+    @Bean
+    public DataQualityCheckConfiguration dataQualityCheckConfiguration() {
+        return new DataQualityCheckConfiguration();
     }
 
     @Bean
