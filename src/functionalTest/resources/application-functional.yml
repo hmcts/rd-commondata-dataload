@@ -154,4 +154,7 @@ mail:
   enabled: false
 idempotent-flag-ingestion: true
 CONTAINER_NAME: rd-common-data
+zero-byte-characters: >
+  \u200B,
+   
 
