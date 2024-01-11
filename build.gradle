@@ -208,7 +208,7 @@ def versions = [
   lombok              : '1.18.30',
   gradlePitest        : '1.5.1',
   pitest              : '1.15.1',
-  flyway              : '6.5.7',
+  flyway              : '9.19.4',
   camel               : '3.8.0',
   log4j               : '2.20.0',
   logback             : '1.2.13',
