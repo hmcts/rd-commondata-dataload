@@ -325,7 +325,6 @@ dependencies {
   implementation group: 'org.springframework', name: 'spring-tx'
   implementation group: 'org.springframework', name: 'spring-web'
   implementation group: 'org.springframework', name: 'spring-webmvc'
-  implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
   implementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
 
