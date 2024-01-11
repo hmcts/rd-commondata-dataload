@@ -207,7 +207,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
                                     "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
@@ -232,7 +232,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
                                     "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
@@ -257,7 +257,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
@@ -285,7 +285,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
@@ -313,8 +313,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             zer0ByteCharacterErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 2);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
@@ -358,8 +357,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     protected void validateCategoriesFileException(JdbcTemplate jdbcTemplate,
                                                     String exceptionQuery,
-                                                    Pair<String, String> pair,
-                                                    int index) {
+                                                    Pair<String, String> pair) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
         assertTrue(result.stream().map(a -> a.get("error_description").toString()).toList().contains(pair.getValue1()));
 
