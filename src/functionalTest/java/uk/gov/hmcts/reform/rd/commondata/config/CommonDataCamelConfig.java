@@ -194,28 +194,19 @@ public class CommonDataCamelConfig {
         jdbcTemplate.setDataSource(dataSource());
         return jdbcTemplate;
     }
-    // db configuration ends
-
-    // transaction configuration starts
-    @Bean(name = "txManager")
-    public PlatformTransactionManager txManager() {
-        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
-        platformTransactionManager.setDataSource(dataSource());
-        return platformTransactionManager;
-    }
 
     @Bean(name = "PROPAGATION_REQUIRED")
-    public SpringTransactionPolicy getSpringTransaction() {
+    public SpringTransactionPolicy getSpringTransaction(PlatformTransactionManager txManager) {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
-        springTransactionPolicy.setTransactionManager(txManager());
+        springTransactionPolicy.setTransactionManager(txManager);
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
         return springTransactionPolicy;
     }
 
     @Bean(name = "PROPAGATION_REQUIRES_NEW")
-    public SpringTransactionPolicy propagationRequiresNew() {
+    public SpringTransactionPolicy propagationRequiresNew(PlatformTransactionManager txManager) {
         SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
-        springTransactionPolicy.setTransactionManager(txManager());
+        springTransactionPolicy.setTransactionManager(txManager);
         springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
         return springTransactionPolicy;
     }
