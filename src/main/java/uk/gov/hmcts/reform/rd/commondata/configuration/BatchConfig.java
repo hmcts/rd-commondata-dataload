@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.rd.commondata.configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
@@ -22,7 +21,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 @Configuration
-@EnableBatchProcessing
 @Slf4j
 public class BatchConfig {
 
