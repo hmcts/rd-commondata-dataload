@@ -82,6 +82,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
         List<Pair<String, Long>> zeroByteCharacterRecords = identifyRecordsWithZeroByteCharacters(categoriesList);
         if (!zeroByteCharacterRecords.isEmpty()) {
+            String auditStatus = FAILURE;
+            setFileStatus(exchange, applicationContext, auditStatus);
+
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 zeroByteCharacterRecords,
                 null,

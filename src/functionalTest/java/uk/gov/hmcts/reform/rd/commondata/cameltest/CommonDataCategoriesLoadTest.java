@@ -316,11 +316,11 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             zer0ByteCharacterErrorMsg
         );
         validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 2);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
-            "PartialSuccess",
+            "Failure",
             UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
     }
