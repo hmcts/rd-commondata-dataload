@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
@@ -21,8 +20,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTas
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
-
-import javax.sql.DataSource;
 
 @Configuration
 @Slf4j
@@ -144,10 +141,4 @@ public class BatchConfig {
     public JobExecutionDecider checkCaseLinkingRouteStatus() {
         return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute ? "STOPPED" : "ENABLED");
     }
-
-    @Bean(name = "txManager")
-    public PlatformTransactionManager txManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
 }
