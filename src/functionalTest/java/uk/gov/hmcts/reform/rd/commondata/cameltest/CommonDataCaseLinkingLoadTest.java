@@ -56,7 +56,7 @@ public class CommonDataCaseLinkingLoadTest extends CommonDataFunctionalBaseTest 
     CommonDataCaseLinkingRouteTask commonDataCaseLinkingRouteTask;
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";

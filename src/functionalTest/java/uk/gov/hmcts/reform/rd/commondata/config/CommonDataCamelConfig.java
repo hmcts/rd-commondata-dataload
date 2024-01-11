@@ -188,16 +188,10 @@ public class CommonDataCamelConfig {
         return dataSourceBuilder;
     }
 
-    @Bean("springJdbcDataSource")
-    public DataSource springJdbcDataSource() {
-        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
-        return dataSourceBuilder.build();
-    }
-
     @Bean("springJdbcTemplate")
     public JdbcTemplate springJdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(springJdbcDataSource());
+        jdbcTemplate.setDataSource(dataSource());
         return jdbcTemplate;
     }
     // db configuration ends
@@ -207,14 +201,6 @@ public class CommonDataCamelConfig {
     public PlatformTransactionManager txManager() {
         DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
         platformTransactionManager.setDataSource(dataSource());
-        return platformTransactionManager;
-    }
-
-    @Bean(name = "springJdbcTransactionManager")
-    public PlatformTransactionManager springJdbcTransactionManager() {
-        DataSourceTransactionManager platformTransactionManager
-            = new DataSourceTransactionManager(springJdbcDataSource());
-        platformTransactionManager.setDataSource(springJdbcDataSource());
         return platformTransactionManager;
     }
 

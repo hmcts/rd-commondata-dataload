@@ -57,7 +57,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
