@@ -519,3 +519,7 @@ dependencyManagement {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
   }
 }
+
+tasks.withType(Copy).all {
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
