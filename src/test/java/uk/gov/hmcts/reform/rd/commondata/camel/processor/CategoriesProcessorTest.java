@@ -198,6 +198,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         lovServiceList.addAll(getLovServicesCase5());
 
         exchange.getIn().setBody(lovServiceList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
 
         processor.process(exchange);
         verify(processor, times(1)).process(exchange);
@@ -226,7 +228,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
             Categories.builder()
                 .categoryKey("caseSubType")
                 .serviceId("BBA4")
-                .key("BBA4-\u200B001AD")
+                .key("BBA4-001AD")
                 .valueEN("ADVANCE PAYMENT new")
                 .parentCategory("caseType")
                 .parentKey("BBA4-001")
