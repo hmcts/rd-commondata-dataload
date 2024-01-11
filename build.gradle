@@ -250,10 +250,6 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch'
 
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
-  implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
-  implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
-
   implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
 
   implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
@@ -409,6 +405,9 @@ dependencies {
 
 configurations.all {
   exclude group: 'org.codehaus.jettison', module: 'jettison'
+  exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+  exclude group: 'ch.qos.logback', module: 'logback-classic'
+  exclude group: 'ch.qos.logback', module: 'logback-core'
   exclude group: 'org.apache.groovy', module: 'groovy'
   exclude group: 'org.apache.groovy', module: 'groovy-xml'
   exclude group: 'org.apache.groovy', module: 'groovy-json'
