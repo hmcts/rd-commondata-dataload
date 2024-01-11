@@ -245,6 +245,7 @@ dependencies {
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
 
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
@@ -390,8 +391,6 @@ dependencies {
   testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.3'
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
-
-  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
 
   smokeTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
