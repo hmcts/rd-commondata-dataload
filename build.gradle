@@ -69,6 +69,8 @@ tasks.withType(Test) {
   }
 }
 
+tasks.withType(Copy).all { duplicatesStrategy 'include' }
+
 test {
   failFast = true
 }
@@ -446,17 +448,28 @@ bootJar {
 
 // Gradle 7.x issue, workaround from: https://github.com/gradle/gradle/issues/17236#issuecomment-894768083
 rootProject.tasks.named("processSmokeTestResources") {
-  duplicatesStrategy = 'include'
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 rootProject.tasks.named("processFunctionalTestResources") {
-  duplicatesStrategy = 'include'
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 rootProject.tasks.named("processIntegrationTestResources") {
-  duplicatesStrategy = 'include'
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+tasks.withType(Jar){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Tar){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Zip){
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 wrapper {
   distributionType = Wrapper.DistributionType.ALL
 }
@@ -518,8 +531,4 @@ dependencyManagement {
   imports {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
   }
-}
-
-tasks.withType(Copy).all {
-  duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
