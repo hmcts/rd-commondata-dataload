@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.binder;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 
 import java.io.Serializable;
-import javax.validation.constraints.NotEmpty;
 
 @Component
 @Setter

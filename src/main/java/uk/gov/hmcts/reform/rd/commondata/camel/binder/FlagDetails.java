@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.binder;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -10,10 +12,8 @@ import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.DatePattern;
 
 import java.io.Serializable;
-import javax.validation.constraints.NotEmpty;
 
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.DATE_TIME_FORMAT;
@@ -50,17 +50,17 @@ public class FlagDetails extends CommonCsvField implements Serializable {
     private String categoryId;
 
     @DataField(pos = 6, columnName = "MRD_Created_Time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+    @Pattern(regexp = DATE_PATTERN,
         message = "Invalid Date format for MRD_Created_Time. Date pattern should be " + DATE_TIME_FORMAT)
     private String mrdCreatedTime;
 
     @DataField(pos = 7, columnName = "MRD_Updated_Time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+    @Pattern(regexp = DATE_PATTERN,
         message = "Invalid Date format for MRD_Updated_Time. Date pattern should be " + DATE_TIME_FORMAT)
     private String mrdUpdatedTime;
 
     @DataField(pos = 8, columnName = "MRD_Deleted_Time")
-    @DatePattern(isNullAllowed = "true", regex = DATE_PATTERN,
+    @Pattern(regexp = DATE_PATTERN,
         message = "Invalid Date format for MRD_Deleted_Time. Date pattern should be " + DATE_TIME_FORMAT)
     private String mrdDeletedTime;
 
