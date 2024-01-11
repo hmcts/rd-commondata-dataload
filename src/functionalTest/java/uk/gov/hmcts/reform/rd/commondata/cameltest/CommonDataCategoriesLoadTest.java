@@ -65,8 +65,6 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     @Qualifier("springJdbcTransactionManager")
     protected PlatformTransactionManager platformTransactionManager;
 
-    private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";
-
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
@@ -316,7 +314,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             zer0ByteCharacterErrorMsg
         );
         validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 0);
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 2);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
