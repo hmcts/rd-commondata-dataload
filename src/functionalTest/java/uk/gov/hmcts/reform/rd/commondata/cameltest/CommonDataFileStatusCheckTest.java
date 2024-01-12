@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -50,7 +49,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
     JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigDataApplicationContextInitializer.class)
-@SpringBootTest
 @SpringBatchTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
