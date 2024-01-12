@@ -10,6 +10,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -186,6 +187,12 @@ public class CommonDataCamelConfig {
         return dataSourceBuilder;
     }
 
+    @Bean("springJdbcTemplate")
+    public JdbcTemplate springJdbcTemplate() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(dataSource());
+        return jdbcTemplate;
+    }
     // db configuration ends
 
     // transaction configuration starts
