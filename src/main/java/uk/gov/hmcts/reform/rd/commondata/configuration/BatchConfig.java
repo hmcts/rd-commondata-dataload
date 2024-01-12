@@ -7,13 +7,12 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
@@ -22,11 +21,13 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagDetailsRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
-import javax.sql.DataSource;
-
 @Configuration
 @Slf4j
 public class BatchConfig {
+
+    private final JobRepository jobRepository;
+
+    private final PlatformTransactionManager txManager;
 
     @Autowired
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
@@ -67,68 +68,71 @@ public class BatchConfig {
     @Value("${batchjob-name}")
     String jobName;
 
+    public BatchConfig(JobRepository jobRepository,
+                       @Qualifier("txManager")
+                       PlatformTransactionManager txManager) {
+        this.jobRepository = jobRepository;
+        this.txManager = txManager;
+    }
+
     /**
      * Create Step to run common Data Flag Route.
      * @return Step
      */
     @Bean
-    public Step stepCommonDataRoute(JobRepository jobRepository,
-                                    PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataRoute() {
         return new StepBuilder(commonDataTask, jobRepository)
-            .tasklet(commonDataFlagServiceRouteTask, transactionManager)
+            .tasklet(commonDataFlagServiceRouteTask, txManager)
             .build();
     }
 
     @Bean
-    public Step stepCommonDataCategoriesRoute(JobRepository jobRepository,
-                                              PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataCategoriesRoute() {
         return new StepBuilder(commonDataCategoriesTask, jobRepository)
-            .tasklet(commonDataCategoriesRouteTask, transactionManager)
+            .tasklet(commonDataCategoriesRouteTask, txManager)
             .build();
     }
 
 
     @Bean
-    public Step stepCommonDataCaseLinkingRoute(JobRepository jobRepository,
-                                               PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataCaseLinkingRoute() {
         return new StepBuilder(commonDataCaseLinkingTask, jobRepository)
-            .tasklet(commonDataCaseLinkingRouteTask, transactionManager)
+            .tasklet(commonDataCaseLinkingRouteTask, txManager)
             .build();
     }
 
     @Bean
-    public Step stepCommonDataFlagDetailsRoute(JobRepository jobRepository,
-                                               PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataFlagDetailsRoute() {
         return new StepBuilder(commonDataFlagDetailsTask, jobRepository)
-            .tasklet(commonDataFlagDetailsRouteTask, transactionManager)
+            .tasklet(commonDataFlagDetailsRouteTask, txManager)
             .build();
     }
 
     @Bean
-    public Step stepOtherCategoriesRoute(JobRepository jobRepository,
-                                         PlatformTransactionManager transactionManager) {
+    public Step stepOtherCategoriesRoute() {
         return new StepBuilder(commonDataOtherCategoriesTask, jobRepository)
-            .tasklet(commonDataOtherCategoriesRouteTask, transactionManager)
+            .tasklet(commonDataOtherCategoriesRouteTask, txManager)
             .build();
     }
 
     /**
      * Returns Job bean.
+     *
      * @return Job
      */
     @Bean
-    public Job runRoutesJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Job runRoutesJob() {
         return new JobBuilder(jobName, jobRepository)
-            .start(stepCommonDataFlagDetailsRoute(jobRepository, transactionManager))
+            .start(stepCommonDataFlagDetailsRoute())
             .listener(jobResultListener)
-            .on("*").to(stepCommonDataRoute(jobRepository, transactionManager))
-            .on("*").to(stepOtherCategoriesRoute(jobRepository, transactionManager))
+            .on("*").to(stepCommonDataRoute())
+            .on("*").to(stepOtherCategoriesRoute())
             .on("*").to(checkCaseLinkingRouteStatus())
             .from(checkCaseLinkingRouteStatus()).on("STOPPED")
-            .to(stepCommonDataCategoriesRoute(jobRepository, transactionManager))
+            .to(stepCommonDataCategoriesRoute())
             .from(checkCaseLinkingRouteStatus()).on("ENABLED")
-            .to(stepCommonDataCaseLinkingRoute(jobRepository, transactionManager))
-            .on("*").to(stepCommonDataCategoriesRoute(jobRepository, transactionManager))
+            .to(stepCommonDataCaseLinkingRoute())
+            .on("*").to(stepCommonDataCategoriesRoute())
             .end()
             .build();
     }
@@ -136,23 +140,5 @@ public class BatchConfig {
     @Bean
     public JobExecutionDecider checkCaseLinkingRouteStatus() {
         return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute ? "STOPPED" : "ENABLED");
-    }
-
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
-        DataSourceTransactionManager platformTransactionManager
-            = new DataSourceTransactionManager(dataSource);
-        platformTransactionManager.setDataSource(dataSource);
-        return platformTransactionManager;
-    }
-
-    @Bean(name = "jobRepository")
-    public JobRepository jobRepository(DataSource dataSource,
-                                       PlatformTransactionManager transactionManager) throws Exception {
-        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setTransactionManager(transactionManager);
-        factory.afterPropertiesSet();
-        return factory.getObject();
     }
 }
