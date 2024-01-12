@@ -3,11 +3,16 @@ package uk.gov.hmcts.reform.rd.commondata.config;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.bean.validator.HibernateValidationProviderResolver;
 import org.apache.camel.spring.SpringCamelContext;
+import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
 import org.mockito.Mockito;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.testcontainers.containers.PostgreSQLContainer;
 import uk.gov.hmcts.reform.data.ingestion.DataIngestionLibraryRunner;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.ArchiveFileProcessor;
@@ -43,6 +48,8 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRou
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataDRecords;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSupport;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class CommonDataCamelConfig {
@@ -163,6 +170,67 @@ public class CommonDataCamelConfig {
 
     static {
         testPostgres.start();
+    }
+
+    @Bean
+    public DataSource dataSource() {
+        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
+        return dataSourceBuilder.build();
+    }
+
+    private DataSourceBuilder getDataSourceBuilder() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.url(testPostgres.getJdbcUrl());
+        dataSourceBuilder.username(testPostgres.getUsername());
+        dataSourceBuilder.password(testPostgres.getPassword());
+        return dataSourceBuilder;
+    }
+
+    @Bean("springJdbcDataSource")
+    public DataSource springJdbcDataSource() {
+        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
+        return dataSourceBuilder.build();
+    }
+
+    @Bean("springJdbcTemplate")
+    public JdbcTemplate springJdbcTemplate() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(springJdbcDataSource());
+        return jdbcTemplate;
+    }
+    // db configuration ends
+
+    // transaction configuration starts
+    @Bean(name = "txManager")
+    public PlatformTransactionManager txManager() {
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        platformTransactionManager.setDataSource(dataSource());
+        return platformTransactionManager;
+    }
+
+    @Bean(name = "springJdbcTransactionManager")
+    public PlatformTransactionManager springJdbcTransactionManager() {
+        DataSourceTransactionManager platformTransactionManager
+            = new DataSourceTransactionManager(springJdbcDataSource());
+        platformTransactionManager.setDataSource(springJdbcDataSource());
+        return platformTransactionManager;
+    }
+
+    @Bean(name = "PROPAGATION_REQUIRED")
+    public SpringTransactionPolicy getSpringTransaction() {
+        SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
+        springTransactionPolicy.setTransactionManager(txManager());
+        springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRED");
+        return springTransactionPolicy;
+    }
+
+    @Bean(name = "PROPAGATION_REQUIRES_NEW")
+    public SpringTransactionPolicy propagationRequiresNew() {
+        SpringTransactionPolicy springTransactionPolicy = new SpringTransactionPolicy();
+        springTransactionPolicy.setTransactionManager(txManager());
+        springTransactionPolicy.setPropagationBehaviorName("PROPAGATION_REQUIRES_NEW");
+        return springTransactionPolicy;
     }
 
     // transaction configuration ends
