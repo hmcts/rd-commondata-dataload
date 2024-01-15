@@ -211,7 +211,7 @@ def versions = [
   gradlePitest        : '1.5.1',
   pitest              : '1.15.1',
   flyway              : '9.19.4',
-  camel               : '3.8.0',
+  camel               : '4.3.0',
   log4j               : '2.20.0',
   logback             : '1.2.13',
   bouncycastle        : '1.77'
@@ -304,7 +304,7 @@ dependencies {
   implementation group: 'org.apache.camel', name: 'camel-spring-batch', version: versions.camel
 
 
-  implementation group: 'org.apache.camel.springboot', name: 'camel-azure-starter', version:versions.camel
+  implementation group: 'org.apache.camel.springboot', name: 'camel-azure-starter', version: '3.8.0'
   implementation group: 'org.apache.camel.springboot', name: 'camel-bindy-starter', version:versions.camel
   implementation group: 'org.apache.camel.springboot', name: 'camel-jdbc-starter', version:versions.camel
   implementation group: 'org.apache.camel', name: 'camel-bean-validator', version: versions.camel
