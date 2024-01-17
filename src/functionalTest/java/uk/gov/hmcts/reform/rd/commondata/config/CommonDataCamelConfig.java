@@ -87,11 +87,6 @@ public class CommonDataCamelConfig {
     }
 
     @Bean
-    public DataQualityCheckConfiguration dataQualityCheckConfiguration() {
-        return new DataQualityCheckConfiguration();
-    }
-
-    @Bean
     public FlagDetailsProcessor flagDetailsProcessor() {
         return new FlagDetailsProcessor();
     }

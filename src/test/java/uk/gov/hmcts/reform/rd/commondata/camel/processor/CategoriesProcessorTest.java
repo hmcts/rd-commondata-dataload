@@ -60,7 +60,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer
         = new JsrValidatorInitializer<>();
 
-    @Spy
+    @Mock
     DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
 
     @Mock
