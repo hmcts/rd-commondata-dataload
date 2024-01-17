@@ -48,7 +48,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRou
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataDRecords;
 import uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor;
 import uk.gov.hmcts.reform.rd.commondata.cameltest.testsupport.CommonDataBlobSupport;
-import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import javax.sql.DataSource;
 
