@@ -65,8 +65,6 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
-    private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";
-
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
@@ -209,7 +207,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
                                     "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
@@ -234,7 +232,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
                                     "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
@@ -259,7 +257,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
@@ -287,7 +285,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             comKeyErrorMsg
         );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair, 1);
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
@@ -296,6 +294,33 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
     }
 
+    @Test
+    @DisplayName("Status: PartialSucess - Test for 0 byte characters.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_0_byte_character() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_0_byte_character.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(3, listOfValues.size());
+
+        String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            zer0ByteCharacterErrorMsg
+        );
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
+        validateCategoriesFileAudit(
+            jdbcTemplate,
+            auditSchedulerQuery,
+            "Failure",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
+    }
 
     @Test
     @DisplayName("To validate UTF-8 LOV csv file with Unicode char in header.")
@@ -332,8 +357,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     protected void validateCategoriesFileException(JdbcTemplate jdbcTemplate,
                                                     String exceptionQuery,
-                                                    Pair<String, String> pair,
-                                                    int index) {
+                                                    Pair<String, String> pair) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
         assertTrue(result.stream().map(a -> a.get("error_description").toString()).toList().contains(pair.getValue1()));
 
