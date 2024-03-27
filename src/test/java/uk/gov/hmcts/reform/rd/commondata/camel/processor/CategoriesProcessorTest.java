@@ -172,9 +172,8 @@ import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfigura
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
-        Assertions.assertEquals(1
-            , actualLovServiceList.size());
-        assertTrue(actualLovServiceList.isEmpty());
+        Assertions.assertEquals(1, actualLovServiceList.size());
+        assertFalse(actualLovServiceList.isEmpty());
 
     }
 
