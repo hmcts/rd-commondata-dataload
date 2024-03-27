@@ -64,7 +64,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String FLAG_DETAILS_TABLE_NAME = "flag_details";

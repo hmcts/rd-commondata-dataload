@@ -62,7 +62,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     CommonDataCategoriesRouteTask commonDataCategoriesRouteTask;
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     @BeforeEach
