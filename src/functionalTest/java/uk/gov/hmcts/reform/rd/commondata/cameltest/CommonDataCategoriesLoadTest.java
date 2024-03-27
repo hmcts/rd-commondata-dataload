@@ -162,7 +162,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 3);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 4);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
@@ -225,7 +225,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(1, listOfValues.size());
+        assertEquals(0, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
@@ -250,7 +250,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(1, listOfValues.size());
+        assertEquals(0, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
@@ -278,7 +278,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(2, listOfValues.size());
+        assertEquals(0, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(

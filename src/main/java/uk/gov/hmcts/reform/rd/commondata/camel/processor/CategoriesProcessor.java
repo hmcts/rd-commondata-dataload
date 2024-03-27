@@ -27,6 +27,7 @@ import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstan
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
 
+
 @Component
 @Slf4j
 public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> {
@@ -70,12 +71,11 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             }
             setFileStatus(exchange, applicationContext, auditStatus);
         }
-
-        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
-
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
+
+        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
     }
 
     private void processExceptionRecords(Exchange exchange,
@@ -97,7 +97,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
         List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()
-                 .map(categories -> createExceptionRecordPair(categories)).toList();
+            .map(categories -> createExceptionRecordPair(categories)).toList();
         if (!invalidCategoryIds.isEmpty()) {
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
@@ -131,7 +131,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return dataQualityCheckConfiguration.zeroByteCharacters.stream()
             .anyMatch(
                 string::contains
-        );
+            );
     }
 
     private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
