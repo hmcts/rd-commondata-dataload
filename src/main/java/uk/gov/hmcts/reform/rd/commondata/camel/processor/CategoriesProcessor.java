@@ -1,5 +1,17 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_FLAG_D;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_Y;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +26,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Collections.singletonList;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_Y;
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
-import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
 
 @Component
 @Slf4j
@@ -55,8 +56,16 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                  categoriesList.size()
         );
 
-        Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList);
-        List<Categories> finalCategoriesList = getValidCategories(filteredCategories);
+        Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList,ACTIVE_Y);
+        List<Categories> finalCategoriesList = getValidCategories(filteredCategories,ACTIVE_Y);
+
+        Multimap<String, Categories> filteredInactiveCategories = convertToMultiMap(categoriesList,ACTIVE_FLAG_D);
+        List<Categories> finalInvaliCategoriesList = getValidCategories(filteredInactiveCategories,ACTIVE_FLAG_D);
+
+        List<Categories>  onlyDeletedNoActiveRecords = onlyDeletedNoActiveRecords
+            (finalCategoriesList,finalInvaliCategoriesList);
+
+        finalCategoriesList.addAll(onlyDeletedNoActiveRecords);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
                  finalCategoriesList.size()
@@ -145,13 +154,13 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return invalidCategories;
     }
 
-    private List<Categories> getValidCategories(Multimap<String, Categories> multimap) {
+    private List<Categories> getValidCategories(Multimap<String, Categories> multimap,String activeFlag) {
 
         List<Categories> finalCategories = new ArrayList<>();
         multimap.asMap().forEach((key, collection) -> {
             List<Categories> categoriesList = collection.stream().toList();
             if (categoriesList.size() > 1) {
-                finalCategories.addAll(filterInvalidCategories(categoriesList));
+                finalCategories.addAll(filterCategories(categoriesList,activeFlag));
             } else {
                 finalCategories.addAll(categoriesList);
             }
@@ -159,25 +168,46 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return finalCategories;
     }
 
-    private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList) {
+    private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList, String activeFlag) {
         Multimap<String, Categories> multimap = ArrayListMultimap.create();
-        categoriesList.forEach(categories -> multimap.put(categories.getCategoryKey() + categories.getServiceId()
-                                                              + categories.getKey(), categories));
+        categoriesList.forEach(categories -> {
+            if(categories.getActive().equalsIgnoreCase(activeFlag)){
+                multimap.put(categories.getCategoryKey() + categories.getServiceId()
+                    + categories.getKey(), categories);
+            }
+
+        });
         return multimap;
     }
 
-    private List<Categories> filterInvalidCategories(List<Categories> categoriesList) {
+    private List<Categories> filterCategories(List<Categories> categoriesList,String activeFlag) {
         List<Categories> validCategories = new ArrayList<>();
 
         boolean activeProcessed = false;
 
         for (Categories category : categoriesList) {
-            if ((ACTIVE_Y.equalsIgnoreCase(category.getActive())
+            if ((activeFlag.equalsIgnoreCase(category.getActive())
                     && !activeProcessed)) {
                 validCategories.add(category);
                 activeProcessed = true;
             }
         }
         return validCategories;
+    }
+    private List<Categories> onlyDeletedNoActiveRecords(List<Categories> activecategoriesList,List<Categories> inactivecategoriesList){
+
+        List<Categories> activecategoriesList1 = new ArrayList<>();
+
+        for(Categories category1:activecategoriesList){
+            for(Categories category:inactivecategoriesList){
+                if((category1.getCategoryKey().equalsIgnoreCase(category.getCategoryKey()))
+                    && (category1.getKey().equalsIgnoreCase(category.getKey()))
+                    && (category1.getServiceId().equalsIgnoreCase(category.getServiceId()))){
+                    activecategoriesList1.add(category);
+                }
+            }
+        }
+         inactivecategoriesList.removeAll(activecategoriesList1);
+        return inactivecategoriesList;
     }
 }
