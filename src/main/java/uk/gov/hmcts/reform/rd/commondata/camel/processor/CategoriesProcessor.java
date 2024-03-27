@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
@@ -16,6 +15,7 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -56,21 +56,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                  categoriesList.size()
         );
 
-        //select all records from file that are marked as active 'y' , eliminate all duplicates
-        Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList,ACTIVE_Y);
-        List<Categories> finalCategoriesList = getValidCategories(filteredCategories,ACTIVE_Y);
-
-        //select all records from file that are marked for deletion 'd' , eliminate all duplicates
-        Multimap<String, Categories> filteredInactiveCategories = convertToMultiMap(categoriesList,ACTIVE_FLAG_D);
-        List<Categories> finalInvaliCategoriesList = getValidCategories(filteredInactiveCategories,ACTIVE_FLAG_D);
-
-        //remove all records from finalInvaliCategoriesList which also have a record marked as 'y'
-        List<Categories>  onlyDeletedNoActiveRecords = onlyDeletedNoActiveRecords(
-            finalCategoriesList,finalInvaliCategoriesList);
-
-        //the final list now contains all records with 'y' that need updating and records that need to be deleted,
-        //entire list is Inserted in db here and delete of all records marked 'd' takes place in CommonDataDRecords
-        finalCategoriesList.addAll(onlyDeletedNoActiveRecords);
+        Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList);
+        List<Categories> finalCategoriesList = getValidCategories(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
                  finalCategoriesList.size()
@@ -83,11 +70,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             }
             setFileStatus(exchange, applicationContext, auditStatus);
         }
+
+        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
+
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
-
-        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
     }
 
     private void processExceptionRecords(Exchange exchange,
@@ -108,13 +96,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
 
         List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
-        List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
-
-        if (!CollectionUtils.isEmpty(invalidCategories)) {
-            invalidCategories.forEach(categories -> invalidCategoryIds.add(
-                createExceptionRecordPair(categories)
-            ));
-
+        List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()
+                 .map(categories -> createExceptionRecordPair(categories)).toList();
+        if (!invalidCategoryIds.isEmpty()) {
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
                 LOV_COMPOSITE_KEY,
@@ -159,62 +143,41 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return invalidCategories;
     }
 
-    private List<Categories> getValidCategories(Multimap<String, Categories> multimap,String activeFlag) {
+    private List<Categories> getValidCategories(Multimap<String, Categories> multimap) {
 
         List<Categories> finalCategories = new ArrayList<>();
         multimap.asMap().forEach((key, collection) -> {
             List<Categories> categoriesList = collection.stream().toList();
-            if (categoriesList.size() > 1) {
-                finalCategories.addAll(filterCategories(categoriesList,activeFlag));
-            } else {
-                finalCategories.addAll(categoriesList);
-            }
+            finalCategories.addAll(filterCategories(categoriesList));
         });
         return finalCategories;
     }
 
-    private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList, String activeFlag) {
+    private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList) {
         Multimap<String, Categories> multimap = ArrayListMultimap.create();
-        categoriesList.forEach(categories -> {
-            if (categories.getActive().equalsIgnoreCase(activeFlag)) {
-                multimap.put(categories.getCategoryKey() + categories.getServiceId()
-                    + categories.getKey(), categories);
-            }
-
-        });
+        categoriesList.forEach(categories -> multimap.put(categories.getCategoryKey() + categories.getServiceId()
+                                                              + categories.getKey(), categories));
         return multimap;
     }
 
-    private List<Categories> filterCategories(List<Categories> categoriesList,String activeFlag) {
-        List<Categories> validCategories = new ArrayList<>();
-
-        boolean activeProcessed = false;
+    private List<Categories> filterCategories(List<Categories> categoriesList) {
+        List<Categories> validCategories = new LinkedList<>();
+        List<Categories> deletedCategories = new LinkedList<>();
 
         for (Categories category : categoriesList) {
-            if ((activeFlag.equalsIgnoreCase(category.getActive())
-                    && !activeProcessed)) {
-                validCategories.add(category);
-                activeProcessed = true;
+            if ((ACTIVE_FLAG_D.equalsIgnoreCase(category.getActive()))) {
+                deletedCategories.add(category);
+                break;
             }
         }
-        return validCategories;
-    }
-
-    private List<Categories> onlyDeletedNoActiveRecords(
-        List<Categories> activecategoriesList,List<Categories> inactivecategoriesList) {
-
-        List<Categories> activecategoriesList1 = new ArrayList<>();
-
-        for (Categories category1:activecategoriesList) {
-            for (Categories category:inactivecategoriesList) {
-                if ((category1.getCategoryKey().equalsIgnoreCase(category.getCategoryKey()))
-                    && (category1.getKey().equalsIgnoreCase(category.getKey()))
-                    && (category1.getServiceId().equalsIgnoreCase(category.getServiceId()))) {
-                    activecategoriesList1.add(category);
+        if (deletedCategories.size() == 0) {
+            for (Categories category : categoriesList) {
+                if ((ACTIVE_Y.equalsIgnoreCase(category.getActive()))) {
+                    validCategories.add(category);
                 }
             }
         }
-        inactivecategoriesList.removeAll(activecategoriesList1);
-        return inactivecategoriesList;
+        validCategories.addAll(deletedCategories);
+        return validCategories;
     }
 }
