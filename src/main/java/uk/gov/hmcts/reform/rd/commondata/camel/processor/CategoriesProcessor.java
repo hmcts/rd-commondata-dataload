@@ -56,15 +56,20 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                  categoriesList.size()
         );
 
+        //select all records from file that are marked as active 'y' , eliminate all duplicates
         Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList,ACTIVE_Y);
         List<Categories> finalCategoriesList = getValidCategories(filteredCategories,ACTIVE_Y);
 
+        //select all records from file that are marked for deletion 'd' , eliminate all duplicates
         Multimap<String, Categories> filteredInactiveCategories = convertToMultiMap(categoriesList,ACTIVE_FLAG_D);
         List<Categories> finalInvaliCategoriesList = getValidCategories(filteredInactiveCategories,ACTIVE_FLAG_D);
 
+        //remove all records from finalInvaliCategoriesList which also have a record marked as 'y'
         List<Categories>  onlyDeletedNoActiveRecords = onlyDeletedNoActiveRecords(
             finalCategoriesList,finalInvaliCategoriesList);
 
+        //the final list now contains all records with 'y' that need updating and records that need to be deleted,
+        //entire list is Inserted in db here and delete of all records marked 'd' takes place in CommonDataDRecords
         finalCategoriesList.addAll(onlyDeletedNoActiveRecords);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
