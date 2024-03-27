@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +63,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         Multimap<String, Categories> filteredInactiveCategories = convertToMultiMap(categoriesList,ACTIVE_FLAG_D);
         List<Categories> finalInvaliCategoriesList = getValidCategories(filteredInactiveCategories,ACTIVE_FLAG_D);
 
-        List<Categories>  onlyDeletedNoActiveRecords = onlyDeletedNoActiveRecords
-            (finalCategoriesList,finalInvaliCategoriesList);
+        List<Categories>  onlyDeletedNoActiveRecords = onlyDeletedNoActiveRecords(
+            finalCategoriesList,finalInvaliCategoriesList);
 
         finalCategoriesList.addAll(onlyDeletedNoActiveRecords);
 
@@ -171,7 +172,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     private Multimap<String, Categories> convertToMultiMap(List<Categories> categoriesList, String activeFlag) {
         Multimap<String, Categories> multimap = ArrayListMultimap.create();
         categoriesList.forEach(categories -> {
-            if(categories.getActive().equalsIgnoreCase(activeFlag)){
+            if (categories.getActive().equalsIgnoreCase(activeFlag)) {
                 multimap.put(categories.getCategoryKey() + categories.getServiceId()
                     + categories.getKey(), categories);
             }
@@ -194,20 +195,22 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
         return validCategories;
     }
-    private List<Categories> onlyDeletedNoActiveRecords(List<Categories> activecategoriesList,List<Categories> inactivecategoriesList){
+
+    private List<Categories> onlyDeletedNoActiveRecords(
+        List<Categories> activecategoriesList,List<Categories> inactivecategoriesList) {
 
         List<Categories> activecategoriesList1 = new ArrayList<>();
 
-        for(Categories category1:activecategoriesList){
-            for(Categories category:inactivecategoriesList){
-                if((category1.getCategoryKey().equalsIgnoreCase(category.getCategoryKey()))
+        for (Categories category1:activecategoriesList) {
+            for (Categories category:inactivecategoriesList) {
+                if ((category1.getCategoryKey().equalsIgnoreCase(category.getCategoryKey()))
                     && (category1.getKey().equalsIgnoreCase(category.getKey()))
-                    && (category1.getServiceId().equalsIgnoreCase(category.getServiceId()))){
+                    && (category1.getServiceId().equalsIgnoreCase(category.getServiceId()))) {
                     activecategoriesList1.add(category);
                 }
             }
         }
-         inactivecategoriesList.removeAll(activecategoriesList1);
+        inactivecategoriesList.removeAll(activecategoriesList1);
         return inactivecategoriesList;
     }
 }
