@@ -1,5 +1,23 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.util.ReflectionTestUtils.setField;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+
 import com.google.common.collect.ImmutableList;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -23,24 +41,6 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.util.ReflectionTestUtils.setField;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 
 @ExtendWith(MockitoExtension.class)
  class CategoriesProcessorTest {
@@ -156,6 +156,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         Assertions.assertEquals(2, actualLovServiceList.size());
     }
 
+    //when two records with same composite key are passed to processor
+    //The first record is selected and duplicate ones are eliminated
     @Test
     @DisplayName("Test for LOV 'D' records Case3")
     void testListOfValuesCsv_DupRecord_Case4() throws Exception {
@@ -170,7 +172,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
-        Assertions.assertEquals(0, actualLovServiceList.size());
+        Assertions.assertEquals(1
+            , actualLovServiceList.size());
         assertTrue(actualLovServiceList.isEmpty());
 
     }
