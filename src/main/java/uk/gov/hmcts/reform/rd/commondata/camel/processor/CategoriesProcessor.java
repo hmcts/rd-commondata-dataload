@@ -71,11 +71,13 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             }
             setFileStatus(exchange, applicationContext, auditStatus);
         }
+        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
+
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
+
     }
 
     private void processExceptionRecords(Exchange exchange,
