@@ -202,7 +202,8 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         //Validate Success Result
         validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
             Categories.builder().categoryKey("caseSubType").serviceId("BBA3").key("BBA3-001AD")
-                .valueEN("ADVANCE PAYMENT scenario1").valueCY("").hintTextEN("").hintTextCY("").parentCategory("caseType")
+                .valueEN("ADVANCE PAYMENT scenario1").valueCY("").hintTextEN("")
+                .hintTextCY("").parentCategory("caseType")
                 .parentKey("BBA3-001").active("Y").build()), 1);
         //Validates Success Audit
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_LIST_OF_VALUES_FILE_NAME);
