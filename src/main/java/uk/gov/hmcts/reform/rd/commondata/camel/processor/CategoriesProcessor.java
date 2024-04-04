@@ -71,13 +71,11 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             }
             setFileStatus(exchange, applicationContext, auditStatus);
         }
-        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
-
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-
+        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
     }
 
     private void processExceptionRecords(Exchange exchange,
@@ -167,17 +165,18 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Categories> deletedCategories = new LinkedList<>();
 
         for (Categories category : categoriesList) {
-            if ((ACTIVE_FLAG_D.equalsIgnoreCase(category.getActive()))) {
+            if ((ACTIVE_Y.equalsIgnoreCase(category.getActive()))) {
+                validCategories.add(category);
+            }
+        }
+
+        if (validCategories.size() == 0) {
+           for (Categories category : categoriesList) {
+              if ((ACTIVE_FLAG_D.equalsIgnoreCase(category.getActive()))) {
                 deletedCategories.add(category);
                 break;
             }
-        }
-        if (deletedCategories.size() == 0) {
-            for (Categories category : categoriesList) {
-                if ((ACTIVE_Y.equalsIgnoreCase(category.getActive()))) {
-                    validCategories.add(category);
-                }
-            }
+           }
         }
         validCategories.addAll(deletedCategories);
         return validCategories;
