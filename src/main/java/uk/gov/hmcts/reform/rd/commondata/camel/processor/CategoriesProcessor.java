@@ -171,12 +171,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
 
         if (validCategories.size() == 0) {
-           for (Categories category : categoriesList) {
-              if ((ACTIVE_FLAG_D.equalsIgnoreCase(category.getActive()))) {
-                deletedCategories.add(category);
-                break;
+            for (Categories category : categoriesList) {
+                if ((ACTIVE_FLAG_D.equalsIgnoreCase(category.getActive()))) {
+                    deletedCategories.add(category);
+                    break;
+                }
             }
-           }
         }
         validCategories.addAll(deletedCategories);
         return validCategories;
