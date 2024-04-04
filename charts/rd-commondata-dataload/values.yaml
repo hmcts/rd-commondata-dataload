@@ -1,6 +1,8 @@
 job:
   applicationPort: 8100
   aadIdentityName: rd
+  spotInstances:
+    enabled: true
   image: 'hmctspublic.azurecr.io/rd/commondata-dataload:latest'
   kind: CronJob
   global:
