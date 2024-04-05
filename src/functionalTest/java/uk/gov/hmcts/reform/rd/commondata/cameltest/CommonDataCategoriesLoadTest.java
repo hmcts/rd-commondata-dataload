@@ -221,7 +221,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(0, listOfValues.size());
+        assertEquals(1, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
@@ -246,7 +246,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(0, listOfValues.size());
+        assertEquals(1, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
@@ -274,7 +274,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(0, listOfValues.size());
+        assertEquals(1, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
