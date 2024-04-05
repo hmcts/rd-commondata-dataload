@@ -341,6 +341,39 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
     }
 
+    @Test
+    @DisplayName("Status: Success - Test for loading a file with records of same composite key both active=D"
+        + "value for CategoryKey field")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    public void testListOfValuesCsv_WithDelete_Success() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_delete_success.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        //all records marked as D hence all deleted
+        assertEquals(0, listOfValues.size());
+
+        //Validates audit
+        var result = jdbcTemplate.queryForList(auditSchedulerQuery);
+        assertEquals(5, result.size());
+        Optional<Map<String, Object>> auditEntry =
+            result.stream().filter(audit -> audit.containsValue(UPLOAD_LIST_OF_VALUES_FILE_NAME)).findFirst();
+        assertTrue(auditEntry.isPresent());
+        auditEntry.ifPresent(audit -> assertEquals("PartialSuccess", audit.get("status")));
+
+        //validate exceptons
+        var resultExceptions = jdbcTemplate.queryForList(exceptionRecordsQuery);
+        assertEquals(3, resultExceptions.size());
+        resultExceptions.forEach(p -> assertEquals(p.get("error_description"),
+            "Record is deleted as Active flag was 'D'"));
+    }
+
+
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
