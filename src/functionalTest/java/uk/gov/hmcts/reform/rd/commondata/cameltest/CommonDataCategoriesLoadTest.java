@@ -189,7 +189,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     }
 
     @Test
-    @DisplayName("Status: PartialSucess - Test for LOV Duplicate records Case1.")
+    @DisplayName("Status: Sucess - Test for LOV Duplicate records Case1.Filters duplicate records")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     void testListOfValuesCsv_DupRecord_Case1() throws Exception {
         commonDataBlobSupport.uploadFile(
@@ -199,18 +199,14 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         );
 
         jobLauncherTestUtils.launchJob();
-        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(1, listOfValues.size());
-
-        String comKeyErrorMsg = "Composite Key violation";
-        Pair<String, String> pair = new Pair<>(
-            UPLOAD_LIST_OF_VALUES_FILE_NAME,
-            comKeyErrorMsg
-        );
-        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
-        validateCategoriesFileAudit(jdbcTemplate, auditSchedulerQuery,
-                                    "PartialSuccess", UPLOAD_LIST_OF_VALUES_FILE_NAME
-        );
+        //Validate Success Result
+        validateListOfValuesFile(jdbcTemplate, listOfValuesSelectData, List.of(
+            Categories.builder().categoryKey("caseSubType").serviceId("BBA3").key("BBA3-001AD")
+                .valueEN("ADVANCE PAYMENT scenario1").valueCY("").hintTextEN("")
+                .hintTextCY("").parentCategory("caseType")
+                .parentKey("BBA3-001").active("Y").build()), 1);
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
     @Test
@@ -278,7 +274,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(2, listOfValues.size());
+        assertEquals(1, listOfValues.size());
 
         String comKeyErrorMsg = "Composite Key violation";
         Pair<String, String> pair = new Pair<>(
@@ -344,6 +340,39 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
 
     }
+
+    @Test
+    @DisplayName("Status: Success - Test for loading a file with records of same composite key both active=D"
+        + "value for CategoryKey field")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    public void testListOfValuesCsv_WithDelete_Success() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_delete_success.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        //all records marked as D hence all deleted
+        assertEquals(0, listOfValues.size());
+
+        //Validates audit
+        var result = jdbcTemplate.queryForList(auditSchedulerQuery);
+        assertEquals(5, result.size());
+        Optional<Map<String, Object>> auditEntry =
+            result.stream().filter(audit -> audit.containsValue(UPLOAD_LIST_OF_VALUES_FILE_NAME)).findFirst();
+        assertTrue(auditEntry.isPresent());
+        auditEntry.ifPresent(audit -> assertEquals("PartialSuccess", audit.get("status")));
+
+        //validate exceptons
+        var resultExceptions = jdbcTemplate.queryForList(exceptionRecordsQuery);
+        assertEquals(3, resultExceptions.size());
+        resultExceptions.forEach(p -> assertEquals(p.get("error_description"),
+            "Record is deleted as Active flag was 'D'"));
+    }
+
 
     protected void validateCategoriesFileAudit(JdbcTemplate jdbcTemplate,
                                                 String auditSchedulerQuery, String status, String fileName) {

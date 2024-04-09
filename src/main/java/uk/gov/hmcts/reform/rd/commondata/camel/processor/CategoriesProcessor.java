@@ -8,7 +8,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
@@ -16,15 +15,18 @@ import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
+import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_FLAG_D;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ACTIVE_Y;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadUtils.setFileStatus;
+
 
 @Component
 @Slf4j
@@ -94,13 +96,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
 
         List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
-        List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
-
-        if (!CollectionUtils.isEmpty(invalidCategories)) {
-            invalidCategories.forEach(categories -> invalidCategoryIds.add(
-                createExceptionRecordPair(categories)
-            ));
-
+        List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()
+            .map(categories -> createExceptionRecordPair(categories)).toList();
+        if (!invalidCategoryIds.isEmpty()) {
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
                 LOV_COMPOSITE_KEY,
@@ -133,7 +131,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return dataQualityCheckConfiguration.zeroByteCharacters.stream()
             .anyMatch(
                 string::contains
-        );
+            );
     }
 
     private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
@@ -150,11 +148,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Categories> finalCategories = new ArrayList<>();
         multimap.asMap().forEach((key, collection) -> {
             List<Categories> categoriesList = collection.stream().toList();
-            if (categoriesList.size() > 1) {
-                finalCategories.addAll(filterInvalidCategories(categoriesList));
-            } else {
-                finalCategories.addAll(categoriesList);
-            }
+            finalCategories.addAll(filterCategories(categoriesList));
         });
         return finalCategories;
     }
@@ -166,18 +160,25 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         return multimap;
     }
 
-    private List<Categories> filterInvalidCategories(List<Categories> categoriesList) {
-        List<Categories> validCategories = new ArrayList<>();
-
-        boolean activeProcessed = false;
+    private List<Categories> filterCategories(List<Categories> categoriesList) {
+        List<Categories> validCategories = new LinkedList<>();
+        List<Categories> deletedCategories = new LinkedList<>();
 
         for (Categories category : categoriesList) {
-            if ((ACTIVE_Y.equalsIgnoreCase(category.getActive())
-                    && !activeProcessed)) {
+            if ((ACTIVE_Y.equalsIgnoreCase(category.getActive()))) {
                 validCategories.add(category);
-                activeProcessed = true;
             }
         }
+
+        if (validCategories.size() == 0) {
+            for (Categories category : categoriesList) {
+                if ((ACTIVE_FLAG_D.equalsIgnoreCase(category.getActive()))) {
+                    deletedCategories.add(category);
+                    break;
+                }
+            }
+        }
+        validCategories.addAll(deletedCategories);
         return validCategories;
     }
 }
