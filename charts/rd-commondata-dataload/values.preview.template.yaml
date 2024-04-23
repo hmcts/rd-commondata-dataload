@@ -24,8 +24,8 @@ job:
           alias: CONTAINER_NAME
   secrets:
     BLOB_ACCOUNT_NAME:
-      secretRef: storage-secret-{{ .Release.Name }}-blobstorage
-      key: storageAccountName
+      secretRef: storage-account-{{ .Release.Name }}-blobstorage
+      key: storage_account_name
     BLOB_ACCESS_KEY:
       secretRef: storage-secret-{{ .Release.Name }}-blobstorage
       key: accessKey
