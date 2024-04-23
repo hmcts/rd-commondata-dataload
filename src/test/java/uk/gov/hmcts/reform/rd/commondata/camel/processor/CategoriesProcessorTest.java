@@ -156,6 +156,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         Assertions.assertEquals(2, actualLovServiceList.size());
     }
 
+    //when two records with same composite key are passed to processor
+    //The first record is selected and duplicate ones are eliminated
     @Test
     @DisplayName("Test for LOV 'D' records Case3")
     void testListOfValuesCsv_DupRecord_Case4() throws Exception {
@@ -170,8 +172,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
-        Assertions.assertEquals(0, actualLovServiceList.size());
-        assertTrue(actualLovServiceList.isEmpty());
+        Assertions.assertEquals(1, actualLovServiceList.size());
+        assertFalse(actualLovServiceList.isEmpty());
 
     }
 

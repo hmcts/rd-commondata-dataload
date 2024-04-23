@@ -1,0 +1,4 @@
+categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
+AdditionalFacilities,,AF-VF,Video Facility,,,,,,,D
+AdditionalFacilities,,AF-SSC,Same Sex Courtroom,,,,,,,D
+AdditionalFacilities,,AF-WR,Witness Room,,,,,,,D
