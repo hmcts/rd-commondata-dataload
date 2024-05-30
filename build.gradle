@@ -329,7 +329,7 @@ dependencies {
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
   implementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
 
-  implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.1'
+  implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.5'
 
 
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
