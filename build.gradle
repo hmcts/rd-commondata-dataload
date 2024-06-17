@@ -6,10 +6,10 @@ plugins {
   id 'io.spring.dependency-management' version '1.1.0'
   id 'org.springframework.boot' version '3.2.2'
   id 'com.github.ben-manes.versions' version '0.42.0'
-  id 'org.sonarqube' version '3.3'
+  id 'org.sonarqube' version '5.0.0.4638'
   id "org.flywaydb.flyway" version "9.19.4"
-  id "info.solidsoft.pitest" version '1.7.4'
-  id 'uk.gov.hmcts.java' version '0.12.39'
+  id "info.solidsoft.pitest" version '1.15.0'
+  id 'uk.gov.hmcts.java' version '0.12.61'
 }
 
 mainClassName = 'uk.gov.hmcts.reform.rd.commondata.CommonDataLoadApplication'
@@ -113,7 +113,7 @@ pmd {
 }
 
 jacoco {
-  toolVersion = "0.8.11"
+  toolVersion = "0.8.12"
 }
 
 jacocoTestReport {
@@ -126,7 +126,7 @@ jacocoTestReport {
 }
 
 pitest {
-  junit5PluginVersion = '0.15'
+  junit5PluginVersion = '1.0.0'
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
   testSourceSets = [sourceSets.test, sourceSets.functionalTest]
   excludedClasses = [
@@ -153,7 +153,7 @@ sonarqube {
   properties {
     property "sonar.projectName", "RD :: Common Data load"
     property "sonar.projectKey", "RDCOMMONDATALOAD"
-    property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+    property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.outputLocation}"
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
 
@@ -377,7 +377,7 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
   testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
-  testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.7.0'
+  testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
   testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
