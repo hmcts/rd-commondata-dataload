@@ -63,7 +63,7 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     String archivalRoute;
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     @BeforeEach
