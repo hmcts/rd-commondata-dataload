@@ -292,14 +292,14 @@ dependencies {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
-  implementation 'commons-io:commons-io:2.8.0'
+  implementation 'commons-io:commons-io:2.16.1'
   implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
   implementation group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: versions.flyway
 
 
   //Fix for CVE-2021-29425
-  implementation 'commons-io:commons-io:2.11.0'
+  implementation 'commons-io:commons-io:2.16.1'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
