@@ -285,7 +285,7 @@ dependencies {
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.9'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
 
-  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.12'
+  implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.13'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
 
   implementation ('com.github.hmcts:data-ingestion-lib:0.5.2.6') {
