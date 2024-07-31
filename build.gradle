@@ -196,8 +196,8 @@ repositories {
 }
 
 def versions = [
-  junit               : '5.9.2',
-  junitPlatform       : '1.9.2',
+  junit               : '5.10.3',
+  junitPlatform       : '1.10.3',
   reformLogging       : '6.0.1',
   springBoot          : '2.7.18',
   springfoxSwagger    : '2.10.5',
