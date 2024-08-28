@@ -141,7 +141,7 @@ pitest {
   outputFormats = ['XML', 'HTML']
   timestampedReports = false
   mutationThreshold = 85
-  verbose = false
+  verbose = true
   useClasspathFile = true
 }
 project.tasks['pitest'].group = "Verification"
@@ -185,6 +185,10 @@ dependencyCheck {
   analyzers {
     // Disable scanning of .NET related binaries
     assemblyEnabled = false
+  }
+
+  nvd {
+    apiKey = '50639f65-d39b-4da9-b4b5-fb4aff6856dd'
   }
 }
 
