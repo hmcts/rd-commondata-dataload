@@ -4,11 +4,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.mapper.IMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.trim;
 
 @Component
 public class OtherCategoriesMapper implements IMapper {

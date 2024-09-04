@@ -8,6 +8,10 @@ import static org.apache.commons.lang.StringUtils.trim;
 
 public class CommonMapper {
 
+    private CommonMapper() {
+        // utility class
+    }
+
     public static Map<String, Object> getMap(String categoryKey, String serviceId, String key, String valueEn,
                                       String valueCy, String hintTextEn, String hintTextCy, String parentCategory,
                                       String parentKey, String active, String lovOrder) {
