@@ -16,23 +16,11 @@ public class OtherCategoriesMapper implements IMapper {
     @Override
     public Map<String, Object> getMap(Object categoriesObj) {
         OtherCategories categories = (OtherCategories) categoriesObj;
-        Map<String, Object> categoriesRow = new HashMap<>();
-        categoriesRow.put("categoryKey", trim(categories.getCategoryKey()));
-        categoriesRow.put("serviceId", trim(categories.getServiceId()));
-        categoriesRow.put("key", trim(categories.getKey()));
-        categoriesRow.put("value_en", trim(categories.getValueEN()));
-        categoriesRow.put("value_cy", trim(categories.getValueCY()));
-        categoriesRow.put("hinttext_en", trim(categories.getHintTextEN()));
-        categoriesRow.put("hinttext_cy", trim(categories.getHintTextCY()));
-        categoriesRow.put("parentcategory", trim(categories.getParentCategory()));
-        categoriesRow.put("parentkey", trim(categories.getParentKey()));
-        categoriesRow.put("active", trim(categories.getActive()));
-        if (isBlank(categories.getLovOrder())) {
-            categoriesRow.put("lov_order", null);
-        } else {
-            categoriesRow.put("lov_order", Long.valueOf(trim(categories.getLovOrder())));
-        }
-        return categoriesRow;
+
+        return CommonMapper.getMap(categories.getCategoryKey(), categories.getServiceId(), categories.getKey(),
+            categories.getValueEN(), categories.getValueCY(), categories.getHintTextEN(),
+            categories.getHintTextCY(), categories.getParentCategory(),
+            categories.getParentKey(), categories.getActive(), categories.getLovOrder());
     }
 }
 
