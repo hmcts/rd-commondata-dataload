@@ -69,8 +69,6 @@ tasks.withType(Test) {
   }
 }
 
-tasks.withType(Copy).all { duplicatesStrategy 'include' }
-
 test {
   failFast = true
 }
@@ -104,7 +102,7 @@ task fortifyScan(type: JavaExec)  {
 }
 
 pmd {
-  toolVersion = "6.53.0"
+  toolVersion = "6.55.0"
   sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
   reportsDir = file("$project.buildDir/reports/pmd")
   ignoreFailures = true
@@ -143,6 +141,7 @@ pitest {
   outputFormats = ['XML', 'HTML']
   timestampedReports = false
   mutationThreshold = 85
+  verbose = false
   useClasspathFile = true
 }
 project.tasks['pitest'].group = "Verification"
@@ -316,7 +315,7 @@ dependencies {
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
-  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: versions.junit
+  testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -347,6 +346,7 @@ dependencies {
       exclude group: 'javax.websocket', module: 'javax.websocket-api'
     }
 
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
   testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
