@@ -213,7 +213,8 @@ def versions = [
   camel               : '4.7.0',
   log4j               : '2.23.1',
   logback             : '1.18.34',
-  bouncycastle        : '1.78.1'
+  bouncycastle        : '1.78.1',
+  tc_postgresql       :  '1.20.0'
 ]
 
 ext.libraries = [
@@ -373,7 +374,7 @@ dependencies {
 
   testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
   testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.16.3'
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: versions.tc_postgresql
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
