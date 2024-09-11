@@ -76,6 +76,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
     }

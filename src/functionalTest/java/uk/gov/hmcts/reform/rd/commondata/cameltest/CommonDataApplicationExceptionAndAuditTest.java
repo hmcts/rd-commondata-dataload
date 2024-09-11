@@ -60,6 +60,7 @@ class CommonDataApplicationExceptionAndAuditTest extends CommonDataFunctionalBas
     @BeforeEach
     public void init() throws Exception {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         commonDataBlobSupport.uploadFile(
