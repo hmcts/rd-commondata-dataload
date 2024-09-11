@@ -3,14 +3,13 @@ package uk.gov.hmcts.reform.rd.commondata.configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
-import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,15 +22,12 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataFlagServiceRouteTa
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRouteTask;
 
 @Configuration
-@EnableBatchProcessing
 @Slf4j
 public class BatchConfig {
 
     private final JobRepository jobRepository;
 
-    private final JobLauncher jobLauncher;
-
-    private final PlatformTransactionManager batchTransactionManager;
+    private final PlatformTransactionManager txManager;
 
     @Autowired
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
@@ -72,12 +68,11 @@ public class BatchConfig {
     @Value("${batchjob-name}")
     String jobName;
 
-    public BatchConfig(JobLauncher jobLauncher,
-                       JobRepository jobRepository,
-                       PlatformTransactionManager batchTransactionManager) {
-        this.jobLauncher = jobLauncher;
+    public BatchConfig(JobRepository jobRepository,
+                       @Qualifier("txManager")
+                       PlatformTransactionManager txManager) {
         this.jobRepository = jobRepository;
-        this.batchTransactionManager = batchTransactionManager;
+        this.txManager = txManager;
     }
 
     /**
@@ -87,14 +82,14 @@ public class BatchConfig {
     @Bean
     public Step stepCommonDataRoute() {
         return new StepBuilder(commonDataTask, jobRepository)
-            .tasklet(commonDataFlagServiceRouteTask, batchTransactionManager)
+            .tasklet(commonDataFlagServiceRouteTask, txManager)
             .build();
     }
 
     @Bean
     public Step stepCommonDataCategoriesRoute() {
         return new StepBuilder(commonDataCategoriesTask, jobRepository)
-            .tasklet(commonDataCategoriesRouteTask, batchTransactionManager)
+            .tasklet(commonDataCategoriesRouteTask, txManager)
             .build();
     }
 
@@ -102,21 +97,21 @@ public class BatchConfig {
     @Bean
     public Step stepCommonDataCaseLinkingRoute() {
         return new StepBuilder(commonDataCaseLinkingTask, jobRepository)
-            .tasklet(commonDataCaseLinkingRouteTask, batchTransactionManager)
+            .tasklet(commonDataCaseLinkingRouteTask, txManager)
             .build();
     }
 
     @Bean
     public Step stepCommonDataFlagDetailsRoute() {
         return new StepBuilder(commonDataFlagDetailsTask, jobRepository)
-            .tasklet(commonDataFlagDetailsRouteTask, batchTransactionManager)
+            .tasklet(commonDataFlagDetailsRouteTask, txManager)
             .build();
     }
 
     @Bean
     public Step stepOtherCategoriesRoute() {
         return new StepBuilder(commonDataOtherCategoriesTask, jobRepository)
-            .tasklet(commonDataOtherCategoriesRouteTask, batchTransactionManager)
+            .tasklet(commonDataOtherCategoriesRouteTask, txManager)
             .build();
     }
 
