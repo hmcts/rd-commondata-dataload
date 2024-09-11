@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.rd.commondata.configuration;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -25,7 +24,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRou
 
 @Configuration
 @EnableBatchProcessing
-@RequiredArgsConstructor
 @Slf4j
 public class BatchConfig {
 
