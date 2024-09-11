@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.rd.commondata.configuration;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -7,15 +8,14 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.FlowExecutionStatus;
 import org.springframework.batch.core.job.flow.JobExecutionDecider;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCategoriesRouteTask;
@@ -25,13 +25,15 @@ import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataOtherCategoriesRou
 
 @Configuration
 @EnableBatchProcessing
-@EnableTransactionManagement
+@RequiredArgsConstructor
 @Slf4j
 public class BatchConfig {
 
     private final JobRepository jobRepository;
 
-    private final PlatformTransactionManager transactionManager;
+    private final JobLauncher jobLauncher;
+
+    private final PlatformTransactionManager batchTransactionManager;
 
     @Autowired
     CommonDataFlagServiceRouteTask commonDataFlagServiceRouteTask;
@@ -72,11 +74,12 @@ public class BatchConfig {
     @Value("${batchjob-name}")
     String jobName;
 
-    public BatchConfig(JobRepository jobRepository,
-                       @Qualifier("transactionManager")
-                       PlatformTransactionManager transactionManager) {
+    public BatchConfig(JobLauncher jobLauncher,
+                       JobRepository jobRepository,
+                       PlatformTransactionManager batchTransactionManager) {
+        this.jobLauncher = jobLauncher;
         this.jobRepository = jobRepository;
-        this.transactionManager = transactionManager;
+        this.batchTransactionManager = batchTransactionManager;
     }
 
     /**
@@ -86,14 +89,14 @@ public class BatchConfig {
     @Bean
     public Step stepCommonDataRoute() {
         return new StepBuilder(commonDataTask, jobRepository)
-            .tasklet(commonDataFlagServiceRouteTask, transactionManager)
+            .tasklet(commonDataFlagServiceRouteTask, batchTransactionManager)
             .build();
     }
 
     @Bean
     public Step stepCommonDataCategoriesRoute() {
         return new StepBuilder(commonDataCategoriesTask, jobRepository)
-            .tasklet(commonDataCategoriesRouteTask, transactionManager)
+            .tasklet(commonDataCategoriesRouteTask, batchTransactionManager)
             .build();
     }
 
@@ -101,21 +104,21 @@ public class BatchConfig {
     @Bean
     public Step stepCommonDataCaseLinkingRoute() {
         return new StepBuilder(commonDataCaseLinkingTask, jobRepository)
-            .tasklet(commonDataCaseLinkingRouteTask, transactionManager)
+            .tasklet(commonDataCaseLinkingRouteTask, batchTransactionManager)
             .build();
     }
 
     @Bean
     public Step stepCommonDataFlagDetailsRoute() {
         return new StepBuilder(commonDataFlagDetailsTask, jobRepository)
-            .tasklet(commonDataFlagDetailsRouteTask, transactionManager)
+            .tasklet(commonDataFlagDetailsRouteTask, batchTransactionManager)
             .build();
     }
 
     @Bean
     public Step stepOtherCategoriesRoute() {
         return new StepBuilder(commonDataOtherCategoriesTask, jobRepository)
-            .tasklet(commonDataOtherCategoriesRouteTask, transactionManager)
+            .tasklet(commonDataOtherCategoriesRouteTask, batchTransactionManager)
             .build();
     }
 
