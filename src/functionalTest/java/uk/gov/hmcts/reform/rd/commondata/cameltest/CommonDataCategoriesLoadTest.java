@@ -53,7 +53,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-@EnableBatchProcessing
+@EnableBatchProcessing(transactionManagerRef = "txManager")
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @SuppressWarnings("unchecked")
@@ -70,6 +70,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
     }

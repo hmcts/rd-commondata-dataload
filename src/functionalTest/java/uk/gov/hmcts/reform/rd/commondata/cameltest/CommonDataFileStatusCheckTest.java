@@ -53,7 +53,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @SpringBootTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
-@EnableBatchProcessing
+@EnableBatchProcessing(transactionManagerRef = "txManager")
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",
     transactionMode = SqlConfig.TransactionMode.ISOLATED)
 @ExtendWith(SpringExtension.class)
@@ -72,6 +72,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
     }
 
     @Test
@@ -151,6 +152,7 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
         jdbcTemplate.execute(truncateAudit);
         jdbcTemplate.execute(truncateException);
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
     }
 
     private void uploadFiles(String time) throws Exception {
