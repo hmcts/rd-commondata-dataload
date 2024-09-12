@@ -69,7 +69,6 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
     @BeforeEach
     public void init() throws Exception {
         SpringStarter.getInstance().restart();
-        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
 
@@ -106,7 +105,6 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
         TransactionStatus status = platformTransactionManager.getTransaction(def);
         platformTransactionManager.commit(status);
         SpringStarter.getInstance().restart();
-        loadJobLauncherTestUtils();
 
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
@@ -159,7 +157,6 @@ class CommonDataApplicationTest extends CommonDataFunctionalBaseTest {
             .toJobParameters();
         dataIngestionLibraryRunner.run(jobLauncherTestUtils.getJob(), params);
         SpringStarter.getInstance().restart();
-        loadJobLauncherTestUtils();
 
         commonDataBlobSupport.uploadFile(
             UPLOAD_FLAG_SERVICE_FILE_NAME,
