@@ -64,7 +64,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask;
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String FLAG_DETAILS_TABLE_NAME = "flag_details";
@@ -76,6 +76,7 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
     }
