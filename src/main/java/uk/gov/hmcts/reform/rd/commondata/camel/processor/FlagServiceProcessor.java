@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,11 +12,13 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
@@ -40,6 +43,12 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
 
     @Value("${flag-code-query}")
     String flagCodeQuery;
+
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
+
+    @Autowired
+    DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
     /**
      * validate CSV file records.
@@ -82,9 +91,35 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
+
+
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(validatedFlagServices);
+
+        processExceptionRecords(exchange, flagServices);
+    }
+
+    private void processExceptionRecords(Exchange exchange,
+                                         List<FlagService> flagServiceList) {
+
+        List<Pair<String, Long>> zeroByteCharacterRecords = flagServiceList.stream()
+            .filter(flagDetail -> dataQualityCheckConfiguration.zeroByteCharacters.stream().anyMatch(
+                flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
+
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            String auditStatus = FAILURE;
+            setFileStatus(exchange, applicationContext, auditStatus);
+
+            flagServiceJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
+                                                                  ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
+        }
+    }
+    private Pair<String,Long> createExceptionRecordPair(FlagService flagService) {
+        return Pair.of(
+            flagService.getFlagCode(),
+            flagService.getRowId()
+        );
     }
 
     /**

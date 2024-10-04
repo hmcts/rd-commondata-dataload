@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
@@ -35,8 +37,14 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
     public static final String EXPIRED_DATE_ERROR_MSG = "Record is expired";
 
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
+
     @Autowired
     JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer;
+
+    @Autowired
+    DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
     @Value("${logging-component-name}")
     String logComponentName;
@@ -78,9 +86,38 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
         if (flagDetails.size() != jsrValidatedFlagDetails) {
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
+
+
+
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(filteredFlagDetails);
+        processExceptionRecords(exchange, flagDetails);
+
+    }
+
+    private void processExceptionRecords(Exchange exchange,
+                                         List<FlagDetails> flagDetailsList) {
+
+        List<Pair<String, Long>> zeroByteCharacterRecords = flagDetailsList.stream()
+            .filter(flagDetail -> dataQualityCheckConfiguration.zeroByteCharacters.stream().anyMatch(
+                flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
+
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            String auditStatus = FAILURE;
+            setFileStatus(exchange, applicationContext, auditStatus);
+
+            flagDetailsJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
+                ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
+        }
+    }
+
+
+    private Pair<String,Long> createExceptionRecordPair(FlagDetails flagDetail) {
+        return Pair.of(
+            flagDetail.getFlagCode(),
+            flagDetail.getRowId()
+        );
     }
 
     public List<FlagDetails> removeExpiredRecords(List<FlagDetails> flagDetailsList,

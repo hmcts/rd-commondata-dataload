@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import javax.validation.ValidatorFactory;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -64,6 +66,14 @@ class FlagServiceProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+
+    private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
+        Pair.of("BFA1-001AD", null),Pair.of("BFA1-PAD", null),
+        Pair.of("BFA1-DC\u200BX", null));
+
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -82,11 +92,34 @@ class FlagServiceProcessorTest {
         setField(processor, "logComponentName",
                  "testlogger"
         );
+        setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
+        setField(processor, "dataQualityCheckConfiguration", dataQualityCheckConfiguration);
         setField(processor, "flagCodeQuery", "test");
         setField(processor, "applicationContext", applicationContext);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
         exchange.getIn().setHeader(ROUTE_DETAILS, routeProperties);
+    }
+
+    @Test
+    void testFlagDetailsCsv_0byte_characters() throws Exception {
+
+        var zeroBytesFlagDetails = getFlagServiceWithZeroBytes();
+        exchange.getIn().setBody(zeroBytesFlagDetails);
+
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(5, actualLovServiceList.size());
+        verify(flagServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
+                                eq(null),
+                                eq("Zero byte characters identified - check source file"),
+                                eq(exchange));
     }
 
     @Test
@@ -203,6 +236,25 @@ class FlagServiceProcessorTest {
                 .ID("2")
                 .serviceId("XXXX")
                 .hearingRelevant("TRUE")
+                .requestReason("FALSE")
+                .flagCode("TEST002")
+                .build()
+        );
+    }
+
+    private List<FlagService> getFlagServiceWithZeroBytes() {
+        return ImmutableList.of(
+            FlagService.builder()
+                .ID("1")
+                .serviceId("XXXX")
+                .hearingRelevant("TRUE")
+                .requestReason("FALSE")
+                .flagCode("\\u200BTEST001")
+                .build(),
+            FlagService.builder()
+                .ID("2")
+                .serviceId("XXXX")
+                .hearingRelevant("TRUE\\u200B")
                 .requestReason("FALSE")
                 .flagCode("TEST002")
                 .build()

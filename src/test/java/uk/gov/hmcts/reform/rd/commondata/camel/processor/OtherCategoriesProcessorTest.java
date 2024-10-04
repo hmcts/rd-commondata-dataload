@@ -5,6 +5,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.DefaultExchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,6 +66,14 @@ public class OtherCategoriesProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+
+    private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
+        Pair.of("BFA1-001AD", null),Pair.of("BFA1-PAD", null),
+        Pair.of("BFA1-DC\u200BX", null));
+
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -81,11 +92,34 @@ public class OtherCategoriesProcessorTest {
         setField(processor, "logComponentName",
                  "testlogger"
         );
+        setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
+        setField(processor, "dataQualityCheckConfiguration", dataQualityCheckConfiguration);
         //setField(processor, "flagCodeQuery", "test");
         setField(processor, "applicationContext", applicationContext);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
         exchange.getIn().setHeader(ROUTE_DETAILS, routeProperties);
+    }
+
+    @Test
+    void testFlagDetailsCsv_0byte_characters() throws Exception {
+
+        var zeroBytesFlagDetails = getOtherCAtegoriesWithZeroBytes() ;
+        exchange.getIn().setBody(zeroBytesFlagDetails);
+
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(5, actualLovServiceList.size());
+        verify(lovServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
+                                eq(null),
+                                eq("Zero byte characters identified - check source file"),
+                                eq(exchange));
     }
 
     @Test
@@ -272,6 +306,29 @@ public class OtherCategoriesProcessorTest {
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
                 .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-002")
+                .active("D")
+                .build()
+        );
+    }
+
+    private List<OtherCategories> getOtherCAtegoriesWithZeroBytes() {
+        return ImmutableList.of(
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-001AD\\u200B")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("\\u200BBBA3-001")
+                .active("D")
+                .build(),
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3\u200B")
+                .key("BBA3-001AD")
+                .valueEN("\u200BADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-002")
                 .active("D")
