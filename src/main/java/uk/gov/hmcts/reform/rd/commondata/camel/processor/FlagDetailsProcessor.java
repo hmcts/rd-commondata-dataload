@@ -53,18 +53,19 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
     @Override
     @SuppressWarnings("unchecked")
     public void process(Exchange exchange) throws Exception {
+        List<FlagDetails> flagDetailsList;
 
-        var flagDetails = exchange.getIn().getBody() instanceof List
+        flagDetailsList = exchange.getIn().getBody() instanceof List
             ? (List<FlagDetails>) exchange.getIn().getBody()
             : singletonList((FlagDetails) exchange.getIn().getBody());
 
         log.info("{}:: Number of Records before validation {}::",
-                 logComponentName, flagDetails.size()
+                 logComponentName, flagDetailsList.size()
         );
 
         var validatedFlagDetails = validate(
             flagDetailsJsrValidatorInitializer,
-            flagDetails
+            flagDetailsList
         );
 
         var jsrValidatedFlagDetails = validatedFlagDetails.size();
@@ -74,7 +75,6 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
         List<FlagDetails> filteredFlagDetails = removeExpiredRecords(validatedFlagDetails, exchange);
 
-
         audit(flagDetailsJsrValidatorInitializer, exchange);
 
         if (validatedFlagDetails.isEmpty() || filteredFlagDetails.isEmpty()) {
@@ -83,16 +83,16 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                                                + "Please review and try again.");
         }
 
-        if (flagDetails.size() != jsrValidatedFlagDetails) {
+        if (flagDetailsList.size() != jsrValidatedFlagDetails) {
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
-
-
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+        processExceptionRecords(exchange, flagDetailsList);
+
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(filteredFlagDetails);
-        processExceptionRecords(exchange, flagDetails);
+
 
     }
 
@@ -100,18 +100,18 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                                          List<FlagDetails> flagDetailsList) {
 
         List<Pair<String, Long>> zeroByteCharacterRecords = flagDetailsList.stream()
-            .filter(flagDetail -> dataQualityCheckConfiguration.zeroByteCharacters.stream().anyMatch(
-                flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
+                .filter(flagDetail ->
+                    dataQualityCheckConfiguration.zeroByteCharacters.stream().anyMatch(
+                        flagDetail.toString()::contains)
+                ).map(this::createExceptionRecordPair).toList();
+
 
         if (!zeroByteCharacterRecords.isEmpty()) {
-            String auditStatus = FAILURE;
-            setFileStatus(exchange, applicationContext, auditStatus);
-
+            setFileStatus(exchange, applicationContext, FAILURE);
             flagDetailsJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
                 ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
         }
     }
-
 
     private Pair<String,Long> createExceptionRecordPair(FlagDetails flagDetail) {
         return Pair.of(

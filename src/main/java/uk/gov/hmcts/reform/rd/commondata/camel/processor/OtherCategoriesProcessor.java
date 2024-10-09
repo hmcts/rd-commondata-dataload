@@ -74,6 +74,9 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
             setFileStatus(exchange, applicationContext, auditStatus);
         }
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+
+        processExceptionRecords(exchange, categoriesList);
+
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
@@ -94,8 +97,6 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
             );
         }
 
-        processExceptionRecords(exchange, categoriesList);
-
     }
 
     private void processExceptionRecords(Exchange exchange,
@@ -106,9 +107,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
                 flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
 
         if (!zeroByteCharacterRecords.isEmpty()) {
-            String auditStatus = FAILURE;
-            setFileStatus(exchange, applicationContext, auditStatus);
-
+            setFileStatus(exchange, applicationContext, FAILURE);
             lovServiceJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
                                                                   ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
         }
@@ -116,7 +115,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
 
     private Pair<String,Long> createExceptionRecordPair(OtherCategories otherCategories) {
         return Pair.of(
-            otherCategories.getCategoryKey(),
+            otherCategories.getKey(),
             otherCategories.getRowId()
         );
     }

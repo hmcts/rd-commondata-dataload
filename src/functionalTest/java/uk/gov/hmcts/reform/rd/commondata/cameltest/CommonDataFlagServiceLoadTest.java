@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.rd.commondata.cameltest;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
-import org.hamcrest.MatcherAssert;
 import org.javatuples.Pair;
 import org.javatuples.Quartet;
 import org.junit.jupiter.api.AfterEach;
@@ -36,13 +35,9 @@ import java.io.FileInputStream;
 import java.time.Clock;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 import static org.springframework.util.ResourceUtils.getFile;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
@@ -274,6 +269,34 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     }
 
     @Test
+    @DisplayName("Status: PartialSucess - Test for 0 byte characters.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testFlagServiceCsv_0_byte_character() throws Exception {
+
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/flag_service_0_byte_character.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var flagServiceValues = jdbcTemplate.queryForList(flagServiceSelectData);
+        assertEquals(4, flagServiceValues.size());
+
+        String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            zer0ByteCharacterErrorMsg
+        );
+
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
+
+    }
+
+    @Test
     @DisplayName("Status: Success - Valid Test for default values of default_status for flag_service table")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testFlagServiceDefaultValuesSetForDefaultStatusAndAvailableExternally_Csv_Success() throws Exception {
@@ -330,38 +353,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             .hasSameElementsAs(expected);
     }
 
-    @Test
-    @DisplayName("Status: PartialSucess - Test for 0 byte characters.")
-    @Sql(scripts = {"/testData/commondata_truncate.sql"})
-    void testFlagServiceCsv_0_byte_character() throws Exception {
-        commonDataBlobSupport.uploadFile(
-            UPLOAD_FLAG_SERVICE_FILE_NAME,
-            new FileInputStream(getFile(
-                "classpath:sourceFiles/flagService/flag_service_0_byte_character.csv"))
-        );
 
-        jobLauncherTestUtils.launchJob();
-        var flagServiceValues = jdbcTemplate.queryForList(flagServiceSelectData);
-        assertEquals(3, flagServiceValues.size());
-
-        String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
-        Pair<String, String> pair = new Pair<>(
-            UPLOAD_FLAG_SERVICE_FILE_NAME,
-            zer0ByteCharacterErrorMsg
-        );
-        var result = jdbcTemplate.queryForList(exceptionQuery);
-        MatcherAssert.assertThat(
-            (String) result.get(3).get("error_description"),
-            containsString(pair.getValue1())
-        );
-        var audirResult = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(5, audirResult.size());
-        Optional<Map<String, Object>> auditEntry =
-            audirResult.stream().filter(audit -> audit.containsValue(UPLOAD_FLAG_SERVICE_FILE_NAME)).findFirst();
-        assertTrue(auditEntry.isPresent());
-        auditEntry.ifPresent(audit -> assertEquals("Failure", audit.get("status")));
-
-    }
 
     @AfterEach
     void tearDown() throws Exception {

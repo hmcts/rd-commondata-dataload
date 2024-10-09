@@ -59,7 +59,7 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
     @SuppressWarnings("unchecked")
     public void process(Exchange exchange) {
 
-        var flagServices = exchange.getIn().getBody() instanceof List
+        List<FlagService>  flagServices = exchange.getIn().getBody() instanceof List
             ? (List<FlagService>) exchange.getIn().getBody()
             : singletonList((FlagService) exchange.getIn().getBody());
 
@@ -91,13 +91,13 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
 
-
-
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+
+        processExceptionRecords(exchange, flagServices);
+
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(validatedFlagServices);
 
-        processExceptionRecords(exchange, flagServices);
     }
 
     private void processExceptionRecords(Exchange exchange,
@@ -108,13 +108,12 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
                 flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
 
         if (!zeroByteCharacterRecords.isEmpty()) {
-            String auditStatus = FAILURE;
-            setFileStatus(exchange, applicationContext, auditStatus);
-
+            setFileStatus(exchange, applicationContext, FAILURE);
             flagServiceJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
                                                                   ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
         }
     }
+
     private Pair<String,Long> createExceptionRecordPair(FlagService flagService) {
         return Pair.of(
             flagService.getFlagCode(),

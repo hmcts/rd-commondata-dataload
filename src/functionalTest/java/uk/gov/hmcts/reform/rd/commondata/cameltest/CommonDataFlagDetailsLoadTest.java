@@ -395,18 +395,20 @@ public class CommonDataFlagDetailsLoadTest extends CommonDataFunctionalBaseTest 
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(flagDetailsSelectData);
-        assertEquals(3, listOfValues.size());
+        assertEquals(4, listOfValues.size());
 
         String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
         Pair<String, String> pair = new Pair<>(
             UPLOAD_FLAG_DETAILS_FILE_NAME,
             zer0ByteCharacterErrorMsg
         );
+
         var result = jdbcTemplate.queryForList(exceptionRecordsQuery);
         MatcherAssert.assertThat(
             (String) result.get(3).get("error_description"),
             containsString(pair.getValue1())
         );
+
         var audirResult = jdbcTemplate.queryForList(auditSchedulerQuery);
         assertEquals(5, audirResult.size());
         Optional<Map<String, Object>> auditEntry =
