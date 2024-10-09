@@ -32,8 +32,13 @@ import uk.gov.hmcts.reform.rd.commondata.configuration.BatchConfig;
 
 import java.io.FileInputStream;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCHEDULER_START_TIME;
 
@@ -188,7 +193,38 @@ public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseT
 
     }
 
+    @Test
+    @DisplayName("Status: PartialSucess - Test for 0 byte characters.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesCsv_0_byte_character() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/otherCategories/other_categories_0_byte_character.csv"))
+        );
 
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(3, listOfValues.size());
+
+        String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
+            zer0ByteCharacterErrorMsg
+        );
+        var result = jdbcTemplate.queryForList(exceptionQuery);
+        assertThat(
+            (String) result.get(3).get("error_description"),
+            containsString(pair.getValue1())
+        );
+        var audirResult = jdbcTemplate.queryForList(auditSchedulerQuery);
+        assertEquals(5, audirResult.size());
+        Optional<Map<String, Object>> auditEntry =
+            audirResult.stream().filter(audit -> audit.containsValue(UPLOAD_LIST_OF_VALUES_FILE_NAME)).findFirst();
+        assertTrue(auditEntry.isPresent());
+        auditEntry.ifPresent(audit -> assertEquals("Failure", audit.get("status")));
+
+    }
 
     @AfterEach
     void tearDown() throws Exception {

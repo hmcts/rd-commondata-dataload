@@ -149,8 +149,10 @@ public abstract class CommonDataFunctionalBaseTest {
             System.setProperty("azure.storage.account-key", System.getenv("BLOB_ACCOUNT_KEY"));
             System.setProperty("azure.storage.account-name", System.getenv("BLOB_ACCOUNT_NAME"));
         } else {
-            System.setProperty("azure.storage.account-key", System.getenv("ACCOUNT_KEY"));
-            System.setProperty("azure.storage.account-name", System.getenv("ACCOUNT_NAME"));
+            System.setProperty("azure.storage.account-key",
+                               "0+VBTzfcEU7KaatWUgruR8lxJHCtoXuXZQcbPPcxp8WSTa2c3K4nWFdrNr2"
+                                   + "b45UpMJePHkZ0I2SatzDlC4e93w==");
+            System.setProperty("azure.storage.account-name", "rdpreview");
         }
         System.setProperty("azure.storage.container-name", "rd-common-data");
     }

@@ -75,6 +75,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
