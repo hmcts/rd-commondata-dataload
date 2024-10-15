@@ -66,7 +66,7 @@ class FlagDetailsProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
-    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
 
     private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
         Pair.of("ABC001", null), Pair.of("ABC002", null));
@@ -122,7 +122,7 @@ class FlagDetailsProcessorTest {
                                 eq(exchange));
     }
 
-    /*@Test
+    @Test
     @DisplayName("Test all valid flag details are processed")
     void testProcessValidFile() throws Exception {
         var expectedValidFlagDetails = getValidFlagDetails();
@@ -135,7 +135,7 @@ class FlagDetailsProcessorTest {
 
         Assertions.assertEquals(expectedValidFlagDetails.size(), actualFlagDetailsList.size());
 
-    }*/
+    }
 
     @Test
     @DisplayName("Test records with expired flag details record")
@@ -163,7 +163,7 @@ class FlagDetailsProcessorTest {
 
     }
 
-    /*@Test
+    @Test
     @DisplayName("Test records with valid mrd date flag details record")
     void testProcessValidFile_CombinationOfValidFlagDetails() throws Exception {
         var flagDetailsList = new ArrayList<FlagDetails>();
@@ -181,7 +181,7 @@ class FlagDetailsProcessorTest {
         Assertions.assertEquals(flagDetailsList.size(), actualFlagDetailsList.size());
 
 
-    }*/
+    }
 
     @Test
     @DisplayName("Test records with missing mandatory details")

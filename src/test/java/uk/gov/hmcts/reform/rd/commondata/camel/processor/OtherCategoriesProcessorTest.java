@@ -66,7 +66,7 @@ public class OtherCategoriesProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
-    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
 
     private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
         Pair.of("BBA3-002AD", null),Pair.of("BBA3-001AD", null));
@@ -121,21 +121,7 @@ public class OtherCategoriesProcessorTest {
                                 eq(exchange));
     }
 
-    /*@Test
-    @DisplayName("Test for LOV Duplicate records Case1")
-    void testListOfValuesCsv_DupRecord_Case1() {
-        var lovServiceList = new ArrayList<OtherCategories>();
-        lovServiceList.addAll(getLovServicesCase1());
 
-        exchange.getIn().setBody(lovServiceList);
-
-        processor.process(exchange);
-        verify(processor, times(1)).process(exchange);
-
-        List actualLovServiceList = (List) exchange.getMessage().getBody();
-        Assertions.assertEquals(2, actualLovServiceList.size());
-
-    }*/
 
     @Test
     @DisplayName("Test for LOV Duplicate records Case2")
@@ -211,13 +197,29 @@ public class OtherCategoriesProcessorTest {
         assertTrue(actualLovServiceList.isEmpty());
     }
 
+    @Test
+    @DisplayName("Test for LOV Duplicate records Case1")
+    void testListOfValuesCsv_DupRecord_Case1() {
+        var lovServiceList = new ArrayList<OtherCategories>();
+        lovServiceList.addAll(getLovServicesCase1());
+
+        exchange.getIn().setBody(lovServiceList);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(2, actualLovServiceList.size());
+
+    }
+
     private List<OtherCategories> getLovServicesCase1() {
         return ImmutableList.of(
             OtherCategories.builder()
                 .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
-                .valueEN("ADVANCE PAYMENT new")
+                .valueEN("ADVANCEPAYMENTnew")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
                 .active("Y")
@@ -226,7 +228,7 @@ public class OtherCategoriesProcessorTest {
                 .categoryKey("caseSubType")
                 .serviceId("BBA4")
                 .key("BBA4-001AD")
-                .valueEN("ADVANCE PAYMENT new")
+                .valueEN("ADVANCEPAYMENTnew")
                 .parentCategory("caseType")
                 .parentKey("BBA4-001")
                 .active("Y")
@@ -295,7 +297,7 @@ public class OtherCategoriesProcessorTest {
                 .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
-                .valueEN("ADVANCE PAYMENT")
+                .valueEN("ADVANCEPAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
                 .active("D")
@@ -304,7 +306,7 @@ public class OtherCategoriesProcessorTest {
                 .categoryKey("caseSubType")
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
-                .valueEN("ADVANCE PAYMENT")
+                .valueEN("ADVANCEPAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-002")
                 .active("D")
@@ -319,7 +321,7 @@ public class OtherCategoriesProcessorTest {
                 .serviceId("BBA3")
                 .key("BBA3-002AD")
                 .valueEN("ADVANCE PAYMENT")
-                .parentCategory("caseType")
+                .parentCategory("caseType ")
                 .parentKey("\\u200BBBA3-001")
                 .active("D")
                 .build(),
