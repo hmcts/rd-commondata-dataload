@@ -56,7 +56,7 @@ public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseT
     CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask;
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String CATEGORIES_TABLE_NAME = "List_Of_Values";
@@ -64,6 +64,7 @@ public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseT
     @BeforeEach
     public void init() throws Exception {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         commonDataBlobSupport.uploadFile(

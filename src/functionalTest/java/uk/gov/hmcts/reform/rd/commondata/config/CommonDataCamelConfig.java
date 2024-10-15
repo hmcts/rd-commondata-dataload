@@ -10,6 +10,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -74,7 +75,6 @@ public class CommonDataCamelConfig {
     public JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer() {
         return new JsrValidatorInitializer<>();
     }
-
 
     @Bean
     public FlagServiceProcessor flagServiceProcessor() {
@@ -194,33 +194,28 @@ public class CommonDataCamelConfig {
         return dataSourceBuilder;
     }
 
-    @Bean("springJdbcDataSource")
-    public DataSource springJdbcDataSource() {
-        DataSourceBuilder dataSourceBuilder = getDataSourceBuilder();
-        return dataSourceBuilder.build();
-    }
-
     @Bean("springJdbcTemplate")
     public JdbcTemplate springJdbcTemplate() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(springJdbcDataSource());
+        jdbcTemplate.setDataSource(dataSource());
         return jdbcTemplate;
     }
     // db configuration ends
 
     // transaction configuration starts
     @Bean(name = "txManager")
+    @Primary
     public PlatformTransactionManager txManager() {
         DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
         platformTransactionManager.setDataSource(dataSource());
         return platformTransactionManager;
     }
 
+    // transaction configuration starts
     @Bean(name = "springJdbcTransactionManager")
     public PlatformTransactionManager springJdbcTransactionManager() {
-        DataSourceTransactionManager platformTransactionManager
-            = new DataSourceTransactionManager(springJdbcDataSource());
-        platformTransactionManager.setDataSource(springJdbcDataSource());
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        platformTransactionManager.setDataSource(dataSource());
         return platformTransactionManager;
     }
 
@@ -262,8 +257,6 @@ public class CommonDataCamelConfig {
     CommonDataOtherCategoriesRouteTask commonDataOtherCategoriesRouteTask() {
         return new CommonDataOtherCategoriesRouteTask();
     }
-
-
 
     @Bean
     CommonDataFlagDetailsRouteTask commonDataFlagDetailsRouteTask() {

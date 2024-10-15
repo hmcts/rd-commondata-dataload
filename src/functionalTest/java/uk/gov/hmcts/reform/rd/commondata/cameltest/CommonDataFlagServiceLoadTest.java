@@ -57,7 +57,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest {
 
     @Autowired
-    @Qualifier("springJdbcTransactionManager")
+    @Qualifier("txManager")
     protected PlatformTransactionManager platformTransactionManager;
 
     private static final String FLAG_SERVICE_TABLE_NAME = "flag_service";
@@ -68,6 +68,7 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     @BeforeEach
     public void init() throws Exception {
         SpringStarter.getInstance().restart();
+        loadJobLauncherTestUtils();
         camelContext.getGlobalOptions()
             .put(SCHEDULER_START_TIME, String.valueOf(new Date(System.currentTimeMillis()).getTime()));
         commonDataBlobSupport.uploadFile(
