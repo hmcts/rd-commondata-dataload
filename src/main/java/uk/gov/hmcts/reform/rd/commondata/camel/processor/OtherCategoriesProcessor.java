@@ -75,10 +75,10 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         }
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        processExceptionRecords(exchange, categoriesList);
-
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
+
+        processExceptionRecords(exchange, categoriesList);
 
         List<OtherCategories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
