@@ -5,6 +5,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.DefaultExchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ import javax.validation.ValidatorFactory;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -63,12 +66,20 @@ class FlagDetailsProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+
+    private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
+        Pair.of("ABC001", null), Pair.of("ABC002", null));
+
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
+
 
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
+        setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
         setField(flagDetailsJsrValidatorInitializer, "validator", validator);
         setField(flagDetailsJsrValidatorInitializer, "camelContext", camelContext);
         setField(flagDetailsJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
@@ -81,11 +92,34 @@ class FlagDetailsProcessorTest {
         setField(processor, "logComponentName",
                  "testlogger"
         );
+
+        setField(processor, "dataQualityCheckConfiguration", dataQualityCheckConfiguration);
         setField(processor, "applicationContext", applicationContext);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
         exchange.getIn().setHeader(ROUTE_DETAILS, routeProperties);
 
+    }
+
+    @Test
+    void testFlagDetailsCsv_0byte_characters() throws Exception {
+
+        var zeroBytesFlagDetails = getFlagDetailsWithZeroBytes();
+        exchange.getIn().setBody(zeroBytesFlagDetails);
+
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(2, actualLovServiceList.size());
+        verify(flagDetailsJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
+                                eq(null),
+                                eq("Zero byte characters identified - check source file"),
+                                eq(exchange));
     }
 
     @Test
@@ -135,6 +169,7 @@ class FlagDetailsProcessorTest {
         var flagDetailsList = new ArrayList<FlagDetails>();
         flagDetailsList.addAll(getValidMrdDeletedDate());
         flagDetailsList.addAll(getValidFlagDetails());
+
 
         exchange.getIn().setBody(flagDetailsList);
         doNothing().when(processor).audit(flagDetailsJsrValidatorInitializer, exchange);
@@ -240,9 +275,9 @@ class FlagDetailsProcessorTest {
                 .valueEn("ABC001")
                 .valueCy("ABC001")
                 .categoryId("01")
-                .mrdCreatedTime("17-06-2022 13:33:00")
-                .mrdUpdatedTime("17-06-2022 13:33:00")
-                .mrdDeletedTime("17-06-2028 13:33:00")
+                .mrdCreatedTime("")
+                .mrdUpdatedTime("")
+                .mrdDeletedTime("")
                 .build());
     }
 
@@ -266,5 +301,28 @@ class FlagDetailsProcessorTest {
                 .mrdCreatedTime("17-06-2022 13:33:00")
                 .mrdUpdatedTime("17-06-2022 13:33:00")
                 .build());
+    }
+
+    private List<FlagDetails> getFlagDetailsWithZeroBytes() {
+        return ImmutableList.of(
+            FlagDetails.builder()
+                .id("1")
+                .flagCode("ABC001")
+                .valueEn("ABC001 ")
+                .valueCy("ABC001")
+                .categoryId("01")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .build(),
+            FlagDetails.builder()
+                .id("2")
+                .flagCode("ABC002")
+                .valueEn("ABC002")
+                .valueCy("A\u200BBC002")
+                .categoryId("02")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .build());
+
     }
 }
