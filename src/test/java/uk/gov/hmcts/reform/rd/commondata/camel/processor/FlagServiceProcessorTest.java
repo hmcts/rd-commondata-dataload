@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.exception.RouteFailedException;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import javax.validation.ValidatorFactory;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -64,11 +66,19 @@ class FlagServiceProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+
+    private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
+        Pair.of("TEST001", null),Pair.of("TEST002", null));
+
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
+        setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
         setField(flagServiceJsrValidatorInitializer, "validator", validator);
         setField(flagServiceJsrValidatorInitializer, "camelContext", camelContext);
         setField(processor, "jdbcTemplate", jdbcTemplate);
@@ -82,11 +92,38 @@ class FlagServiceProcessorTest {
         setField(processor, "logComponentName",
                  "testlogger"
         );
+
+        setField(processor, "dataQualityCheckConfiguration", dataQualityCheckConfiguration);
         setField(processor, "flagCodeQuery", "test");
         setField(processor, "applicationContext", applicationContext);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
         exchange.getIn().setHeader(ROUTE_DETAILS, routeProperties);
+    }
+
+    @Test
+    void testFlagDetailsCsv_0byte_characters() throws Exception {
+        var zeroBytesFlagDetails = new ArrayList<FlagService>();
+        zeroBytesFlagDetails.addAll(getFlagServiceWithZeroBytes());
+
+        exchange.getIn().setBody(zeroBytesFlagDetails);
+
+        doNothing().when(processor).audit(flagServiceJsrValidatorInitializer, exchange);
+        when((processor).validate(flagServiceJsrValidatorInitializer,zeroBytesFlagDetails))
+            .thenReturn(zeroBytesFlagDetails);
+        when(jdbcTemplate.queryForList("test", String.class)).thenReturn(ImmutableList.of("TEST001", "TEST002"));
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(2, actualLovServiceList.size());
+        verify(flagServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
+                                eq(null),
+                                eq("Zero byte characters identified - check source file"),
+                                eq(exchange));
     }
 
     @Test
@@ -207,5 +244,25 @@ class FlagServiceProcessorTest {
                 .flagCode("TEST002")
                 .build()
         );
+    }
+
+    private List<FlagService> getFlagServiceWithZeroBytes() {
+        return ImmutableList.of(
+            FlagService.builder()
+                .ID("1")
+                .serviceId("XXXX")
+                .hearingRelevant("TRUE")
+                .requestReason("FALSE ")
+                .flagCode("TEST001")
+                .build(),
+            FlagService.builder()
+                .ID("2")
+                .serviceId("XXXX")
+                .hearingRelevant("TRUE")
+                .requestReason("F\u200BALSE")
+                .flagCode("TEST002")
+                .build()
+        );
+
     }
 }
