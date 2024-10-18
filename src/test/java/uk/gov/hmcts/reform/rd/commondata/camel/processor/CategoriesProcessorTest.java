@@ -280,7 +280,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
-                .active("D")
+                .active("Y")
                 .build(),
             Categories.builder()
                 .categoryKey("caseSubType")
@@ -289,7 +289,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .valueEN("ADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-001")
-                .active("Y")
+                .active("D")
                 .build()
         );
     }

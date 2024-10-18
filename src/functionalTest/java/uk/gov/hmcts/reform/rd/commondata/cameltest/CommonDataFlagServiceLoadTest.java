@@ -353,8 +353,6 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
             .hasSameElementsAs(expected);
     }
 
-
-
     @AfterEach
     void tearDown() throws Exception {
         //Delete Uploaded test file with Snapshot delete

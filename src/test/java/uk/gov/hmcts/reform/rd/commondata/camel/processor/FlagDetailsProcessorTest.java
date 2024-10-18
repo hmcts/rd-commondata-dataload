@@ -275,9 +275,9 @@ class FlagDetailsProcessorTest {
                 .valueEn("ABC001")
                 .valueCy("ABC001")
                 .categoryId("01")
-                .mrdCreatedTime("")
-                .mrdUpdatedTime("")
-                .mrdDeletedTime("")
+                .mrdCreatedTime("17-06-2022 13:33:00")
+                .mrdUpdatedTime("17-06-2022 13:33:00")
+                .mrdDeletedTime("17-06-2028 13:33:00")
                 .build());
     }
 
