@@ -45,9 +45,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     @Override
     public void process(Exchange exchange) {
 
-        List<Categories> categoriesList;
-
-        categoriesList = (exchange.getIn().getBody() instanceof List)
+        var categoriesList = (exchange.getIn().getBody() instanceof List)
             ? (List<Categories>) exchange.getIn().getBody()
             : singletonList((Categories) exchange.getIn().getBody());
 
