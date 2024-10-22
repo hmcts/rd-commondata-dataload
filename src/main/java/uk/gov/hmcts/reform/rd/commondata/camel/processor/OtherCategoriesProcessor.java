@@ -38,9 +38,6 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
-    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
-        "Zero byte characters identified - check source file";
-
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
@@ -78,7 +75,10 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        processExceptionRecords(exchange, categoriesList);
+        if (categoriesList.size() > 0) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
+                applicationContext, lovServiceJsrValidatorInitializer);
+        }
 
         List<OtherCategories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
@@ -97,27 +97,6 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
             );
         }
 
-    }
-
-    private void processExceptionRecords(Exchange exchange,
-                                         List<OtherCategories> otherCategoriesList) {
-
-        List<Pair<String, Long>> zeroByteCharacterRecords = otherCategoriesList.stream()
-            .filter(flagDetail -> dataQualityCheckConfiguration.zeroByteCharacters.stream().anyMatch(
-                flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
-
-        if (!zeroByteCharacterRecords.isEmpty()) {
-            setFileStatus(exchange, applicationContext, FAILURE);
-            lovServiceJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
-                                                                  ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
-        }
-    }
-
-    private Pair<String,Long> createExceptionRecordPair(OtherCategories otherCategories) {
-        return Pair.of(
-            otherCategories.getKey(),
-            otherCategories.getRowId()
-        );
     }
 
     private List<OtherCategories> getInvalidCategories(List<OtherCategories> orgCategoryList,

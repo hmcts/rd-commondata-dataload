@@ -60,7 +60,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer
         = new JsrValidatorInitializer<>();
 
-    @Mock
+
     DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
 
     @Mock
@@ -212,7 +212,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
             .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
                                 eq(null),
                                 eq("Zero byte characters identified - check source file"),
-                                eq(exchange));
+                               eq(exchange));
     }
 
 

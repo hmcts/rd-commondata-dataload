@@ -40,8 +40,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
-    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
-        "Zero byte characters identified - check source file";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -75,25 +73,18 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        processExceptionRecords(exchange, categoriesList, finalCategoriesList);
+        if (categoriesList.size() > 0) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
+                applicationContext, lovServiceJsrValidatorInitializer);
+        }
+
+        processException(exchange, categoriesList, finalCategoriesList);
     }
 
-    private void processExceptionRecords(Exchange exchange,
+    private void processException(Exchange exchange,
                                          List<Categories> categoriesList,
                                          List<Categories> finalCategoriesList) {
 
-        List<Pair<String, Long>> zeroByteCharacterRecords = identifyRecordsWithZeroByteCharacters(categoriesList);
-        if (!zeroByteCharacterRecords.isEmpty()) {
-            String auditStatus = FAILURE;
-            setFileStatus(exchange, applicationContext, auditStatus);
-
-            lovServiceJsrValidatorInitializer.auditJsrExceptions(
-                zeroByteCharacterRecords,
-                null,
-                ZERO_BYTE_CHARACTER_ERROR_MESSAGE,
-                exchange
-            );
-        }
 
         List<Categories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()

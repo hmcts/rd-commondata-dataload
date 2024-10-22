@@ -197,19 +197,16 @@ public class CommonDataOtherCategoriesLoadTest extends CommonDataFunctionalBaseT
         assertEquals(3, listOfValues.size());
 
         String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
-        Pair<String, String> pair = new Pair<>(
-            UPLOAD_OTHER_CATEGORIES_FILE_NAME,
-            zer0ByteCharacterErrorMsg
-        );
+
         var result = jdbcTemplate.queryForList(exceptionQuery);
         assertThat(
             (String) result.get(3).get("error_description"),
-            containsString(pair.getValue1())
+            containsString(zer0ByteCharacterErrorMsg)
         );
-        var audirResult = jdbcTemplate.queryForList(auditSchedulerQuery);
-        assertEquals(5, audirResult.size());
+        var auditResult = jdbcTemplate.queryForList(auditSchedulerQuery);
+        assertEquals(5, auditResult.size());
         Optional<Map<String, Object>> auditEntry =
-            audirResult.stream().filter(audit -> audit.containsValue(UPLOAD_LIST_OF_VALUES_FILE_NAME)).findFirst();
+            auditResult.stream().filter(audit -> audit.containsValue(UPLOAD_LIST_OF_VALUES_FILE_NAME)).findFirst();
         assertTrue(auditEntry.isPresent());
         auditEntry.ifPresent(audit -> assertEquals("Failure", audit.get("status")));
 

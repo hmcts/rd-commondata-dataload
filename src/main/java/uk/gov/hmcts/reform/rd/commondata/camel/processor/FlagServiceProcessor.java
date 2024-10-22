@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
@@ -44,9 +42,6 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
     @Value("${flag-code-query}")
     String flagCodeQuery;
 
-    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
-        "Zero byte characters identified - check source file";
-
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
@@ -59,7 +54,7 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
     @SuppressWarnings("unchecked")
     public void process(Exchange exchange) {
 
-        List<FlagService>  flagServices = exchange.getIn().getBody() instanceof List
+        var  flagServices = exchange.getIn().getBody() instanceof List
             ? (List<FlagService>) exchange.getIn().getBody()
             : singletonList((FlagService) exchange.getIn().getBody());
 
@@ -93,33 +88,15 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        processExceptionRecords(exchange, flagServices);
-
+        if (flagServices.size() > 0) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagServices),
+                applicationContext, flagServiceJsrValidatorInitializer);
+        }
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(validatedFlagServices);
 
     }
 
-    private void processExceptionRecords(Exchange exchange,
-                                         List<FlagService> flagServiceList) {
-
-        List<Pair<String, Long>> zeroByteCharacterRecords = flagServiceList.stream()
-            .filter(flagDetail -> dataQualityCheckConfiguration.zeroByteCharacters.stream().anyMatch(
-                flagDetail.toString()::contains)).map(this::createExceptionRecordPair).toList();
-
-        if (!zeroByteCharacterRecords.isEmpty()) {
-            setFileStatus(exchange, applicationContext, FAILURE);
-            flagServiceJsrValidatorInitializer.auditJsrExceptions(zeroByteCharacterRecords,null,
-                                                                  ZERO_BYTE_CHARACTER_ERROR_MESSAGE,exchange);
-        }
-    }
-
-    private Pair<String,Long> createExceptionRecordPair(FlagService flagService) {
-        return Pair.of(
-            flagService.getFlagCode(),
-            flagService.getRowId()
-        );
-    }
 
     /**
      * Filter if Primary Key is not present in the parent table.
