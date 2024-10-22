@@ -48,22 +48,22 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
     @Override
     public void process(Exchange exchange) {
 
-        var categoriesList = (exchange.getIn().getBody() instanceof List)
+        var otherCategoriesListategoriesList = (exchange.getIn().getBody() instanceof List)
             ? (List<OtherCategories>) exchange.getIn().getBody()
             : singletonList((OtherCategories) exchange.getIn().getBody());
 
         log.info(" {} Categories Records count before Validation {}::", logComponentName,
-                 categoriesList.size()
+            otherCategoriesListategoriesList.size()
         );
 
-        Multimap<String, OtherCategories> filteredCategories = convertToMultiMap(categoriesList);
+        Multimap<String, OtherCategories> filteredCategories = convertToMultiMap(otherCategoriesListategoriesList);
         List<OtherCategories> finalCategoriesList = getValidCategories(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
                  finalCategoriesList.size()
         );
 
-        if (categoriesList.size() != finalCategoriesList.size()) {
+        if (otherCategoriesListategoriesList.size() != finalCategoriesList.size()) {
             String auditStatus = PARTIAL_SUCCESS;
             if (finalCategoriesList.isEmpty()) {
                 auditStatus = FAILURE;
@@ -75,12 +75,12 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        if (!categoriesList.isEmpty()) {
-            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
+        if (!otherCategoriesListategoriesList.isEmpty()) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(otherCategoriesListategoriesList),
                 applicationContext, lovServiceJsrValidatorInitializer);
         }
 
-        List<OtherCategories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
+        List<OtherCategories> invalidCategories = getInvalidCategories(otherCategoriesListategoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
