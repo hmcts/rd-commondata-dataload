@@ -88,7 +88,7 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        if (flagServices.size() > 0) {
+        if (!flagServices.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagServices),
                 applicationContext, flagServiceJsrValidatorInitializer);
         }

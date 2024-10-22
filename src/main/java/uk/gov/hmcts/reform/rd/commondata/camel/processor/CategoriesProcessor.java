@@ -73,7 +73,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        if (categoriesList.size() > 0) {
+        if (!categoriesList.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
                 applicationContext, lovServiceJsrValidatorInitializer);
         }
@@ -106,24 +106,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         );
     }
 
-    private List<Pair<String, Long>> identifyRecordsWithZeroByteCharacters(List<Categories> categoriesList) {
-
-        return categoriesList.stream()
-            .filter(category ->
-                        checkStringForZeroByteCharacters(category.toString())
-            )
-            .map(
-                this::createExceptionRecordPair
-            )
-            .toList();
-    }
-
-    private boolean checkStringForZeroByteCharacters(String string) {
-        return dataQualityCheckConfiguration.zeroByteCharacters.stream()
-            .anyMatch(
-                string::contains
-            );
-    }
 
     private List<Categories> getInvalidCategories(List<Categories> orgCategoryList,
                                                   List<Categories> finalCategoriesList) {

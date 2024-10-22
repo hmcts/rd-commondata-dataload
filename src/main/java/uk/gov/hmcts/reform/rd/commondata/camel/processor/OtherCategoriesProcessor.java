@@ -75,7 +75,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        if (categoriesList.size() > 0) {
+        if (!categoriesList.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
                 applicationContext, lovServiceJsrValidatorInitializer);
         }

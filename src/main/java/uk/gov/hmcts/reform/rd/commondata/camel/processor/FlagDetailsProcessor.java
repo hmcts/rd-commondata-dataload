@@ -85,7 +85,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        if (flagDetailsList.size() > 0) {
+        if (!flagDetailsList.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagDetailsList),
                 applicationContext, flagDetailsJsrValidatorInitializer);
         }
