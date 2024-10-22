@@ -72,13 +72,13 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         }
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
-        exchange.getMessage().setBody(finalCategoriesList);
-
         if (!otherCategoriesListategoriesList.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(otherCategoriesListategoriesList),
                 applicationContext, lovServiceJsrValidatorInitializer);
         }
+
+        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
+        exchange.getMessage().setBody(finalCategoriesList);
 
         List<OtherCategories> invalidCategories = getInvalidCategories(otherCategoriesListategoriesList, finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
