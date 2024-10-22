@@ -315,7 +315,7 @@ public class OtherCategoriesProcessorTest {
     }
 
     private List<OtherCategories> getOtherCAtegoriesWithZeroBytes() {
-        return ImmutableList.of(
+        return List.of(
             OtherCategories.builder()
                 .categoryKey("caseSubType")
                 .serviceId("BBA3")

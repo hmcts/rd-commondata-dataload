@@ -304,7 +304,7 @@ class FlagDetailsProcessorTest {
     }
 
     private List<FlagDetails> getFlagDetailsWithZeroBytes() {
-        return ImmutableList.of(
+        return List.of(
             FlagDetails.builder()
                 .id("1")
                 .flagCode("ABC001")

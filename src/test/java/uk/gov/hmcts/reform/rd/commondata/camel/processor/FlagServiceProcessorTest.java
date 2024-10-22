@@ -111,7 +111,7 @@ class FlagServiceProcessorTest {
         doNothing().when(processor).audit(flagServiceJsrValidatorInitializer, exchange);
         when((processor).validate(flagServiceJsrValidatorInitializer,zeroBytesFlagDetails))
             .thenReturn(zeroBytesFlagDetails);
-        when(jdbcTemplate.queryForList("test", String.class)).thenReturn(ImmutableList.of("TEST001", "TEST002"));
+        when(jdbcTemplate.queryForList("test", String.class)).thenReturn(List.of("TEST001", "TEST002"));
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
         processor.process(exchange);
@@ -247,7 +247,7 @@ class FlagServiceProcessorTest {
     }
 
     private List<FlagService> getFlagServiceWithZeroBytes() {
-        return ImmutableList.of(
+        return List.of(
             FlagService.builder()
                 .ID("1")
                 .serviceId("XXXX")
