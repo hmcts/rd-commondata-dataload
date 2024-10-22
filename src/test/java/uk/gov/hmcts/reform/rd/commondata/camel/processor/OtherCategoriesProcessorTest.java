@@ -115,10 +115,9 @@ public class OtherCategoriesProcessorTest {
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(2, actualLovServiceList.size());
         verify(lovServiceJsrValidatorInitializer, times(1))
-            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
-                                eq(null),
-                                eq("Zero byte characters identified - check source file"),
-                                eq(exchange));
+            .auditJsrExceptions(ZERO_BYTE_CHARACTER_RECORDS,
+                                null,"Zero byte characters identified - check source file",
+                exchange);
     }
 
 

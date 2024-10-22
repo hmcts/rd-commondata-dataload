@@ -209,10 +209,10 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(5, actualLovServiceList.size());
         verify(lovServiceJsrValidatorInitializer, times(1))
-            .auditJsrExceptions(eq(ZERO_BYTE_CHARACTER_RECORDS),
-                                eq(null),
-                                eq("Zero byte characters identified - check source file"),
-                               eq(exchange));
+            .auditJsrExceptions(ZERO_BYTE_CHARACTER_RECORDS,
+                                null,
+                                "Zero byte characters identified - check source file",
+                               exchange);
     }
 
 
