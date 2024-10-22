@@ -38,9 +38,11 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
-    @Autowired
-    DataQualityCheckConfiguration dataQualityCheckConfiguration;
+    private DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
+    public OtherCategoriesProcessor(DataQualityCheckConfiguration dataQualityCheckConfiguration) {
+        this.dataQualityCheckConfiguration = dataQualityCheckConfiguration;
+    }
 
     @SuppressWarnings("unchecked")
     @Override

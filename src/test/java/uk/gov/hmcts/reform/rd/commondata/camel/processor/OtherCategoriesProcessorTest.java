@@ -42,8 +42,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
 @ExtendWith(MockitoExtension.class)
 public class OtherCategoriesProcessorTest {
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
     @Spy
-    private OtherCategoriesProcessor processor = new OtherCategoriesProcessor();
+    private OtherCategoriesProcessor processor = new OtherCategoriesProcessor(dataQualityCheckConfiguration);
 
     CamelContext camelContext = new DefaultCamelContext();
 
@@ -70,7 +71,7 @@ public class OtherCategoriesProcessorTest {
     private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
         Pair.of("BBA3-002AD", null),Pair.of("BBA3-001AD", null));
 
-    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
+
 
     @BeforeEach
     void init() {
