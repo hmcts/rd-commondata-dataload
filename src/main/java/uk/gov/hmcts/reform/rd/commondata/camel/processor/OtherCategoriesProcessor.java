@@ -80,7 +80,6 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
                 exchange
             );
         }
-
     }
 
 
