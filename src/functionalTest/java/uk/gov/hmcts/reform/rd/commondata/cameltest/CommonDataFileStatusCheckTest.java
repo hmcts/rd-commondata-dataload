@@ -71,7 +71,6 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
     @BeforeEach
     public void init() {
         SpringStarter.getInstance().restart();
-        loadJobLauncherTestUtils();
     }
 
     @Test
@@ -151,7 +150,6 @@ class CommonDataFileStatusCheckTest extends CommonDataFunctionalBaseTest {
         jdbcTemplate.execute(truncateAudit);
         jdbcTemplate.execute(truncateException);
         SpringStarter.getInstance().restart();
-        loadJobLauncherTestUtils();
     }
 
     private void uploadFiles(String time) throws Exception {
