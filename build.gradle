@@ -214,7 +214,8 @@ def versions = [
   log4j               : '2.23.1',
   logback             : '1.18.34',
   bouncycastle        : '1.78.1',
-  tc_postgresql       :  '1.20.0'
+  tc_postgresql       :  '1.20.0',
+  springVersion       :  '6.1.14'
 ]
 
 ext.libraries = [
@@ -237,6 +238,7 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-integration'
 
   implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
@@ -244,9 +246,9 @@ dependencies {
   implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
   implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '3.1.9'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '3.1.9'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.9'
 
   // Fix for CVE-2022-45047, CVE-2023-35887
   implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.13.2'
@@ -263,6 +265,7 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
 
   implementation group: 'org.springframework.security', name: 'spring-security-core'
+  implementation group: 'org.springframework.security', name: 'spring-security-config'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
 
   implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-13') {
@@ -280,7 +283,7 @@ dependencies {
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
-  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter', version:versions.camel
+  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
   implementation group: 'org.apache.camel', name: 'camel-csv', version: versions.camel
   implementation group: 'org.apache.camel', name: 'camel-sql', version: versions.camel
   implementation group: 'org.apache.camel', name: 'camel-spring-batch', version: versions.camel
@@ -294,22 +297,21 @@ dependencies {
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
 
-  implementation group: 'org.springframework', name: 'spring-core'
+  implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
 
- 	implementation group: 'org.springframework', name: 'spring-beans'
-  implementation group: 'org.springframework', name: 'spring-aop'
-  implementation group: 'org.springframework', name: 'spring-aspects'
-  implementation group: 'org.springframework', name: 'spring-context'
-  implementation group: 'org.springframework', name: 'spring-context-support'
-  implementation group: 'org.springframework', name: 'spring-expression'
-  implementation group: 'org.springframework', name: 'spring-jcl'
-  implementation group: 'org.springframework', name: 'spring-jdbc'
-  implementation group: 'org.springframework', name: 'spring-orm'
-  implementation group: 'org.springframework', name: 'spring-tx'
-  implementation group: 'org.springframework', name: 'spring-web'
-  implementation group: 'org.springframework', name: 'spring-webmvc'
-
-  implementation group: 'com.microsoft.azure', name: 'azure-storage-blob', version: '11.0.0'
+ 	implementation group: 'org.springframework', name: 'spring-beans', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-aop', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-aspects', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-context', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-context-support', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-expression', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-jcl', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-jdbc', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-orm', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-tx', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-web', version: versions.springVersion
+  implementation group: 'org.springframework', name: 'spring-webmvc', version: versions.springVersion
+  implementation group: 'org.yaml', name: 'snakeyaml', version: '2.3'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
@@ -351,6 +353,7 @@ dependencies {
       exclude group: 'javax.websocket', module: 'javax.websocket-api'
     }
 
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
   testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

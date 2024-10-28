@@ -42,6 +42,9 @@ public class BatchConfig {
     @Autowired
     JobResultListener jobResultListener;
 
+    @Autowired
+    PlatformTransactionManager transactionManager;
+
     @Value("${commondata-flag-service-route-task}")
     String commonDataTask;
 
@@ -68,40 +71,35 @@ public class BatchConfig {
      * @return Step
      */
     @Bean
-    public Step stepCommonDataRoute(JobRepository jobRepository,
-                                    PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataRoute(JobRepository jobRepository) {
         return new StepBuilder(commonDataTask, jobRepository)
             .tasklet(commonDataFlagServiceRouteTask, transactionManager)
             .build();
     }
 
     @Bean
-    public Step stepCommonDataCategoriesRoute(JobRepository jobRepository,
-                                              PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataCategoriesRoute(JobRepository jobRepository) {
         return new StepBuilder(commonDataCategoriesTask, jobRepository)
             .tasklet(commonDataCategoriesRouteTask, transactionManager)
             .build();
     }
 
     @Bean
-    public Step stepCommonDataCaseLinkingRoute(JobRepository jobRepository,
-                                               PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataCaseLinkingRoute(JobRepository jobRepository) {
         return new StepBuilder(commonDataCaseLinkingTask, jobRepository)
             .tasklet(commonDataCaseLinkingRouteTask, transactionManager)
             .build();
     }
 
     @Bean
-    public Step stepCommonDataFlagDetailsRoute(JobRepository jobRepository,
-                                               PlatformTransactionManager transactionManager) {
+    public Step stepCommonDataFlagDetailsRoute(JobRepository jobRepository) {
         return new StepBuilder(commonDataFlagDetailsTask, jobRepository)
             .tasklet(commonDataFlagDetailsRouteTask, transactionManager)
             .build();
     }
 
     @Bean
-    public Step stepOtherCategoriesRoute(JobRepository jobRepository,
-                                         PlatformTransactionManager transactionManager) {
+    public Step stepOtherCategoriesRoute(JobRepository jobRepository) {
         return new StepBuilder(commonDataOtherCategoriesTask, jobRepository)
             .tasklet(commonDataOtherCategoriesRouteTask, transactionManager)
             .build();
@@ -113,18 +111,18 @@ public class BatchConfig {
      * @return Job
      */
     @Bean
-    public Job runRoutesJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Job runRoutesJob(JobRepository jobRepository) {
         return new JobBuilder(jobName, jobRepository)
-            .start(stepCommonDataFlagDetailsRoute(jobRepository, transactionManager))
+            .start(stepCommonDataFlagDetailsRoute(jobRepository))
             .listener(jobResultListener)
-            .on("*").to(stepCommonDataRoute(jobRepository, transactionManager))
-            .on("*").to(stepOtherCategoriesRoute(jobRepository, transactionManager))
+            .on("*").to(stepCommonDataRoute(jobRepository))
+            .on("*").to(stepOtherCategoriesRoute(jobRepository))
             .on("*").to(checkCaseLinkingRouteStatus())
             .from(checkCaseLinkingRouteStatus()).on("STOPPED")
-            .to(stepCommonDataCategoriesRoute(jobRepository, transactionManager))
+            .to(stepCommonDataCategoriesRoute(jobRepository))
             .from(checkCaseLinkingRouteStatus()).on("ENABLED")
-            .to(stepCommonDataCaseLinkingRoute(jobRepository, transactionManager))
-            .on("*").to(stepCommonDataCategoriesRoute(jobRepository, transactionManager))
+            .to(stepCommonDataCaseLinkingRoute(jobRepository))
+            .on("*").to(stepCommonDataCategoriesRoute(jobRepository))
             .end()
             .build();
     }
