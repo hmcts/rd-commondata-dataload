@@ -210,7 +210,7 @@ def versions = [
   gradlePitest        : '1.5.1',
   pitest              : '1.16.1',
   flyway              : '9.19.4',
-  camel               : '4.7.0',
+  camel               : '4.8.0',
   log4j               : '2.23.1',
   logback             : '1.18.34',
   bouncycastle        : '1.78.1',
@@ -282,21 +282,7 @@ dependencies {
 
   //Fix for CVE-2021-29425
   implementation 'commons-io:commons-io:2.11.0'
-  implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
-  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
-
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
-  implementation group: 'org.apache.camel', name: 'camel-csv', version: versions.camel
-  implementation group: 'org.apache.camel', name: 'camel-sql', version: versions.camel
-  implementation group: 'org.apache.camel', name: 'camel-spring-batch', version: versions.camel
-
-  implementation group: 'org.apache.camel.springboot', name: 'camel-azure-starter', version: '3.8.0'
-  implementation group: 'org.apache.camel.springboot', name: 'camel-bindy-starter', version:versions.camel
-  implementation group: 'org.apache.camel.springboot', name: 'camel-jdbc-starter', version:versions.camel
-  implementation group: 'org.apache.camel', name: 'camel-bean-validator', version: versions.camel
-
-  implementation group: 'org.apache.camel', name: 'camel-core', version: versions.camel
-
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
 
   implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
