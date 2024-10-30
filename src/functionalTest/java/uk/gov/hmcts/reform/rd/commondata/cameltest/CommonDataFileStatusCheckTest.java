@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.rd.commondata.cameltest;
 
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
+import net.serenitybdd.annotations.WithTag;
+import net.serenitybdd.annotations.WithTags;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.CamelTestContextBootstrapper;
 import org.apache.camel.test.spring.junit5.MockEndpoints;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -47,9 +47,10 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @CamelSpringBootTest
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
-    JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
+    BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigDataApplicationContextInitializer.class)
 @SpringBootTest
+@SpringBatchTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",

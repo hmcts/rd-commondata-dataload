@@ -211,15 +211,21 @@ public class CommonDataCamelConfig {
     // transaction configuration starts
     @Bean(name = "txManager")
     public PlatformTransactionManager txManager() {
-        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager(dataSource());
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager();
+        platformTransactionManager.setDataSource(dataSource());
+        return platformTransactionManager;
+    }
+
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager() {
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager();
         platformTransactionManager.setDataSource(dataSource());
         return platformTransactionManager;
     }
 
     @Bean(name = "springJdbcTransactionManager")
     public PlatformTransactionManager springJdbcTransactionManager() {
-        DataSourceTransactionManager platformTransactionManager
-            = new DataSourceTransactionManager(springJdbcDataSource());
+        DataSourceTransactionManager platformTransactionManager = new DataSourceTransactionManager();
         platformTransactionManager.setDataSource(springJdbcDataSource());
         return platformTransactionManager;
     }
