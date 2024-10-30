@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.util;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.spi.Registry;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,8 @@ class CommonDataDRecordsTest {
 
     CamelContext camelContext = mock(CamelContext.class);
 
+    ExtendedCamelContext extendedCamelContext = mock(ExtendedCamelContext.class);
+
     JsrValidatorInitializer<OtherCategories> lovServiceJsrValidatorInitializer = mock(JsrValidatorInitializer.class);
 
     @InjectMocks
@@ -54,6 +57,7 @@ class CommonDataDRecordsTest {
         setField(commonDataDRecords, "camelContext", camelContext);
         setField(commonDataDRecords, "jdbcTemplate", jdbcTemplate);
 
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
     }
 
 
