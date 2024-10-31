@@ -73,16 +73,17 @@ public class CommonDataDRecords {
     }
 
     private List<Categories> getCategoriesByStatus(String activeFlag) {
-        return jdbcTemplate.query(SELECT_CATEGORY_BY_STATUS,
-                                  (rs, rowNum) -> {
-                                      Categories categories =  new Categories();
-                                      categories.setCategoryKey(rs.getString("categorykey"));
-                                      categories.setKey(rs.getString("key"));
-                                      categories.setServiceId(rs.getString("serviceid"));
-                                      categories.setRowId((long) rs.getRow());
-                                      return categories;
-                                  },
-                                  activeFlag
+        return jdbcTemplate.query(
+            SELECT_CATEGORY_BY_STATUS,
+            (rs, rowNum) -> {
+                Categories categories = new Categories();
+                categories.setCategoryKey(rs.getString("categorykey"));
+                categories.setKey(rs.getString("key"));
+                categories.setServiceId(rs.getString("serviceid"));
+                categories.setRowId((long) rs.getRow());
+                return categories;
+            },
+            activeFlag
         );
     }
 
