@@ -205,7 +205,7 @@ def versions = [
   serenity            : '2.6.0',
   lombok              : '1.18.34',
   gradlePitest        : '1.5.1',
-  pitest              : '1.16.1',
+  pitest              : '1.17.0',
   flyway              : '6.5.7',
   camel               : '3.8.0',
   log4j               : '2.23.1',
