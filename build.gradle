@@ -211,7 +211,7 @@ def versions = [
   log4j               : '2.23.1',
   springVersion       : '5.3.39',
   logback             : '1.2.13',
-  bouncycastle        : '1.78.1'
+  bouncycastle        : '1.79'
 ]
 
 ext.libraries = [
