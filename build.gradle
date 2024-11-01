@@ -24,6 +24,26 @@ java {
   }
 }
 
+def versions = [
+  junit               : '5.9.2',
+  junitPlatform       : '1.9.2',
+  reformLogging       : '6.1.7',
+  springBoot          : '2.7.18',
+  springfoxSwagger    : '2.10.5',
+  serenity            : '2.6.0',
+  lombok              : '1.18.34',
+  gradlePitest        : '1.15.0',
+  pitest              : '1.17.0',
+  sonarPitest         : '0.5',
+  junitPitest         : '1.2.1',
+  flyway              : '6.5.7',
+  camel               : '3.8.0',
+  log4j               : '2.23.1',
+  springVersion       : '5.3.39',
+  logback             : '1.2.13',
+  bouncycastle        : '1.79'
+]
+
 sourceSets {
   functionalTest {
     java {
@@ -124,7 +144,8 @@ jacocoTestReport {
 }
 
 pitest {
-  junit5PluginVersion = '1.0.0'
+  pitestVersion = versions.pitest
+  junit5PluginVersion = versions.junitPitest
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
   testSourceSets = [sourceSets.test, sourceSets.functionalTest]
   excludedClasses = [
@@ -133,6 +154,9 @@ pitest {
     'uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor',
     'uk.gov.hmcts.reform.rd.commondata.camel.binder.*',
     'uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask'
+  ]
+  excludedTestClasses = [
+    'uk.gov.hmcts.reform.rd.commondata.cameltest.*'
   ]
   threads = 6
   enableDefaultIncrementalAnalysis = true
@@ -195,24 +219,6 @@ repositories {
     url 'https://jitpack.io'
   }
 }
-
-def versions = [
-  junit               : '5.9.2',
-  junitPlatform       : '1.9.2',
-  reformLogging       : '6.1.7',
-  springBoot          : '2.7.18',
-  springfoxSwagger    : '2.10.5',
-  serenity            : '2.6.0',
-  lombok              : '1.18.34',
-  gradlePitest        : '1.5.1',
-  pitest              : '1.17.0',
-  flyway              : '6.5.7',
-  camel               : '3.8.0',
-  log4j               : '2.23.1',
-  springVersion       : '5.3.39',
-  logback             : '1.2.13',
-  bouncycastle        : '1.79'
-]
 
 ext.libraries = [
   junit5: [
@@ -364,13 +370,13 @@ dependencies {
     }
 
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-  testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5', {
+  testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-  }
+  }, version: versions.sonarPitest
   testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
-  testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
-  testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
+  testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
+  testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: versions.junitPitest
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
   integrationTestImplementation sourceSets.test.runtimeClasspath
