@@ -52,7 +52,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
             ? (List<OtherCategories>) exchange.getIn().getBody()
             : singletonList((OtherCategories) exchange.getIn().getBody());
 
-        List<OtherCategories> finalCategoriesList = validate(otherCategoriesListategoriesList, exchange);
+        var finalCategoriesList = validate(otherCategoriesListategoriesList, exchange);
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 

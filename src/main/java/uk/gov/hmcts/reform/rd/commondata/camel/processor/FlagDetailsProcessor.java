@@ -69,7 +69,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                  logComponentName, jsrValidatedFlagDetails
         );
 
-        List<FlagDetails> filteredFlagDetails = removeExpiredRecords(validatedFlagDetails, exchange);
+        var filteredFlagDetails = removeExpiredRecords(validatedFlagDetails, exchange);
 
         audit(flagDetailsJsrValidatorInitializer, exchange);
 
