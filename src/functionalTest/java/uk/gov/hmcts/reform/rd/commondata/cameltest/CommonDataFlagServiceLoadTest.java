@@ -269,6 +269,34 @@ public class CommonDataFlagServiceLoadTest extends CommonDataFunctionalBaseTest 
     }
 
     @Test
+    @DisplayName("Status: PartialSucess - Test for 0 byte characters.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testFlagServiceCsv_0_byte_character() throws Exception {
+
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/flagService/flag_service_0_byte_character.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var flagServiceValues = jdbcTemplate.queryForList(flagServiceSelectData);
+        assertEquals(4, flagServiceValues.size());
+
+        String zer0ByteCharacterErrorMsg = "Zero byte characters identified - check source file";
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_FLAG_SERVICE_FILE_NAME,
+            zer0ByteCharacterErrorMsg
+        );
+
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 0);
+
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_FLAG_SERVICE_FILE_NAME);
+
+    }
+
+    @Test
     @DisplayName("Status: Success - Valid Test for default values of default_status for flag_service table")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
     public void testFlagServiceDefaultValuesSetForDefaultStatusAndAvailableExternally_Csv_Success() throws Exception {

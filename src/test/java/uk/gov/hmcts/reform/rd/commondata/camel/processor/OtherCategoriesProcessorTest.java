@@ -5,6 +5,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.DefaultExchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,8 +42,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
 @ExtendWith(MockitoExtension.class)
 public class OtherCategoriesProcessorTest {
+    DataQualityCheckConfiguration dataQualityCheckConfiguration = new DataQualityCheckConfiguration();
     @Spy
-    private OtherCategoriesProcessor processor = new OtherCategoriesProcessor();
+    private OtherCategoriesProcessor processor = new OtherCategoriesProcessor(dataQualityCheckConfiguration);
 
     CamelContext camelContext = new DefaultCamelContext();
 
@@ -63,11 +66,19 @@ public class OtherCategoriesProcessorTest {
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+    private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
+
+    private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(
+        Pair.of("BBA3-002AD", null),Pair.of("BBA3-001AD", null));
+
+
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
+        setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
         setField(lovServiceJsrValidatorInitializer, "validator", validator);
         setField(lovServiceJsrValidatorInitializer, "camelContext", camelContext);
         // setField(processor, "jdbcTemplate", jdbcTemplate);
@@ -81,7 +92,8 @@ public class OtherCategoriesProcessorTest {
         setField(processor, "logComponentName",
                  "testlogger"
         );
-        //setField(processor, "flagCodeQuery", "test");
+
+        setField(processor, "dataQualityCheckConfiguration", dataQualityCheckConfiguration);
         setField(processor, "applicationContext", applicationContext);
         RouteProperties routeProperties = new RouteProperties();
         routeProperties.setFileName("test");
@@ -89,20 +101,26 @@ public class OtherCategoriesProcessorTest {
     }
 
     @Test
-    @DisplayName("Test for LOV Duplicate records Case1")
-    void testListOfValuesCsv_DupRecord_Case1() {
-        var lovServiceList = new ArrayList<OtherCategories>();
-        lovServiceList.addAll(getLovServicesCase1());
+    void testFlagDetailsCsv_0byte_characters() throws Exception {
 
-        exchange.getIn().setBody(lovServiceList);
+        var zeroBytesFlagDetails = getOtherCAtegoriesWithZeroBytes();
+        exchange.getIn().setBody(zeroBytesFlagDetails);
+
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
 
         processor.process(exchange);
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(2, actualLovServiceList.size());
-
+        verify(lovServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(ZERO_BYTE_CHARACTER_RECORDS,
+                                null,"Zero byte characters identified - check source file",
+                exchange);
     }
+
+
 
     @Test
     @DisplayName("Test for LOV Duplicate records Case2")
@@ -176,6 +194,22 @@ public class OtherCategoriesProcessorTest {
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertEquals(0, actualLovServiceList.size());
         assertTrue(actualLovServiceList.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Test for LOV Duplicate records Case1")
+    void testListOfValuesCsv_DupRecord_Case1() {
+        var lovServiceList = new ArrayList<OtherCategories>();
+        lovServiceList.addAll(getLovServicesCase1());
+
+        exchange.getIn().setBody(lovServiceList);
+
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertEquals(2, actualLovServiceList.size());
+
     }
 
     private List<OtherCategories> getLovServicesCase1() {
@@ -272,6 +306,29 @@ public class OtherCategoriesProcessorTest {
                 .serviceId("BBA3")
                 .key("BBA3-001AD")
                 .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType")
+                .parentKey("BBA3-002")
+                .active("D")
+                .build()
+        );
+    }
+
+    private List<OtherCategories> getOtherCAtegoriesWithZeroBytes() {
+        return List.of(
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3")
+                .key("BBA3-002AD")
+                .valueEN("ADVANCE PAYMENT")
+                .parentCategory("caseType ")
+                .parentKey("\\u200BBBA3-001")
+                .active("D")
+                .build(),
+            OtherCategories.builder()
+                .categoryKey("caseSubType")
+                .serviceId("BBA3\u200B")
+                .key("BBA3-001AD")
+                .valueEN("\u200BADVANCE PAYMENT")
                 .parentCategory("caseType")
                 .parentKey("BBA3-002")
                 .active("D")

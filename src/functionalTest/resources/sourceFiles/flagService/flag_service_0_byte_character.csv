@@ -1,0 +1,5 @@
+ID,ServiceID,HearingRelevant,RequestReason,FlagCode,DefaultStatus,AvailableExternally
+1,xxxxx ,FALSE,true,RA0004,Requested,true
+2,xxxxx,FALSE,true,RA0008,Act​ive,true
+3,xxxxx,FALSE,true,RA0009,Requested​,false
+4,xxxxx,FALSE,true,RA0007,Requested​,false
