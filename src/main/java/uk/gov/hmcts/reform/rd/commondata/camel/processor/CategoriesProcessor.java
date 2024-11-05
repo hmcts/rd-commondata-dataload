@@ -71,7 +71,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        if (!categoriesList.isEmpty()) {
+        if (categoriesList != null && !categoriesList.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
                 applicationContext, lovServiceJsrValidatorInitializer);
         }

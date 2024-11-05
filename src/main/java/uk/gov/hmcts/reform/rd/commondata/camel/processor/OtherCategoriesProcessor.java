@@ -56,7 +56,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        if (!otherCategoriesListategoriesList.isEmpty()) {
+        if (otherCategoriesListategoriesList != null && !otherCategoriesListategoriesList.isEmpty()) {
             dataQualityCheckConfiguration.processExceptionRecords(exchange,
                 singletonList(otherCategoriesListategoriesList),
                 applicationContext, lovServiceJsrValidatorInitializer);
