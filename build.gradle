@@ -24,6 +24,26 @@ java {
   }
 }
 
+def versions = [
+  junit               : '5.11.3',
+  junitPlatform       : '1.11.3',
+  reformLogging       : '6.1.7',
+  springBoot          : '2.7.18',
+  springfoxSwagger    : '2.10.5',
+  serenity            : '2.6.0',
+  lombok              : '1.18.34',
+  gradlePitest        : '1.15.0',
+  pitest              : '1.17.0',
+  sonarPitest         : '0.5',
+  junitPitest         : '1.2.1',
+  flyway              : '6.5.7',
+  camel               : '3.8.0',
+  log4j               : '2.24.1',
+  springVersion       : '5.3.39',
+  logback             : '1.2.13',
+  bouncycastle        : '1.79'
+]
+
 sourceSets {
   functionalTest {
     java {
@@ -124,7 +144,8 @@ jacocoTestReport {
 }
 
 pitest {
-  junit5PluginVersion = '1.0.0'
+  pitestVersion = versions.pitest
+  junit5PluginVersion = versions.junitPitest
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
   testSourceSets = [sourceSets.test, sourceSets.functionalTest]
   excludedClasses = [
@@ -133,6 +154,9 @@ pitest {
     'uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor',
     'uk.gov.hmcts.reform.rd.commondata.camel.binder.*',
     'uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask'
+  ]
+  excludedTestClasses = [
+    'uk.gov.hmcts.reform.rd.commondata.cameltest.*'
   ]
   threads = 6
   enableDefaultIncrementalAnalysis = true
@@ -196,24 +220,6 @@ repositories {
   }
 }
 
-def versions = [
-  junit               : '5.9.2',
-  junitPlatform       : '1.9.2',
-  reformLogging       : '6.1.6',
-  springBoot          : '2.7.18',
-  springfoxSwagger    : '2.10.5',
-  serenity            : '2.6.0',
-  lombok              : '1.18.34',
-  gradlePitest        : '1.5.1',
-  pitest              : '1.16.1',
-  flyway              : '6.5.7',
-  camel               : '3.8.0',
-  log4j               : '2.23.1',
-  springVersion       : '5.3.39',
-  logback             : '1.2.13',
-  bouncycastle        : '1.78.1'
-]
-
 ext.libraries = [
   junit5: [
     "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
@@ -273,18 +279,18 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.9'
 
   // Fix for CVE-2022-45047, CVE-2023-35887
-  implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.13.2'
-  implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.13.2'
-  implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.13.2'
-  implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.13.2'
+  implementation group: 'org.apache.sshd', name: 'sshd-common', version: '2.14.0'
+  implementation group: 'org.apache.sshd', name: 'sshd-core', version: '2.14.0'
+  implementation group: 'org.apache.sshd', name: 'sshd-osgi', version: '2.14.0'
+  implementation group: 'org.apache.sshd', name: 'sshd-sftp', version: '2.14.0'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
-  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
+  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.18.1', ext: 'pom'
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.9'
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
 
   implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.8.15'
   implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
@@ -293,14 +299,14 @@ dependencies {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
-  implementation 'commons-io:commons-io:2.8.0'
+  implementation 'commons-io:commons-io:2.17.0'
   implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
   implementation group: 'javax.el', name: 'javax.el-api', version: '3.0.0'
   implementation group: 'org.flywaydb', name: 'flyway-core', version: versions.flyway
 
 
   //Fix for CVE-2021-29425
-  implementation 'commons-io:commons-io:2.11.0'
+  implementation 'commons-io:commons-io:2.17.0'
   implementation group: 'org.apache.camel', name: 'camel-bom', version: versions.camel, ext: 'pom'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-dependencies', version: versions.camel
 
@@ -364,13 +370,13 @@ dependencies {
     }
 
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-  testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5', {
+  testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-  }
+  }, version: versions.sonarPitest
   testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
-  testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
-  testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
+  testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: versions.gradlePitest
+  testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: versions.junitPitest
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
   integrationTestImplementation sourceSets.test.runtimeClasspath
@@ -386,7 +392,7 @@ dependencies {
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.3.10'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
-  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
+  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
 
   smokeTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
