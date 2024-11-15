@@ -52,8 +52,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
 
     private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(Pair.of("BFA1-001AD", null),
-                                                                   Pair.of("BFA1-PAD", null),
-                                                                   Pair.of("BFA1-DC\u200BX", null));
+                                                                   Pair.of("BFA1-DC\u200BX", null),
+                                                                    Pair.of("BFA1-PAD", null));
 
     @Spy
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer
@@ -332,7 +332,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .serviceId("BFA1")
                 .key("BFA1-PAD")
                 .valueEN("ADVANCE PAYMENT ")
-                .parentCategory("caseType")
+                .parentCategory("caseType\u200B")
                 .parentKey("BFA1-002")
                 .active("Y")
                 .build(),

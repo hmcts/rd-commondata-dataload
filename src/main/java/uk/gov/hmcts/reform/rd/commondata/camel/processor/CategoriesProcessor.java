@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfigura
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
@@ -41,6 +42,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
+    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference_type and "
+        + "external_reference_type value must be null or both must be not-null";
+
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
@@ -50,14 +57,14 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             : singletonList((Categories) exchange.getIn().getBody());
 
         log.info(" {} Categories Records count before Validation {}::", logComponentName,
-                 categoriesList.size()
+            categoriesList.size()
         );
 
         Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList);
         List<Categories> finalCategoriesList = getValidCategories(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
-                 finalCategoriesList.size()
+            finalCategoriesList.size()
         );
 
         if (categoriesList.size() != finalCategoriesList.size()) {
@@ -67,17 +74,46 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             }
             setFileStatus(exchange, applicationContext, auditStatus);
         }
+
+        List<Pair<String, Long>> zeroByteCharacterRecords = new ArrayList<>();
+        List<Categories> categoriesWithException = new ArrayList<>();
+        if (finalCategoriesList != null && !finalCategoriesList.isEmpty()) {
+            //validation to check if there are any zerobyte characters
+            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
+                exchange, singletonList(finalCategoriesList),
+                    applicationContext, lovServiceJsrValidatorInitializer);
+            //validation for external reference fields
+            categoriesWithException = validateExternalReference(finalCategoriesList);
+
+        }
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
+                .distinct().collect(Collectors.toList());
+            audit(distinctZeroByteCharacterRecords, null,exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
+        } else if (!categoriesWithException.isEmpty()) {
+            List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
+                .map(categories -> createExceptionRecordPair(categories)).toList();
+            audit(invalidCategoryIds, LOV_COMPOSITE_KEY,exchange,
+                EXTERNAL_REFERENCE_ERROR_MSG);
+        }
+        //find invalid / inactive records and audit
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+        processException(exchange, categoriesList, finalCategoriesList);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        if (categoriesList != null && !categoriesList.isEmpty()) {
-            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
-                applicationContext, lovServiceJsrValidatorInitializer);
-        }
-
-        processException(exchange, categoriesList, finalCategoriesList);
     }
+
+    public <T> void audit(List<Pair<String, Long>> invalidCategoryIds,
+                          String fieldError,Exchange exchange,String message) {
+        if (!invalidCategoryIds.isEmpty()) {
+            setFileStatus(exchange, applicationContext, FAILURE);
+            lovServiceJsrValidatorInitializer.auditJsrExceptions(
+                invalidCategoryIds, fieldError,
+                message, exchange);
+        }
+    }
+
 
     private void processException(Exchange exchange,
                                          List<Categories> categoriesList,
@@ -88,14 +124,27 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()
             .map(categories -> createExceptionRecordPair(categories)).toList();
         if (!invalidCategoryIds.isEmpty()) {
-            lovServiceJsrValidatorInitializer.auditJsrExceptions(
-                invalidCategoryIds,
-                LOV_COMPOSITE_KEY,
-                LOV_COMPOSITE_KEY_ERROR_MSG,
-                exchange
-            );
+            audit(invalidCategoryIds, LOV_COMPOSITE_KEY,exchange,LOV_COMPOSITE_KEY_ERROR_MSG);
         }
+
     }
+
+    private List<Categories> validateExternalReference(List<Categories> finalCategoriesList) {
+        List<Categories> invalidCategories = new LinkedList<>();
+        for (Categories category : finalCategoriesList) {
+            if ((category.getExternalReference() != null & category.getExternalReferenceType() != null)
+                && (
+                ((!category.getExternalReference().isEmpty()
+                && category.getExternalReferenceType().isEmpty()))
+                || (category.getExternalReference().isEmpty()
+                    && !category.getExternalReferenceType().isEmpty())
+                )) {
+                invalidCategories.add(category);
+            }
+        }
+        return invalidCategories;
+    }
+
 
     private Pair<String,Long> createExceptionRecordPair(Categories category) {
         return Pair.of(

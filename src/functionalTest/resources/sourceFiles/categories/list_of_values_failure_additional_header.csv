@@ -1,4 +1,4 @@
-categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active,newHeader
-AdditionalFacilities,,AF-VF,Video Facility,,,,,,,Y
-AdditionalFacilities,,AF-SSC,Same Sex Courtroom,,,,,,,Y
-AdditionalFacilities,,AF-WR,Witness Room,,,,,,,Y
+categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active,external_reference,external_reference_type,newHeader
+AdditionalFacilities,,AF-VF,Video Facility,,,,,,,Y,,,
+AdditionalFacilities,,AF-SSC,Same Sex Courtroom,,,,,,,Y,,,
+AdditionalFacilities,,AF-WR,Witness Room,,,,,,,Y,,,
