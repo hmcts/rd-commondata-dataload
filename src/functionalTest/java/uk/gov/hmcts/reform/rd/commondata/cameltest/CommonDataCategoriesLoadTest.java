@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -335,16 +334,21 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         //Validate Success Result
         validateListOfValuesFile1(jdbcTemplate, listOfValuesSelectData, List.of(
             Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-74")
-                .valueEN("Medical office holder").valueCY("").hintTextEN("").hintTextCY("").parentCategory("caseSubType")
-                .parentKey("PC2").active("Y").externalReference("74").externalReferenceType("MedicalRole").build(),
+                .valueEN("Medical office holder").valueCY("").hintTextEN("").hintTextCY("").parentCategory(
+                    "caseSubType").parentKey("PC2").active("Y").externalReference("74")
+                .externalReferenceType("MedicalRole").build(),
             Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-94")
-                .valueEN("Financial office holder").valueCY("").hintTextEN("").hintTextCY("").parentCategory("caseSubType")
+                .valueEN("Financial office holder").valueCY("").hintTextEN("").hintTextCY("")
+                .parentCategory("caseSubType")
                 .parentKey("PC3").active("Y").externalReference("94").externalReferenceType("FinancialRole").build(),
             Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-84")
-                .valueEN("Judicial office holder").valueCY("").hintTextEN("").hintTextCY("").parentCategory("caseSubType")
-                .parentKey("PC1").active("Y").externalReference("84").externalReferenceType("JudicialRole").build()), 3);
+                .valueEN("Judicial office holder").valueCY("").hintTextEN("").hintTextCY("")
+                .parentCategory("caseSubType")
+                .parentKey("PC1").active("Y").externalReference("84").externalReferenceType("JudicialRole")
+                .build()), 3);
         //Validates Success Audit
-        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME);
 
     }
 
@@ -360,7 +364,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(3, listOfValues.size());
+        assertEquals(0, listOfValues.size());
 
         String externalReferenceErrorMessage = "Both external_reference_type and external_reference_type "
             + "value must be null or both must be not-null";

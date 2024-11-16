@@ -7,6 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProcessor;
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
@@ -39,6 +40,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
@@ -86,22 +91,26 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             categoriesWithException = validateExternalReference(finalCategoriesList);
 
         }
+        //find invalid / inactive records and audit
+        var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
+        processException(exchange, categoriesList, finalCategoriesList);
+
         if (!zeroByteCharacterRecords.isEmpty()) {
             List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
                 .distinct().collect(Collectors.toList());
-            audit(distinctZeroByteCharacterRecords, null,exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
+            audit(distinctZeroByteCharacterRecords, null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         } else if (!categoriesWithException.isEmpty()) {
+            List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
+                .getExistingListFromTable(jdbcTemplate);
             List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
                 .map(categories -> createExceptionRecordPair(categories)).toList();
-            audit(invalidCategoryIds, LOV_COMPOSITE_KEY,exchange,
+            audit(invalidCategoryIds, LOV_COMPOSITE_KEY, exchange,
                 EXTERNAL_REFERENCE_ERROR_MSG);
+            exchange.getMessage().setBody(existingDataFromTablelist);
+        } else {
+            exchange.getMessage().setBody(finalCategoriesList);
         }
-        //find invalid / inactive records and audit
-        var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-        processException(exchange, categoriesList, finalCategoriesList);
-        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
-        exchange.getMessage().setBody(finalCategoriesList);
-
     }
 
     public <T> void audit(List<Pair<String, Long>> invalidCategoryIds,
@@ -201,4 +210,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         validCategories.addAll(deletedCategories);
         return validCategories;
     }
+
+
 }
