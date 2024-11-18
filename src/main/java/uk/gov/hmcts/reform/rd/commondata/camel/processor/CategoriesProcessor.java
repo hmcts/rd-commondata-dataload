@@ -62,14 +62,14 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             : singletonList((Categories) exchange.getIn().getBody());
 
         log.info(" {} Categories Records count before Validation {}::", logComponentName,
-            categoriesList.size()
+                 categoriesList.size()
         );
 
         Multimap<String, Categories> filteredCategories = convertToMultiMap(categoriesList);
         List<Categories> finalCategoriesList = getValidCategories(filteredCategories);
 
         log.info(" {} Categories Records count after Validation {}::", logComponentName,
-            finalCategoriesList.size()
+                 finalCategoriesList.size()
         );
 
         if (categoriesList.size() != finalCategoriesList.size()) {
@@ -133,9 +133,13 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()
             .map(categories -> createExceptionRecordPair(categories)).toList();
         if (!invalidCategoryIds.isEmpty()) {
-            audit(invalidCategoryIds, LOV_COMPOSITE_KEY,exchange,LOV_COMPOSITE_KEY_ERROR_MSG);
+            lovServiceJsrValidatorInitializer.auditJsrExceptions(
+                invalidCategoryIds,
+                LOV_COMPOSITE_KEY,
+                LOV_COMPOSITE_KEY_ERROR_MSG,
+                exchange
+            );
         }
-
     }
 
     private List<Categories> validateExternalReference(List<Categories> finalCategoriesList) {
@@ -210,6 +214,4 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         validCategories.addAll(deletedCategories);
         return validCategories;
     }
-
-
 }
