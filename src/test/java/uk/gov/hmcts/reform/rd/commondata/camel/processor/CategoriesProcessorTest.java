@@ -43,8 +43,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
 @ExtendWith(MockitoExtension.class)
  class CategoriesProcessorTest {
-    @Spy
-    private CategoriesProcessor processor = new CategoriesProcessor();
+
 
     CamelContext camelContext = new DefaultCamelContext();
 
@@ -73,6 +72,9 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
     @Mock
     ConfigurableApplicationContext applicationContext;
+
+    @Spy
+    private CategoriesProcessor processor = new CategoriesProcessor(jdbcTemplate);
 
     @BeforeEach
     void init() {

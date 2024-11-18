@@ -40,10 +40,12 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
+
+    public static final String LOV_EXTERNAL_REFERENCE = "external_reference,external_reference_type";
+
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
     public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference_type and "
@@ -51,6 +53,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
     public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
         "Zero byte characters identified - check source file";
+
+    public CategoriesProcessor(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -104,7 +110,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                 .getExistingListFromTable(jdbcTemplate);
             List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
                 .map(this::createExceptionRecordPair).toList();
-            audit(invalidCategoryIds, LOV_COMPOSITE_KEY, exchange,
+            audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,
                 EXTERNAL_REFERENCE_ERROR_MSG);
             exchange.getMessage().setBody(existingDataFromTablelist);
         } else {
