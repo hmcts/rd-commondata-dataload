@@ -263,8 +263,15 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertNotNull(actualLovServiceList);
-        Assertions.assertEquals(2, actualLovServiceList.size());
-
+        Assertions.assertEquals(categories.size(), actualLovServiceList.size());
+        Assertions.assertEquals(categories.get(0).getExternalReference(),
+            ((Categories) actualLovServiceList.get(0)).getExternalReference());
+        Assertions.assertEquals(categories.get(0).getExternalReferenceType(),
+            ((Categories) actualLovServiceList.get(0)).getExternalReferenceType());
+        Assertions.assertEquals(categories.get(1).getExternalReference(),
+            ((Categories) actualLovServiceList.get(1)).getExternalReference());
+        Assertions.assertEquals(categories.get(1).getExternalReferenceType(),
+            ((Categories) actualLovServiceList.get(1)).getExternalReferenceType());
     }
 
     private List<Map<String, Object>> existingCategoriesFromDatabase(List<Categories> categories) {
