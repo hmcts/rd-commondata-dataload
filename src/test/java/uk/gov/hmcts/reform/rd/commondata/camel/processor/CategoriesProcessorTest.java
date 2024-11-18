@@ -322,7 +322,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .categoryKey("caseSubType")
                 .serviceId("BFA1")
                 .key("BFA1-001AD")
-                .valueEN("Refusal of application under the EEA regulations \u200B")
+                .valueEN("Refusal of application under the EEA regulations ")
                 .parentCategory("caseType")
                 .parentKey("BFA1-001")
                 .active("Y")
@@ -332,7 +332,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .serviceId("BFA1")
                 .key("BFA1-PAD")
                 .valueEN("ADVANCE PAYMENT ")
-                .parentCategory("caseType\u200B")
+                .parentCategory("caseType")
                 .parentKey("BFA1-002")
                 .active("Y")
                 .build(),
