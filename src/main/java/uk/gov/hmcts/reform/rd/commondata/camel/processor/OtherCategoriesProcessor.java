@@ -68,7 +68,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
 
         if (!zeroByteCharacterRecords.isEmpty()) {
             List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
-                .distinct().collect(Collectors.toList());
+                .distinct().toList();
             audit(distinctZeroByteCharacterRecords,null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         }
 
@@ -87,7 +87,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
 
     }
 
-    public <T> void audit(List<Pair<String, Long>> invalidCategoryIds,String fieldInError,
+    public void audit(List<Pair<String, Long>> invalidCategoryIds,String fieldInError,
                           Exchange exchange,String message) {
         if (!invalidCategoryIds.isEmpty()) {
             setFileStatus(exchange, applicationContext, FAILURE);

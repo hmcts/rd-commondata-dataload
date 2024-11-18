@@ -101,7 +101,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
         if (!zeroByteCharacterRecords.isEmpty()) {
             List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
-                .distinct().collect(Collectors.toList());
+                .distinct().toList();
             audit(distinctZeroByteCharacterRecords, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         }
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
@@ -109,7 +109,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
     }
 
-    public <T> void audit(List<Pair<String, Long>> invalidCategoryIds, Exchange exchange,
+    public void audit(List<Pair<String, Long>> invalidCategoryIds, Exchange exchange,
                           String message) {
         if (!invalidCategoryIds.isEmpty()) {
             setFileStatus(exchange, applicationContext, FAILURE);
