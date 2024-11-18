@@ -97,14 +97,13 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         processException(exchange, categoriesList, finalCategoriesList);
 
         if (!zeroByteCharacterRecords.isEmpty()) {
-            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
-                .distinct().collect(Collectors.toList());
+            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream().toList();
             audit(distinctZeroByteCharacterRecords, null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         } else if (!categoriesWithException.isEmpty()) {
             List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
                 .getExistingListFromTable(jdbcTemplate);
             List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
-                .map(categories -> createExceptionRecordPair(categories)).toList();
+                .map(this::createExceptionRecordPair).toList();
             audit(invalidCategoryIds, LOV_COMPOSITE_KEY, exchange,
                 EXTERNAL_REFERENCE_ERROR_MSG);
             exchange.getMessage().setBody(existingDataFromTablelist);
@@ -113,7 +112,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
     }
 
-    public <T> void audit(List<Pair<String, Long>> invalidCategoryIds,
+    public void audit(List<Pair<String, Long>> invalidCategoryIds,
                           String fieldError,Exchange exchange,String message) {
         if (!invalidCategoryIds.isEmpty()) {
             setFileStatus(exchange, applicationContext, FAILURE);
@@ -145,10 +144,10 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     private List<Categories> validateExternalReference(List<Categories> finalCategoriesList) {
         List<Categories> invalidCategories = new LinkedList<>();
         for (Categories category : finalCategoriesList) {
-            if ((category.getExternalReference() != null & category.getExternalReferenceType() != null)
+            if ((category.getExternalReference() != null && category.getExternalReferenceType() != null)
                 && (
-                ((!category.getExternalReference().isEmpty()
-                && category.getExternalReferenceType().isEmpty()))
+                (!category.getExternalReference().isEmpty()
+                && category.getExternalReferenceType().isEmpty())
                 || (category.getExternalReference().isEmpty()
                     && !category.getExternalReferenceType().isEmpty())
                 )) {
