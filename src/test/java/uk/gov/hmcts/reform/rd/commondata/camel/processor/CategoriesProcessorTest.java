@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -38,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -231,7 +229,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         var lovServiceList = new ArrayList<Categories>();
         List<Categories> categories = getLovServicesWithExternalReferenceInvalid();
         lovServiceList.addAll(categories);
-        DataQualityCheckConfiguration dataQualityCheckConfiguration = mock(DataQualityCheckConfiguration.class);
         String query = "Select * from list_of_values";
         exchange.getIn().setBody(lovServiceList);
         when(((ConfigurableApplicationContext)
@@ -253,10 +250,27 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 exchange);
     }
 
+    @Test
+    @DisplayName("Test success external reference values in record")
+    void testListOfValuesExternal_Reference_Success() {
+        var lovServiceList = new ArrayList<Categories>();
+        List<Categories> categories = getLovServicesWithExternalReference();
+        lovServiceList.addAll(categories);
+
+        exchange.getIn().setBody(lovServiceList);
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertNotNull(actualLovServiceList);
+        Assertions.assertEquals(2, actualLovServiceList.size());
+
+    }
+
     private List<Map<String, Object>> existingCategoriesFromDatabase(List<Categories> categories) {
 
         Map<String, Object> existingCategories = new HashMap<>();
-        List<Map<String, Object>>existingCategoriesList = new ArrayList<>();
+        List<Map<String, Object>> existingCategoriesList = new ArrayList<>();
         for (Categories category : categories) {
             existingCategories.put("category",category.getCategoryKey());
             existingCategories.put("serviceId",category.getServiceId());
