@@ -96,7 +96,8 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         processException(exchange, categoriesList, finalCategoriesList);
 
         if (!zeroByteCharacterRecords.isEmpty()) {
-            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream().distinct().toList();
+            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
+                .distinct().toList();
             audit(distinctZeroByteCharacterRecords, null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         } else if (!categoriesWithException.isEmpty()) {
             List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
