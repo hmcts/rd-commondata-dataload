@@ -107,7 +107,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         } else if (!categoriesWithException.isEmpty()) {
             List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
                 .map(this::createExceptionRecordPair).toList();
-            audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,EXTERNAL_REFERENCE_ERROR_MSG );
+            audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,EXTERNAL_REFERENCE_ERROR_MSG);
             List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
                 .getExistingListFromTable(jdbcTemplate);
             exchange.getMessage().setBody(existingDataFromTablelist);
