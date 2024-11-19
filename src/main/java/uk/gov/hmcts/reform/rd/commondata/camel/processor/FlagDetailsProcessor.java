@@ -92,9 +92,8 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
         if (validatedFlagDetails != null && !validatedFlagDetails.isEmpty()) {
             //validation to check if there are any zerobyte characters
-            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(exchange,
-             singletonList(validatedFlagDetails),
-            applicationContext, flagDetailsJsrValidatorInitializer);
+            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
+             singletonList(validatedFlagDetails),flagDetailsJsrValidatorInitializer);
 
         }
 

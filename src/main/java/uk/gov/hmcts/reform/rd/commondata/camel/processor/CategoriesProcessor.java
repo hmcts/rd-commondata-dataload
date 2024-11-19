@@ -90,8 +90,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         if (finalCategoriesList != null && !finalCategoriesList.isEmpty()) {
             //validation to check if there are any zerobyte characters
             zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
-                exchange, singletonList(finalCategoriesList),
-                    applicationContext, lovServiceJsrValidatorInitializer);
+                singletonList(finalCategoriesList), lovServiceJsrValidatorInitializer);
             //validation for external reference fields
             categoriesWithException = validateExternalReference(finalCategoriesList);
 
@@ -106,12 +105,11 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
                 .distinct().toList();
             audit(distinctZeroByteCharacterRecords, null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         } else if (!categoriesWithException.isEmpty()) {
-            List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
-                .getExistingListFromTable(jdbcTemplate);
             List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
                 .map(this::createExceptionRecordPair).toList();
-            audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,
-                EXTERNAL_REFERENCE_ERROR_MSG);
+            audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,EXTERNAL_REFERENCE_ERROR_MSG );
+            List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
+                .getExistingListFromTable(jdbcTemplate);
             exchange.getMessage().setBody(existingDataFromTablelist);
         } else {
             exchange.getMessage().setBody(finalCategoriesList);
