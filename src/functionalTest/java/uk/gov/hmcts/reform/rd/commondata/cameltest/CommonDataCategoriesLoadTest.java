@@ -162,7 +162,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 4);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 3);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
@@ -424,7 +424,6 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         //Validates audit
         var result = jdbcTemplate.queryForList(auditSchedulerQuery);
-
         assertEquals(5, result.size());
         Optional<Map<String, Object>> auditEntry =
             result.stream().filter(audit -> audit.containsValue(UPLOAD_LIST_OF_VALUES_FILE_NAME)).findFirst();
