@@ -20,7 +20,6 @@ route:
     processor-class: categoriesProcessor
     mapper-class: categoriesMapper
     csv-binder-object: Categories
-    #csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
     csv-headers-expected: categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active,external_reference,external_reference_type
     header-validation-enabled: true
 

@@ -58,7 +58,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
     public static final String LOV_EXTERNAL_REFERENCE = "external_reference,external_reference_type";
 
-    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference_type and "
+    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference and "
         + "external_reference_type value must be null or both must be not-null";
 
     @Spy
@@ -458,7 +458,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .categoryKey("caseSubType")
                 .serviceId("BFA1")
                 .key("BFA1-001AD")
-                .valueEN("Refusal of application under the EEA regulations ")
+                .valueEN("Refusal of application under the EEA regulations\u200B")
                 .parentCategory("caseType")
                 .parentKey("BFA1-001")
                 .active("Y")

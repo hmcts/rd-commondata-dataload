@@ -185,7 +185,7 @@ public abstract class CommonDataFunctionalBaseTest {
         assertEquals(exceptedResult, listOfValues);
     }
 
-    protected void validateListOfValuesFile1(JdbcTemplate jdbcTemplate, String serviceSql,
+    protected void validateListOfValuesFileWithExternalReference(JdbcTemplate jdbcTemplate, String serviceSql,
                                             List<Categories> exceptedResult, int size) {
         RowMapper<Categories> rowMapper = (rs, rowNum) -> {
             Categories categories = new Categories();

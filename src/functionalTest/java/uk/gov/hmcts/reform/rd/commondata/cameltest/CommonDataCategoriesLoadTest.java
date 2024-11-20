@@ -162,7 +162,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
             UPLOAD_LIST_OF_VALUES_FILE_NAME,
             "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
         );
-        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 3);
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 4);
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
@@ -332,7 +332,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
         assertEquals(3, listOfValues.size());
         //Validate Success Result
-        validateListOfValuesFile1(jdbcTemplate, listOfValuesSelectData, List.of(
+        validateListOfValuesFileWithExternalReference(jdbcTemplate, listOfValuesSelectData, List.of(
             Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-74")
                 .valueEN("Medical office holder").valueCY("").hintTextEN("").hintTextCY("").parentCategory(
                     "caseSubType").parentKey("PC2").active("Y").externalReference("74")
@@ -366,7 +366,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
         assertEquals(0, listOfValues.size());
 
-        String externalReferenceErrorMessage = "Both external_reference_type and external_reference_type "
+        String externalReferenceErrorMessage = "Both external_reference and external_reference_type "
             + "value must be null or both must be not-null";
 
         Pair<String, String> pair = new Pair<>(

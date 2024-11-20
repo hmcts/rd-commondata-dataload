@@ -1,3 +1,3 @@
 CategoryKey,ServiceID,Key,Value_EN,Value_CY,Hinttext_EN,Hinttext_CY,Lov_Order,ParentCategory,ParentKey,Active,External_Reference,External_Reference_Type
-caseSubType,BBA3,BBA3-001AD,ADVANCE PAYMENT new,,,,,caseType,BBA3-001,D,,,
-caseSubType,BBA3,BBA3-001AD,ADVANCE PAYMENT scenario2,,,,,caseType,BBA3-001,Y,,,
+caseSubType,BBA3,BBA3-001AD,ADVANCE PAYMENT new,,,,,caseType,BBA3-001,D,,
+caseSubType,BBA3,BBA3-001AD,ADVANCE PAYMENT scenario2,,,,,caseType,BBA3-001,Y,,

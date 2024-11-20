@@ -9,7 +9,7 @@ create table flag_details(
 	constraint id_unique unique (id)
 );
 
-INSERT INTO dbcommondata.flag_details (id,flag_code,value_en,value_cy,category_id) VALUES
+INSERT INTO public.flag_details (id,flag_code,value_en,value_cy,category_id) VALUES
 	 (1,'CF0001','Case','',0),
 	 (2,'PF0001','Party','',0),
 	 (3,'RA0001','Reasonable adjustment','',2),

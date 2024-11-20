@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfigura
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
@@ -48,7 +49,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
 
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
-    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference_type and "
+    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference and "
         + "external_reference_type value must be null or both must be not-null";
 
     public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
@@ -104,12 +105,14 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
                 .distinct().toList();
             audit(distinctZeroByteCharacterRecords, null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
-        } else if (!categoriesWithException.isEmpty()) {
+        }
+
+        if (!categoriesWithException.isEmpty()) {
             List<Pair<String, Long>> invalidCategoryIds = categoriesWithException.stream()
                 .map(this::createExceptionRecordPair).toList();
             audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,EXTERNAL_REFERENCE_ERROR_MSG);
-            List<Categories> existingDataFromTablelist = dataQualityCheckConfiguration
-                .getExistingListFromTable(jdbcTemplate);
+            List<Categories> existingDataFromTablelist =
+                getExistingListFromTable(jdbcTemplate);
             exchange.getMessage().setBody(existingDataFromTablelist);
         } else {
             exchange.getMessage().setBody(finalCategoriesList);
@@ -216,5 +219,37 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         }
         validCategories.addAll(deletedCategories);
         return validCategories;
+    }
+
+    public List<Categories> getExistingListFromTable(JdbcTemplate jdbcTemplate) {
+        String query = "Select * from list_of_values";
+        var listOfValues = jdbcTemplate.queryForList(query);
+        List<Categories> listOfExistingCategoriesInTable = new ArrayList<>();
+        if (listOfValues != null) {
+            for (Map<String, Object> category : listOfValues) {
+                Categories categories = new Categories();
+                categories.setActive(category.get("active") != null ? (String) category.get("active") : "");
+                categories.setCategoryKey(
+                    category.get("categorykey") != null ? (String) category.get("categorykey") : "");
+                categories.setHintTextEN(
+                    category.get("hinttext_en") != null ? (String) category.get("hinttext_en") : "");
+                categories.setHintTextCY(
+                    category.get("hinttext_cy") != null ? (String) category.get("hinttext_cy") : "");
+                categories.setKey(category.get("key") != null ? (String) category.get("key") : "");
+                categories.setValueCY(category.get("value_cy") != null ? (String) category.get("value_cy") : "");
+                categories.setValueEN(category.get("value_en") != null ? (String) category.get("value_en") : "");
+                categories.setLovOrder(category.get("lov_order") != null ? (String) category.get("lov_order") : null);
+                categories.setServiceId(category.get("serviceid") != null ? (String) category.get("serviceid") : "");
+                categories.setParentCategory(category.get("parentcategory") != null
+                    ? (String) category.get("parentcategory") : "");
+                categories.setParentKey(category.get("parentkey") != null ? (String) category.get("parentkey") : "");
+                categories.setExternalReferenceType(category.get("external_reference_type") != null
+                    ? (String) category.get("external_reference_type") : "");
+                categories.setExternalReference(category.get("external_reference") != null
+                    ? (String) category.get("external_reference") : "");
+                listOfExistingCategoriesInTable.add(categories);
+            }
+        }
+        return listOfExistingCategoriesInTable;
     }
 }
