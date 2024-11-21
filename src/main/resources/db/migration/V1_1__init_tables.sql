@@ -1777,7 +1777,7 @@ INSERT INTO entity_role_codes (categorykey,serviceid,"key",value_en,value_cy,hin
  Active varchar(1)
  );
 
- INSERT INTO public.panel_member_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
+ INSERT INTO dbcommondata.panel_member_type (categorykey,serviceid,"key",value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active) VALUES
  	 ('PanelMemberType','BBA3','BBA3-DQPM','Disability Qualified Panel Member','','','',NULL,'','','Y'),
  	 ('PanelMemberType','BBA3','BBA3-MQPM1','Medically Qualified Panel Member','','','',NULL,'','','Y'),
  	 ('PanelMemberType','BBA3','BBA3-MQPM2','Medically Qualified Panel Member','','','',NULL,'','','Y'),

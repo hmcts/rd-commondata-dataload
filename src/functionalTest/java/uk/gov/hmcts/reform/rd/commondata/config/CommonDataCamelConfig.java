@@ -6,6 +6,7 @@ import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -55,6 +56,9 @@ import javax.sql.DataSource;
 @Configuration
 public class CommonDataCamelConfig {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Bean
     CommonDataBlobSupport integrationTestSupport() {
         return new CommonDataBlobSupport();
@@ -83,7 +87,7 @@ public class CommonDataCamelConfig {
 
     @Bean
     public CategoriesProcessor listOfValuesProcessor() {
-        return new CategoriesProcessor();
+        return new CategoriesProcessor(jdbcTemplate);
     }
 
     @Bean
