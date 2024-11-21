@@ -61,10 +61,4 @@ public class Categories extends CommonCsvField implements Serializable {
     @DataField(pos = 11, columnName = "active")
     @NotEmpty
     private String active;
-
-    @DataField(pos = 12, columnName = "external_reference")
-    private String externalReference;
-
-    @DataField(pos = 13, columnName = "external_reference_type")
-    private String externalReferenceType;
 }

@@ -23,7 +23,6 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.nonNull;
-import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
@@ -47,8 +46,6 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
     @Value("${logging-component-name}")
     String logComponentName;
 
-    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
-        "Zero byte characters identified - check source file";
 
     @Override
     @SuppressWarnings("unchecked")
@@ -88,37 +85,16 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        List<Pair<String, Long>> zeroByteCharacterRecords = new ArrayList<>();
-
-        if (validatedFlagDetails != null && !validatedFlagDetails.isEmpty()) {
-            //validation to check if there are any zerobyte characters
-            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
-             singletonList(validatedFlagDetails),flagDetailsJsrValidatorInitializer);
-
+        if  (flagDetailsList != null && !flagDetailsList.isEmpty()) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagDetailsList),
+                applicationContext, flagDetailsJsrValidatorInitializer);
         }
 
-        if (!zeroByteCharacterRecords.isEmpty()) {
-            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
-                .distinct().toList();
-            audit(distinctZeroByteCharacterRecords, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
-        }
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(filteredFlagDetails);
 
-    }
-
-    public void audit(List<Pair<String, Long>> invalidCategoryIds, Exchange exchange,
-                          String message) {
-        if (!invalidCategoryIds.isEmpty()) {
-            setFileStatus(exchange, applicationContext, FAILURE);
-            flagDetailsJsrValidatorInitializer.auditJsrExceptions(
-                invalidCategoryIds, null,
-                message, exchange);
-        }
-
 
     }
-
 
     public List<FlagDetails> removeExpiredRecords(List<FlagDetails> flagDetailsList,
                                                   Exchange exchange) {
@@ -169,11 +145,12 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                 expiredDetails.getFlagCode(),
                 expiredDetails.getRowId()
             )));
-            flagDetailsJsrValidatorInitializer.auditJsrExceptions(expiredDetailsList, "",
-                EXPIRED_DATE_ERROR_MSG, exchange
-            );
-            setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
 
+            flagDetailsJsrValidatorInitializer.auditJsrExceptions(expiredDetailsList, "",
+                                                                  EXPIRED_DATE_ERROR_MSG, exchange
+            );
+
+            setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
     }
 

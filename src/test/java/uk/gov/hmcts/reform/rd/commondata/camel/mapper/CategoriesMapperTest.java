@@ -34,8 +34,6 @@ class CategoriesMapperTest {
             .parentCategory("TEST002")
             .parentKey("TEST002")
             .active("Y")
-            .externalReference(null)
-            .externalReferenceType(null)
             .build();
         var expected = new HashMap<String, Object>();
         expected.put("categoryKey", trim(categories.getCategoryKey()));
@@ -49,11 +47,10 @@ class CategoriesMapperTest {
         expected.put("parentcategory", trim(categories.getParentCategory()));
         expected.put("parentkey", trim(categories.getParentKey()));
         expected.put("active", trim(categories.getActive()));
-        expected.put("external_reference", trim(categories.getExternalReference()));
-        expected.put("external_reference_type", trim(categories.getExternalReferenceType()));
+
         Map<String, Object> actual = listOfValuesMapper.getMap(categories);
         verify(listOfValuesMapper, times(1)).getMap(categories);
-        Assertions.assertThat(actual).hasSize(13).isEqualTo(expected);
+        Assertions.assertThat(actual).hasSize(11).isEqualTo(expected);
     }
 
     @Test
@@ -83,10 +80,9 @@ class CategoriesMapperTest {
         expected.put("parentcategory", trim(categories.getParentCategory()));
         expected.put("parentkey", trim(categories.getParentKey()));
         expected.put("active", trim(categories.getActive()));
-        expected.put("external_reference", trim(categories.getExternalReference()));
-        expected.put("external_reference_type", trim(categories.getExternalReferenceType()));
+
         Map<String, Object> actual = listOfValuesMapper.getMap(categories);
         verify(listOfValuesMapper, times(1)).getMap(categories);
-        Assertions.assertThat(actual).hasSize(13).isEqualTo(expected);
+        Assertions.assertThat(actual).hasSize(11).isEqualTo(expected);
     }
 }
