@@ -47,11 +47,10 @@ public class OtherCategoriesMapperTest {
         expected.put("parentcategory", trim(otherCategories.getParentCategory()));
         expected.put("parentkey", trim(otherCategories.getParentKey()));
         expected.put("active", trim(otherCategories.getActive()));
-        expected.put("external_reference", trim(otherCategories.getExternalReference()));
-        expected.put("external_reference_type", trim(otherCategories.getExternalReferenceType()));
+
         Map<String, Object> actual = listOfValuesMapper.getMap(otherCategories);
         verify(listOfValuesMapper, times(1)).getMap(otherCategories);
-        Assertions.assertThat(actual).hasSize(13).isEqualTo(expected);
+        Assertions.assertThat(actual).hasSize(11).isEqualTo(expected);
     }
 
     @Test
@@ -81,11 +80,10 @@ public class OtherCategoriesMapperTest {
         expected.put("parentcategory", trim(otherCategories.getParentCategory()));
         expected.put("parentkey", trim(otherCategories.getParentKey()));
         expected.put("active", trim(otherCategories.getActive()));
-        expected.put("external_reference", trim(otherCategories.getExternalReference()));
-        expected.put("external_reference_type", trim(otherCategories.getExternalReferenceType()));
+
         Map<String, Object> actual = listOfValuesMapper.getMap(otherCategories);
         verify(listOfValuesMapper, times(1)).getMap(otherCategories);
-        Assertions.assertThat(actual).hasSize(13).isEqualTo(expected);
+        Assertions.assertThat(actual).hasSize(11).isEqualTo(expected);
     }
 
 }

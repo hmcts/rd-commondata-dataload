@@ -18,8 +18,6 @@ public class OtherCategoriesTest {
             .parentCategory("TEST001")
             .parentKey("TEST001")
             .active("Y")
-            .externalReference(null)
-            .externalReferenceType(null)
             .build();
         Assertions.assertEquals("TEST001", otherCategories.getCategoryKey());
         Assertions.assertEquals("XXXX", otherCategories.getServiceId());
@@ -48,8 +46,7 @@ public class OtherCategoriesTest {
             .toString();
         Assertions.assertEquals(categoriesBuilderString, "OtherCategories.OtherCategoriesBuilder("
             + "categoryKey=TEST002, serviceId=XXXX, key=TEST002, valueEN=TEST002, valueCY=TEST002, hintTextEN=TEST002"
-            + ", hintTextCY=TEST002, lovOrder=TEST002, parentCategory=TEST002, parentKey=TEST002, active=Y,"
-            + " externalReference=null, externalReferenceType=null)");
+            + ", hintTextCY=TEST002, lovOrder=TEST002, parentCategory=TEST002, parentKey=TEST002, active=Y)");
     }
 
 }

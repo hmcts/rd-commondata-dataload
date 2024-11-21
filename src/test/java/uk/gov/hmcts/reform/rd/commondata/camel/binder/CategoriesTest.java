@@ -19,8 +19,6 @@ class CategoriesTest {
             .parentCategory("TEST001")
             .parentKey("TEST001")
             .active("Y")
-            .externalReference(null)
-            .externalReferenceType(null)
             .build();
         Assertions.assertEquals("TEST001", categories.getCategoryKey());
         Assertions.assertEquals("XXXX", categories.getServiceId());
@@ -48,9 +46,8 @@ class CategoriesTest {
             .active("Y")
             .toString();
         Assertions.assertEquals(categoriesBuilderString, "Categories.CategoriesBuilder("
-            + "categoryKey=TEST002, serviceId=XXXX, key=TEST002, valueEN=TEST002, valueCY=TEST002,"
-            + " hintTextEN=TEST002, hintTextCY=TEST002, lovOrder=TEST002, parentCategory=TEST002, parentKey=TEST002,"
-            + " active=Y, externalReference=null, externalReferenceType=null)");
+            + "categoryKey=TEST002, serviceId=XXXX, key=TEST002, valueEN=TEST002, valueCY=TEST002, hintTextEN=TEST002"
+            + ", hintTextCY=TEST002, lovOrder=TEST002, parentCategory=TEST002, parentKey=TEST002, active=Y)");
     }
 
 }

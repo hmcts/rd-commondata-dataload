@@ -16,7 +16,6 @@ public class CategoriesMapper implements IMapper {
         return CommonMapper.getMap(categories.getCategoryKey(), categories.getServiceId(), categories.getKey(),
             categories.getValueEN(), categories.getValueCY(), categories.getHintTextEN(), categories.getHintTextCY(),
             categories.getParentCategory(), categories.getParentKey(), categories.getActive(),
-            categories.getExternalReference(),
-                                   categories.getExternalReferenceType(), categories.getLovOrder());
+            categories.getLovOrder());
     }
 }
