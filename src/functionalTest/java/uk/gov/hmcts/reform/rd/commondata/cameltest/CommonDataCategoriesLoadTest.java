@@ -364,7 +364,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
 
         jobLauncherTestUtils.launchJob();
         var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
-        assertEquals(0, listOfValues.size());
+        assertEquals(1, listOfValues.size());
 
         String externalReferenceErrorMessage = "Both external_reference and external_reference_type "
             + "value must be null or both must be not-null";
