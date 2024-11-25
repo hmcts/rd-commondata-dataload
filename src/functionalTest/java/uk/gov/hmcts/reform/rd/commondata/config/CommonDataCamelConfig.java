@@ -6,7 +6,6 @@ import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.spring.spi.SpringTransactionPolicy;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +37,6 @@ import uk.gov.hmcts.reform.rd.commondata.camel.listener.JobResultListener;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.CategoriesMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagDetailsMapper;
 import uk.gov.hmcts.reform.rd.commondata.camel.mapper.FlagServiceMapper;
-import uk.gov.hmcts.reform.rd.commondata.camel.processor.CategoriesProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagDetailsProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.processor.FlagServiceProcessor;
 import uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask;
@@ -55,9 +53,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class CommonDataCamelConfig {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Bean
     CommonDataBlobSupport integrationTestSupport() {
@@ -83,11 +78,6 @@ public class CommonDataCamelConfig {
     @Bean
     public FlagServiceProcessor flagServiceProcessor() {
         return new FlagServiceProcessor();
-    }
-
-    @Bean
-    public CategoriesProcessor listOfValuesProcessor() {
-        return new CategoriesProcessor(jdbcTemplate);
     }
 
     @Bean
