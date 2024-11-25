@@ -43,7 +43,8 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
 
 @ExtendWith(MockitoExtension.class)
  class CategoriesProcessorTest {
-
+    @Spy
+    private CategoriesProcessor processor = new CategoriesProcessor();
 
     CamelContext camelContext = new DefaultCamelContext();
 
@@ -78,8 +79,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     @Mock
     ConfigurableApplicationContext applicationContext;
 
-    @Spy
-    private CategoriesProcessor processor = new CategoriesProcessor();
 
     @BeforeEach
     void init() {
@@ -89,7 +88,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
         setField(lovServiceJsrValidatorInitializer, "validator", validator);
         setField(lovServiceJsrValidatorInitializer, "camelContext", camelContext);
-        setField(processor, "jdbcTemplate", jdbcTemplate);
         setField(lovServiceJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(lovServiceJsrValidatorInitializer, "platformTransactionManager",
                  platformTransactionManager
