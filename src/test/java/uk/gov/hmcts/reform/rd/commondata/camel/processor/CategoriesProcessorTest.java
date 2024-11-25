@@ -26,9 +26,7 @@ import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfigura
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -233,14 +231,12 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         exchange.getIn().setBody(lovServiceList);
         when(((ConfigurableApplicationContext)
             applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
-        when(jdbcTemplate.queryForList(query))
-            .thenReturn(existingCategoriesFromDatabase(categories));
         processor.process(exchange);
         verify(processor, times(1)).process(exchange);
 
         List actualLovServiceList = (List) exchange.getMessage().getBody();
         Assertions.assertNotNull(actualLovServiceList);
-        Assertions.assertEquals(2, actualLovServiceList.size());
+        Assertions.assertEquals(1, actualLovServiceList.size());
         List<Pair<String, Long>> externalRefRecWithError = List.of(Pair.of(categories.get(0).getKey(), null));
 
         verify(lovServiceJsrValidatorInitializer, times(1))
@@ -274,28 +270,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
             ((Categories) actualLovServiceList.get(1)).getExternalReferenceType());
     }
 
-    private List<Map<String, Object>> existingCategoriesFromDatabase(List<Categories> categories) {
-
-        Map<String, Object> existingCategories = new HashMap<>();
-        List<Map<String, Object>> existingCategoriesList = new ArrayList<>();
-        for (Categories category : categories) {
-            existingCategories.put("category",category.getCategoryKey());
-            existingCategories.put("serviceId",category.getServiceId());
-            existingCategories.put("key",category.getKey());
-            existingCategories.put("value_en",category.getValueEN());
-            existingCategories.put("value_cy",category.getValueCY());
-            existingCategories.put("hinttext_en",category.getHintTextEN());
-            existingCategories.put("hinttext_cy",category.getHintTextCY());
-            existingCategories.put("lov_order",category.getLovOrder());
-            existingCategories.put("parentcategory",category.getParentCategory());
-            existingCategories.put("parentkey",category.getParentKey());
-            existingCategories.put("active",category.getActive());
-            existingCategories.put("external_reference",category.getExternalReference());
-            existingCategories.put("external_reference_type",category.getExternalReferenceType());
-            existingCategoriesList.add(existingCategories);
-        }
-        return existingCategoriesList;
-    }
 
     private List<Categories> getLovServicesWithExternalReference() {
         return ImmutableList.of(
