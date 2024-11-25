@@ -40,7 +40,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
-    private JdbcTemplate jdbcTemplate;
 
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
 
@@ -54,9 +53,6 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
         "Zero byte characters identified - check source file";
 
-    public CategoriesProcessor(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @SuppressWarnings("unchecked")
     @Override
