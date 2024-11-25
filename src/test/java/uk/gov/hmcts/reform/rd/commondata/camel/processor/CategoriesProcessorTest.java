@@ -79,7 +79,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     ConfigurableApplicationContext applicationContext;
 
     @Spy
-    private CategoriesProcessor processor = new CategoriesProcessor(jdbcTemplate);
+    private CategoriesProcessor processor = new CategoriesProcessor();
 
     @BeforeEach
     void init() {
