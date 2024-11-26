@@ -139,8 +139,6 @@ jacocoTestReport {
 }
 
 pitest {
-  pitestVersion = versions.pitest
-  junit5PluginVersion = versions.junitPitest
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
   testSourceSets = [sourceSets.test, sourceSets.functionalTest]
   excludedClasses = [
