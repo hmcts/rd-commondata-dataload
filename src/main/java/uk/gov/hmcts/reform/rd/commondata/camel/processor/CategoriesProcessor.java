@@ -105,7 +105,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     public void audit(List<Pair<String, Long>> invalidCategoryIds,
                           String fieldError,Exchange exchange,String message) {
         if (!invalidCategoryIds.isEmpty()) {
-            setFileStatus(exchange, applicationContext, FAILURE);
+            setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds, fieldError,
                 message, exchange);
