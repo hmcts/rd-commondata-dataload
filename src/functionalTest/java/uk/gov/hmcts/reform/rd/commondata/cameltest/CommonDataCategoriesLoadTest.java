@@ -313,7 +313,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
-            "Failure",
+            "PartialSuccess",
             UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
     }
@@ -377,7 +377,7 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
-            "Failure",
+            "PartialSuccess",
             UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
     }
