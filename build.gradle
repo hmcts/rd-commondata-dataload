@@ -226,11 +226,11 @@ def versions = [
   flyway              : '9.19.4',
   camel               : '4.8.0',
   gradlePitest        : '1.5.1',
-  pitest              : '1.16.1',
+  pitest              : '1.17.0',
   jackson             : '2.17.2',
   log4j               : '2.23.1',
   logback             : '1.5.11',
-  bouncycastle        : '1.78.1'
+  bouncycastle        : '1.79'
 ]
 
 ext.libraries = [
