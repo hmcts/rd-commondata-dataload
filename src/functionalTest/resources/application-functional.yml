@@ -56,7 +56,7 @@ route:
       sql:insert into flag_details (id,flag_code,value_en,value_cy,category_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
       values(:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?dataSource=#dataSource
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/FlagDetails-test.csv?credentials=#credsreg&operation=uploadBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=FlagDetails-test.csv
     processor-class: flagDetailsProcessor
     mapper-class: flagDetailsMapper
     csv-binder-object: FlagDetails
@@ -72,7 +72,7 @@ route:
       sql:insert into flag_service (id,service_id,hearing_relevant,request_reason,flag_code,default_status,available_externally)
       values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code,:#default_status,:#available_externally)?dataSource=#dataSource
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/FlagService-test.csv?credentials=#credsreg&operation=uploadBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=FlagService-test.csv
     processor-class: flagServiceProcessor
     mapper-class: flagServiceMapper
     csv-binder-object: FlagService
@@ -91,7 +91,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?dataSource=#dataSource
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/ListOfValues-test.csv?credentials=#credsreg&operation=uploadBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=ListOfValues-test.csv
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
@@ -110,7 +110,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?dataSource=#dataSource
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons-test.csv?credentials=#credsreg&operation=uploadBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=CaseLinkingReasons-test.csv
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
@@ -129,7 +129,7 @@ route:
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
       active = :#active?dataSource=#dataSource
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/OtherCategories-test.csv?credentials=#credsreg&operation=uploadBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=OtherCategories-test.csv
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues

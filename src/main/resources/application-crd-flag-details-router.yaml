@@ -14,7 +14,7 @@ route:
       values (:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?dataSource=#dataSource
 
     blob-path:
-      azure-storage-blob://${azure.storage.account-name}/rd-common-data/FlagDetails.csv?credentials=#credsreg&operation=uploadBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=FlagDetails.csv
     processor-class: flagDetailsProcessor
     mapper-class: flagDetailsMapper
     csv-binder-object: FlagDetails
