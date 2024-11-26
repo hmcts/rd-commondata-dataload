@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -35,8 +36,12 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
 
     public static final String EXPIRED_DATE_ERROR_MSG = "Record is expired";
 
+
     @Autowired
     JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer;
+
+    @Autowired
+    DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
     @Value("${logging-component-name}")
     String logComponentName;
@@ -46,17 +51,17 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
     @SuppressWarnings("unchecked")
     public void process(Exchange exchange) throws Exception {
 
-        var flagDetails = exchange.getIn().getBody() instanceof List
+        var flagDetailsList = exchange.getIn().getBody() instanceof List
             ? (List<FlagDetails>) exchange.getIn().getBody()
             : singletonList((FlagDetails) exchange.getIn().getBody());
 
         log.info("{}:: Number of Records before validation {}::",
-                 logComponentName, flagDetails.size()
+                 logComponentName, flagDetailsList.size()
         );
 
         var validatedFlagDetails = validate(
             flagDetailsJsrValidatorInitializer,
-            flagDetails
+            flagDetailsList
         );
 
         var jsrValidatedFlagDetails = validatedFlagDetails.size();
@@ -64,8 +69,7 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                  logComponentName, jsrValidatedFlagDetails
         );
 
-        List<FlagDetails> filteredFlagDetails = removeExpiredRecords(validatedFlagDetails, exchange);
-
+        var filteredFlagDetails = removeExpiredRecords(validatedFlagDetails, exchange);
 
         audit(flagDetailsJsrValidatorInitializer, exchange);
 
@@ -75,12 +79,21 @@ public class FlagDetailsProcessor extends JsrValidationBaseProcessor<FlagDetails
                                                + "Please review and try again.");
         }
 
-        if (flagDetails.size() != jsrValidatedFlagDetails) {
+        if (flagDetailsList.size() != jsrValidatedFlagDetails) {
             setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
         }
+
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+
+        if  (flagDetailsList != null && !flagDetailsList.isEmpty()) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagDetailsList),
+                applicationContext, flagDetailsJsrValidatorInitializer);
+        }
+
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(filteredFlagDetails);
+
+
     }
 
     public List<FlagDetails> removeExpiredRecords(List<FlagDetails> flagDetailsList,

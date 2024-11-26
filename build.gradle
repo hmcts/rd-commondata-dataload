@@ -139,7 +139,8 @@ jacocoTestReport {
 }
 
 pitest {
-  junit5PluginVersion = '1.0.0'
+  pitestVersion = versions.pitest
+  junit5PluginVersion = versions.junitPitest
   targetClasses = ['uk.gov.hmcts.reform.rd.commondata.*']
   testSourceSets = [sourceSets.test, sourceSets.functionalTest]
   excludedClasses = [
@@ -148,6 +149,9 @@ pitest {
     'uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataExecutor',
     'uk.gov.hmcts.reform.rd.commondata.camel.binder.*',
     'uk.gov.hmcts.reform.rd.commondata.camel.task.CommonDataCaseLinkingRouteTask'
+  ]
+  excludedTestClasses = [
+    'uk.gov.hmcts.reform.rd.commondata.cameltest.*'
   ]
   threads = 6
   enableDefaultIncrementalAnalysis = true
@@ -307,7 +311,7 @@ dependencies {
   testImplementation (group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity)
 
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-  testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5', {
+  testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }

@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.OtherCategories;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,47 +38,40 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
 
+    private DataQualityCheckConfiguration dataQualityCheckConfiguration;
+
+    public OtherCategoriesProcessor(DataQualityCheckConfiguration dataQualityCheckConfiguration) {
+        this.dataQualityCheckConfiguration = dataQualityCheckConfiguration;
+    }
 
     @SuppressWarnings("unchecked")
     @Override
     public void process(Exchange exchange) {
 
-        List<OtherCategories> categoriesList;
-
-        categoriesList = (exchange.getIn().getBody() instanceof List)
+        var otherCategoriesListategoriesList = (exchange.getIn().getBody() instanceof List)
             ? (List<OtherCategories>) exchange.getIn().getBody()
             : singletonList((OtherCategories) exchange.getIn().getBody());
 
-        log.info(" {} Categories Records count before Validation {}::", logComponentName,
-                 categoriesList.size()
-        );
+        var finalCategoriesList = validate(otherCategoriesListategoriesList, exchange);
 
-        Multimap<String, OtherCategories> filteredCategories = convertToMultiMap(categoriesList);
-        List<OtherCategories> finalCategoriesList = getValidCategories(filteredCategories);
-
-        log.info(" {} Categories Records count after Validation {}::", logComponentName,
-                 finalCategoriesList.size()
-        );
-
-        if (categoriesList.size() != finalCategoriesList.size()) {
-            String auditStatus = PARTIAL_SUCCESS;
-            if (finalCategoriesList.isEmpty()) {
-                auditStatus = FAILURE;
-            }
-            setFileStatus(exchange, applicationContext, auditStatus);
-        }
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+
+        if (otherCategoriesListategoriesList != null && !otherCategoriesListategoriesList.isEmpty()) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange,
+                singletonList(otherCategoriesListategoriesList),
+                applicationContext, lovServiceJsrValidatorInitializer);
+        }
+
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(finalCategoriesList);
 
-        List<OtherCategories> invalidCategories = getInvalidCategories(categoriesList, finalCategoriesList);
+        List<OtherCategories> invalidCategories = getInvalidCategories(otherCategoriesListategoriesList,
+            finalCategoriesList);
         List<Pair<String, Long>> invalidCategoryIds = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(invalidCategories)) {
-            invalidCategories.forEach(categories -> invalidCategoryIds.add(Pair.of(
-                categories.getKey(),
-                categories.getRowId()
-            )));
+            invalidCategories.forEach(categories -> invalidCategoryIds.add(Pair.of(categories.getKey(),
+                categories.getRowId())));
 
             lovServiceJsrValidatorInitializer.auditJsrExceptions(
                 invalidCategoryIds,
@@ -86,8 +80,33 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
                 exchange
             );
         }
-
     }
+
+
+    private  List<OtherCategories> validate(List<OtherCategories> otherCategoriesListategoriesList,Exchange exchange) {
+
+        log.info(" {} Categories Records count before Validation {}::", logComponentName,
+            otherCategoriesListategoriesList.size()
+        );
+
+        Multimap<String, OtherCategories> filteredCategories = convertToMultiMap(otherCategoriesListategoriesList);
+        List<OtherCategories> finalCategoriesList = getValidCategories(filteredCategories);
+
+        log.info(" {} Categories Records count after Validation {}::", logComponentName,
+            finalCategoriesList.size()
+        );
+
+        if (otherCategoriesListategoriesList.size() != finalCategoriesList.size()) {
+            String auditStatus = PARTIAL_SUCCESS;
+            if (finalCategoriesList.isEmpty()) {
+                auditStatus = FAILURE;
+            }
+            setFileStatus(exchange, applicationContext, auditStatus);
+        }
+
+        return finalCategoriesList;
+    }
+
 
     private List<OtherCategories> getInvalidCategories(List<OtherCategories> orgCategoryList,
                                                   List<OtherCategories> finalCategoriesList) {

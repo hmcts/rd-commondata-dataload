@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.data.ingestion.camel.processor.JsrValidationBaseProce
 import uk.gov.hmcts.reform.data.ingestion.camel.route.beans.RouteProperties;
 import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
+import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
 import java.util.List;
 
@@ -41,6 +42,9 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
     @Value("${flag-code-query}")
     String flagCodeQuery;
 
+    @Autowired
+    DataQualityCheckConfiguration dataQualityCheckConfiguration;
+
     /**
      * validate CSV file records.
      *
@@ -50,7 +54,7 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
     @SuppressWarnings("unchecked")
     public void process(Exchange exchange) {
 
-        var flagServices = exchange.getIn().getBody() instanceof List
+        var  flagServices = exchange.getIn().getBody() instanceof List
             ? (List<FlagService>) exchange.getIn().getBody()
             : singletonList((FlagService) exchange.getIn().getBody());
 
@@ -83,9 +87,16 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
         }
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+
+        if (flagServices != null && !flagServices.isEmpty()) {
+            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagServices),
+                applicationContext, flagServiceJsrValidatorInitializer);
+        }
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(validatedFlagServices);
+
     }
+
 
     /**
      * Filter if Primary Key is not present in the parent table.
