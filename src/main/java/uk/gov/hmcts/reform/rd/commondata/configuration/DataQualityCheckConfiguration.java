@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.rd.commondata.configuration;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitializer;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.Categories;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagDetails;
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
