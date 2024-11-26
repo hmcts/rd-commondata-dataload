@@ -48,9 +48,6 @@ public class DataQualityCheckConfiguration {
                 }));
         } else if (((List) typeList.get(0)).get(0).getClass().getName().contains("FlagDetails")) {
             List<FlagDetails> flagDetailList = (List<FlagDetails>) typeList.get(0);
-            JsrValidatorInitializer<FlagDetails> flagDetailsJsrValidatorInitializer =
-                (JsrValidatorInitializer<FlagDetails>) validator;
-
             flagDetailList.forEach(flagDetail -> zeroByteCharacters
                 .forEach(zeroByteChar -> {
                     if (flagDetail.toString().contains(zeroByteChar)) {

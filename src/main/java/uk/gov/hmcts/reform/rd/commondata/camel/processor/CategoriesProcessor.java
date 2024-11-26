@@ -134,13 +134,9 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     private List<Categories> validateExternalReference(List<Categories> finalCategoriesList, Exchange exchange) {
         List<Categories> invalidCategories = new LinkedList<>();
         for (Categories category : finalCategoriesList) {
-            if ((category.getExternalReference() != null && category.getExternalReferenceType() != null)
-                && (
-                (!category.getExternalReference().isEmpty()
-                && category.getExternalReferenceType().isEmpty())
-                || (category.getExternalReference().isEmpty()
-                    && !category.getExternalReferenceType().isEmpty())
-                )) {
+            if ((category.getExternalReference() != null && category.getExternalReferenceType() != null) && (
+                (!category.getExternalReference().isEmpty() && category.getExternalReferenceType().isEmpty())
+                    || (category.getExternalReference().isEmpty() && !category.getExternalReferenceType().isEmpty()))) {
                 invalidCategories.add(category);
             }
         }
