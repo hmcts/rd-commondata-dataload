@@ -17,7 +17,7 @@ public class OtherCategoriesMapper implements IMapper {
             categories.getValueEN(), categories.getValueCY(), categories.getHintTextEN(),
             categories.getHintTextCY(), categories.getParentCategory(),
             categories.getParentKey(), categories.getActive(), categories.getExternalReference(),
-                                   categories.getExternalReferenceType(),categories.getLovOrder());
+            categories.getExternalReferenceType(),categories.getLovOrder());
     }
 }
 

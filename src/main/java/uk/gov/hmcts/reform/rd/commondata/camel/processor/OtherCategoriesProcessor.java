@@ -61,7 +61,7 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         if (otherCategoriesListategoriesList != null && !otherCategoriesListategoriesList.isEmpty()) {
             //validation to check if there are any zerobyte characters
             zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
-                singletonList(otherCategoriesListategoriesList), lovServiceJsrValidatorInitializer);
+                singletonList(otherCategoriesListategoriesList));
         }
 
         if (!zeroByteCharacterRecords.isEmpty()) {

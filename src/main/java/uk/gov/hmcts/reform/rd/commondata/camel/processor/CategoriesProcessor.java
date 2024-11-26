@@ -89,7 +89,7 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
         if (finalCategoriesList != null && !finalCategoriesList.isEmpty()) {
             //validation to check if there are any zerobyte characters
             zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
-                singletonList(finalCategoriesList), lovServiceJsrValidatorInitializer);
+                singletonList(finalCategoriesList));
             //validation for external reference fields
             finalCategoriesList = validateExternalReference(finalCategoriesList,exchange);
         }

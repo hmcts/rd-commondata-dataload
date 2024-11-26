@@ -15,7 +15,7 @@ public class CommonMapper {
     public static Map<String, Object> getMap(String categoryKey, String serviceId, String key, String valueEn,
                                       String valueCy, String hintTextEn, String hintTextCy, String parentCategory,
                                       String parentKey, String active, String externalReference,
-                                             String externalReferenceType, String lovOrder) {
+                                      String externalReferenceType, String lovOrder) {
         Map<String, Object> categoriesRow = new HashMap<>();
         categoriesRow.put("categoryKey", trim(categoryKey));
         categoriesRow.put("serviceId", trim(serviceId));

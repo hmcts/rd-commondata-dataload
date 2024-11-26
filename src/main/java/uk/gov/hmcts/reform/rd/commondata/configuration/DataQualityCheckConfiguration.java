@@ -19,8 +19,7 @@ public class DataQualityCheckConfiguration {
     @Value("${zero-byte-characters}")
     public List<String> zeroByteCharacters;
 
-    public <T> List<Pair<String, Long>> processExceptionRecords(List<Object> typeList,
-                                            JsrValidatorInitializer<T> validator) {
+    public <T> List<Pair<String, Long>> processExceptionRecords(List<Object> typeList) {
 
         List<Pair<String, Long>> zeroByteCharacterRecords = new ArrayList<>();
 
