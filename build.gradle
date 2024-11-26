@@ -5,7 +5,7 @@ plugins {
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.6'
   id 'org.owasp.dependencycheck' version '10.0.4'
-  id 'org.springframework.boot' version '3.3.4'
+  id 'org.springframework.boot' version '3.4.0'
   id 'com.github.ben-manes.versions' version '0.51.0'
   id 'org.sonarqube' version '5.1.0.4882'
   id "org.flywaydb.flyway" version '9.22.3'
@@ -218,22 +218,25 @@ ext {
 }
 
 def versions = [
-  junit               : '5.11.0',
-  junitPlatform       : '1.11.0',
-  reformLogging       : '6.1.6',
-  springBoot          : '3.3.4',
-  restAssured         : '5.5.0',
-  serenity            : '4.2.6',
-  lombok              : '1.18.34',
-  flyway              : '9.19.4',
-  camel               : '4.8.0',
-  gradlePitest        : '1.5.1',
+  junit               : '5.11.3',
+  junitPlatform       : '1.11.3',
+  reformLogging       : '6.1.7',
+  springBoot          : '3.4.0',
+  springfoxSwagger    : '2.10.5',
+  lombok              : '1.18.36',
+  flyway              : '9.22.3',
+  camel               : '4.8.1',
+  gradlePitest        : '1.15.0',
   pitest              : '1.17.0',
-  jackson             : '2.17.2',
-  log4j               : '2.23.1',
-  logback             : '1.5.11',
+  sonarPitest         : '0.5',
+  junitPitest         : '1.2.1',
+  jackson             : '2.18.1',
+  log4j               : '2.24.2',
+  springVersion       : '5.3.39',
+  logback             : '1.5.12',
   bouncycastle        : '1.79',
-  sonarPitest         : '0.5'
+  restAssured         : '5.5.0',
+  serenity            : '4.2.9'
 ]
 
 ext.libraries = [
@@ -264,6 +267,8 @@ dependencies {
   implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '8.0.1.Final'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
   implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation group: 'org.springframework.security', name: 'spring-security-core'
+  implementation group: 'org.springframework.security', name: 'spring-security-config'
 
   implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
