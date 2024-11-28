@@ -189,6 +189,30 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
+
+    @Test
+    @DisplayName("Status: Failure - Test for missing external reference Upload Filed.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesExternalReferenceHeadersMissing() throws Exception {
+
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_failure_missing_header.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(0, listOfValues.size());
+
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
+        );
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 4);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+    }
+
     @Test
     @DisplayName("Status: Sucess - Test for LOV Duplicate records Case1.Filters duplicate records")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
