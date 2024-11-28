@@ -38,8 +38,20 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer;
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
+
+
     public static final String LOV_COMPOSITE_KEY = "categorykey,key,serviceid";
+
+    public static final String LOV_EXTERNAL_REFERENCE = "external_reference,external_reference_type";
+
     public static final String LOV_COMPOSITE_KEY_ERROR_MSG = "Composite Key violation";
+
+    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference and "
+        + "external_reference_type value must be null or both must be not-null";
+
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -67,17 +79,39 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             }
             setFileStatus(exchange, applicationContext, auditStatus);
         }
+
+        //find invalid / inactive records and audit
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
-        exchange.getMessage().setBody(finalCategoriesList);
+        processException(exchange, categoriesList, finalCategoriesList);
 
-        if (categoriesList != null && !categoriesList.isEmpty()) {
-            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(categoriesList),
-                applicationContext, lovServiceJsrValidatorInitializer);
+        List<Pair<String, Long>> zeroByteCharacterRecords = new ArrayList<>();
+        if (finalCategoriesList != null && !finalCategoriesList.isEmpty()) {
+            //validation to check if there are any zerobyte characters
+            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
+                singletonList(finalCategoriesList));
+            //validation for external reference fields
+            finalCategoriesList = validateExternalReference(finalCategoriesList,exchange);
         }
 
-        processException(exchange, categoriesList, finalCategoriesList);
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
+                .distinct().toList();
+            audit(distinctZeroByteCharacterRecords, null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
+        }
+        exchange.getMessage().setBody(finalCategoriesList);
     }
+
+    public void audit(List<Pair<String, Long>> invalidCategoryIds,
+                          String fieldError,Exchange exchange,String message) {
+        if (!invalidCategoryIds.isEmpty()) {
+            setFileStatus(exchange, applicationContext, PARTIAL_SUCCESS);
+            lovServiceJsrValidatorInitializer.auditJsrExceptions(
+                invalidCategoryIds, fieldError,
+                message, exchange);
+        }
+    }
+
 
     private void processException(Exchange exchange,
                                          List<Categories> categoriesList,
@@ -96,6 +130,25 @@ public class CategoriesProcessor extends JsrValidationBaseProcessor<Categories> 
             );
         }
     }
+
+    private List<Categories> validateExternalReference(List<Categories> finalCategoriesList, Exchange exchange) {
+        List<Categories> invalidCategories = new LinkedList<>();
+        for (Categories category : finalCategoriesList) {
+            if ((category.getExternalReference() != null && category.getExternalReferenceType() != null) && (
+                (!category.getExternalReference().isEmpty() && category.getExternalReferenceType().isEmpty())
+                    || (category.getExternalReference().isEmpty() && !category.getExternalReferenceType().isEmpty()))) {
+                invalidCategories.add(category);
+            }
+        }
+        finalCategoriesList.removeAll(invalidCategories);
+        if (!invalidCategories.isEmpty()) {
+            List<Pair<String, Long>> invalidCategoryIds = invalidCategories.stream()
+                .map(this::createExceptionRecordPair).toList();
+            audit(invalidCategoryIds, LOV_EXTERNAL_REFERENCE, exchange,EXTERNAL_REFERENCE_ERROR_MSG);
+        }
+        return finalCategoriesList;
+    }
+
 
     private Pair<String,Long> createExceptionRecordPair(Categories category) {
         return Pair.of(

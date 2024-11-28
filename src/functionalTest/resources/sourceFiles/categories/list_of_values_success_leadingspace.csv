@@ -1,2 +1,2 @@
-CategoryKey,ServiceId,Key,Value_EN,Value_CY,Hinttext_EN,Hinttext_CY,Lov_Order,ParentCategory,ParentKey,Active
-AdditionalFacilities,,AF-VF,Video Facility,,,,,,,Y
+CategoryKey,ServiceId,Key,Value_EN,Value_CY,Hinttext_EN,Hinttext_CY,Lov_Order,ParentCategory,ParentKey,Active,external_reference,external_reference_type
+AdditionalFacilities,,AF-VF,Video Facility,,,,,,,Y,,
