@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.rd.commondata.camel.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,10 +14,12 @@ import uk.gov.hmcts.reform.data.ingestion.camel.validator.JsrValidatorInitialize
 import uk.gov.hmcts.reform.rd.commondata.camel.binder.FlagService;
 import uk.gov.hmcts.reform.rd.commondata.configuration.DataQualityCheckConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.FAILURE;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROUTE_DETAILS;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.FILE_NAME;
@@ -41,6 +44,9 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
 
     @Value("${flag-code-query}")
     String flagCodeQuery;
+
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
 
     @Autowired
     DataQualityCheckConfiguration dataQualityCheckConfiguration;
@@ -88,22 +94,40 @@ public class FlagServiceProcessor extends JsrValidationBaseProcessor<FlagService
 
         var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
 
-        if (flagServices != null && !flagServices.isEmpty()) {
-            dataQualityCheckConfiguration.processExceptionRecords(exchange, singletonList(flagServices),
-                applicationContext, flagServiceJsrValidatorInitializer);
+        List<Pair<String, Long>> zeroByteCharacterRecords = new ArrayList<>();
+
+        if (validatedFlagServices != null && !validatedFlagServices.isEmpty()) {
+            //validation to check if there are any zerobyte characters
+            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
+                singletonList(validatedFlagServices));
+
+        }
+
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
+                .distinct().toList();
+            audit(distinctZeroByteCharacterRecords, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
         }
         exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
         exchange.getMessage().setBody(validatedFlagServices);
 
     }
 
-
+    public void audit(List<Pair<String, Long>> invalidCategoryIds, Exchange exchange,String message) {
+        if (!invalidCategoryIds.isEmpty()) {
+            setFileStatus(exchange, applicationContext, FAILURE);
+            flagServiceJsrValidatorInitializer.auditJsrExceptions(
+                invalidCategoryIds, null,
+                message, exchange);
+        }
+    }
     /**
      * Filter if Primary Key is not present in the parent table.
      *
      * @param validatedFlagServices list of Validated records after jsr validation
      * @param exchange              exchange obj
      */
+
     private void filterFlagServiceForForeignKeyViolations(List<FlagService> validatedFlagServices,
                                                           Exchange exchange) {
 

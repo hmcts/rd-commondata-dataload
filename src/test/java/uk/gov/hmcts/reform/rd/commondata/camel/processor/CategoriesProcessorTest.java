@@ -52,8 +52,13 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     private static final List<String> ZERO_BYTE_CHARACTERS = List.of("\u200B", " ");
 
     private static final List<Pair<String, Long>> ZERO_BYTE_CHARACTER_RECORDS = List.of(Pair.of("BFA1-001AD", null),
-                                                                   Pair.of("BFA1-PAD", null),
-                                                                   Pair.of("BFA1-DC\u200BX", null));
+                                                                   Pair.of("BFA1-DC\u200BX", null),
+                                                                    Pair.of("BFA1-PAD", null));
+
+    public static final String LOV_EXTERNAL_REFERENCE = "external_reference,external_reference_type";
+
+    public static final String EXTERNAL_REFERENCE_ERROR_MSG = "Both external_reference and "
+        + "external_reference_type value must be null or both must be not-null";
 
     @Spy
     JsrValidatorInitializer<Categories> lovServiceJsrValidatorInitializer
@@ -74,6 +79,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
     @Mock
     ConfigurableApplicationContext applicationContext;
 
+
     @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -82,7 +88,6 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
         setField(dataQualityCheckConfiguration, "zeroByteCharacters", ZERO_BYTE_CHARACTERS);
         setField(lovServiceJsrValidatorInitializer, "validator", validator);
         setField(lovServiceJsrValidatorInitializer, "camelContext", camelContext);
-        // setField(processor, "jdbcTemplate", jdbcTemplate);
         setField(lovServiceJsrValidatorInitializer, "jdbcTemplate", jdbcTemplate);
         setField(lovServiceJsrValidatorInitializer, "platformTransactionManager",
                  platformTransactionManager
@@ -214,6 +219,109 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                                exchange);
     }
 
+    @Test
+    @DisplayName("Test for missing external reference values in record")
+    void testListOfValuesExternal_Reference_Validation() {
+        var lovServiceList = new ArrayList<Categories>();
+        List<Categories> categories = getLovServicesWithExternalReferenceInvalid();
+        lovServiceList.addAll(categories);
+        String query = "Select * from list_of_values";
+        exchange.getIn().setBody(lovServiceList);
+        when(((ConfigurableApplicationContext)
+            applicationContext).getBeanFactory()).thenReturn(configurableListableBeanFactory);
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertNotNull(actualLovServiceList);
+        Assertions.assertEquals(1, actualLovServiceList.size());
+        List<Pair<String, Long>> externalRefRecWithError = List.of(Pair.of(categories.get(0).getKey(), null));
+
+        verify(lovServiceJsrValidatorInitializer, times(1))
+            .auditJsrExceptions(externalRefRecWithError,
+                LOV_EXTERNAL_REFERENCE,
+                EXTERNAL_REFERENCE_ERROR_MSG,
+                exchange);
+    }
+
+    @Test
+    @DisplayName("Test success external reference values in record")
+    void testListOfValuesExternal_Reference_Success() {
+        var lovServiceList = new ArrayList<Categories>();
+        List<Categories> categories = getLovServicesWithExternalReference();
+        lovServiceList.addAll(categories);
+
+        exchange.getIn().setBody(lovServiceList);
+        processor.process(exchange);
+        verify(processor, times(1)).process(exchange);
+
+        List actualLovServiceList = (List) exchange.getMessage().getBody();
+        Assertions.assertNotNull(actualLovServiceList);
+        Assertions.assertEquals(categories.size(), actualLovServiceList.size());
+        Assertions.assertEquals(categories.get(0).getExternalReference(),
+            ((Categories) actualLovServiceList.get(0)).getExternalReference());
+        Assertions.assertEquals(categories.get(0).getExternalReferenceType(),
+            ((Categories) actualLovServiceList.get(0)).getExternalReferenceType());
+        Assertions.assertEquals(categories.get(1).getExternalReference(),
+            ((Categories) actualLovServiceList.get(1)).getExternalReference());
+        Assertions.assertEquals(categories.get(1).getExternalReferenceType(),
+            ((Categories) actualLovServiceList.get(1)).getExternalReferenceType());
+    }
+
+
+    private List<Categories> getLovServicesWithExternalReference() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("panelCategoryMember")
+                .serviceId("BBA3")
+                .key("PC1-01-74")
+                .valueEN("Medical office holder")
+                .parentCategory("panelCategory")
+                .parentKey("PC2")
+                .active("Y")
+                .externalReferenceType("MedicalRole")
+                .externalReference("74")
+                .build(),
+            Categories.builder()
+                .categoryKey("panelCategoryMember")
+                .serviceId("BBA3")
+                .key("PC1-01-84")
+                .valueEN("Judicial office holder")
+                .parentCategory("panelCategory")
+                .parentKey("PC1")
+                .active("Y")
+                .externalReferenceType("JudicialRole")
+                .externalReference("84")
+                .build()
+        );
+    }
+
+    private List<Categories> getLovServicesWithExternalReferenceInvalid() {
+        return ImmutableList.of(
+            Categories.builder()
+                .categoryKey("panelCategoryMember")
+                .serviceId("BBA3")
+                .key("PC1-01-74")
+                .valueEN("Medical office holder")
+                .parentCategory("panelCategory")
+                .parentKey("PC2")
+                .active("Y")
+                .externalReferenceType("MedicalRole")
+                .externalReference("")
+                .build(),
+            Categories.builder()
+                .categoryKey("panelCategoryMember")
+                .serviceId("BBA3")
+                .key("PC1-01-84")
+                .valueEN("Judicial office holder")
+                .parentCategory("panelCategory")
+                .parentKey("PC1")
+                .active("Y")
+                .externalReferenceType("JudicialRole")
+                .externalReference("84")
+                .build()
+        );
+    }
 
     private List<Categories> getLovServicesCase1() {
         return ImmutableList.of(
@@ -322,7 +430,7 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.ROU
                 .categoryKey("caseSubType")
                 .serviceId("BFA1")
                 .key("BFA1-001AD")
-                .valueEN("Refusal of application under the EEA regulations \u200B")
+                .valueEN("Refusal of application under the EEA regulations\u200B")
                 .parentCategory("caseType")
                 .parentKey("BFA1-001")
                 .active("Y")

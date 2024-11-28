@@ -40,6 +40,9 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
 
     private DataQualityCheckConfiguration dataQualityCheckConfiguration;
 
+    public static final String ZERO_BYTE_CHARACTER_ERROR_MESSAGE =
+        "Zero byte characters identified - check source file";
+
     public OtherCategoriesProcessor(DataQualityCheckConfiguration dataQualityCheckConfiguration) {
         this.dataQualityCheckConfiguration = dataQualityCheckConfiguration;
     }
@@ -54,16 +57,18 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
 
         var finalCategoriesList = validate(otherCategoriesListategoriesList, exchange);
 
-        var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
-
+        List<Pair<String, Long>> zeroByteCharacterRecords = new ArrayList<>();
         if (otherCategoriesListategoriesList != null && !otherCategoriesListategoriesList.isEmpty()) {
-            dataQualityCheckConfiguration.processExceptionRecords(exchange,
-                singletonList(otherCategoriesListategoriesList),
-                applicationContext, lovServiceJsrValidatorInitializer);
+            //validation to check if there are any zerobyte characters
+            zeroByteCharacterRecords = dataQualityCheckConfiguration.processExceptionRecords(
+                singletonList(otherCategoriesListategoriesList));
         }
 
-        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
-        exchange.getMessage().setBody(finalCategoriesList);
+        if (!zeroByteCharacterRecords.isEmpty()) {
+            List<Pair<String, Long>> distinctZeroByteCharacterRecords = zeroByteCharacterRecords.stream()
+                .distinct().toList();
+            audit(distinctZeroByteCharacterRecords,null, exchange, ZERO_BYTE_CHARACTER_ERROR_MESSAGE);
+        }
 
         List<OtherCategories> invalidCategories = getInvalidCategories(otherCategoriesListategoriesList,
             finalCategoriesList);
@@ -72,16 +77,23 @@ public class OtherCategoriesProcessor extends JsrValidationBaseProcessor<OtherCa
         if (!CollectionUtils.isEmpty(invalidCategories)) {
             invalidCategories.forEach(categories -> invalidCategoryIds.add(Pair.of(categories.getKey(),
                 categories.getRowId())));
-
-            lovServiceJsrValidatorInitializer.auditJsrExceptions(
-                invalidCategoryIds,
-                LOV_COMPOSITE_KEY,
-                LOV_COMPOSITE_KEY_ERROR_MSG,
-                exchange
-            );
+            audit(invalidCategoryIds, LOV_COMPOSITE_KEY,exchange, LOV_COMPOSITE_KEY_ERROR_MSG);
         }
+        var routeProperties = (RouteProperties) exchange.getIn().getHeader(ROUTE_DETAILS);
+        exchange.getContext().getGlobalOptions().put(FILE_NAME, routeProperties.getFileName());
+        exchange.getMessage().setBody(finalCategoriesList);
+
     }
 
+    public void audit(List<Pair<String, Long>> invalidCategoryIds,String fieldInError,
+                          Exchange exchange,String message) {
+        if (!invalidCategoryIds.isEmpty()) {
+            setFileStatus(exchange, applicationContext, FAILURE);
+            lovServiceJsrValidatorInitializer.auditJsrExceptions(
+                invalidCategoryIds, fieldInError,
+                message, exchange);
+        }
+    }
 
     private  List<OtherCategories> validate(List<OtherCategories> otherCategoriesListategoriesList,Exchange exchange) {
 

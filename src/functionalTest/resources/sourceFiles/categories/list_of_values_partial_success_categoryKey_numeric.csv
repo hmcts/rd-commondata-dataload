@@ -1,2 +1,2 @@
-categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active
-1,,AF-WR,Witness Room,,,,,,,Y
+categorykey,serviceid,key,value_en,value_cy,hinttext_en,hinttext_cy,lov_order,parentcategory,parentkey,active,external_reference,external_reference_type
+1,,AF-WR,Witness Room,,,,,,,Y,,

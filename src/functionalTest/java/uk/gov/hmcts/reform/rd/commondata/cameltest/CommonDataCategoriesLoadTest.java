@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.ResourceUtils.getFile;
@@ -189,6 +190,30 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
     }
 
+
+    @Test
+    @DisplayName("Status: Failure - Test for missing external reference Upload Filed.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesExternalReferenceHeadersMissing() throws Exception {
+
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_failure_missing_header.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(0, listOfValues.size());
+
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            "There is a mismatch in the headers of the csv file :: ListOfValues-test.csv"
+        );
+        validateFlagServiceFileException(jdbcTemplate, exceptionQuery, pair, 3);
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Failure", UPLOAD_LIST_OF_VALUES_FILE_NAME);
+    }
+
     @Test
     @DisplayName("Status: Sucess - Test for LOV Duplicate records Case1.Filters duplicate records")
     @Sql(scripts = {"/testData/commondata_truncate.sql"})
@@ -314,7 +339,111 @@ public class CommonDataCategoriesLoadTest extends CommonDataFunctionalBaseTest {
         validateCategoriesFileAudit(
             jdbcTemplate,
             auditSchedulerQuery,
-            "Failure",
+            "PartialSuccess",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME
+        );
+    }
+
+    @Test
+    @DisplayName("Status: Sucess - all values exist.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesExternalReferenceSuccess() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_external_reference_success.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(3, listOfValues.size());
+        //Validate Success Result
+        validateListOfValuesFileWithExternalReference(jdbcTemplate, listOfValuesSelectData, List.of(
+            Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-74")
+                .valueEN("Medical office holder").valueCY("").hintTextEN("").hintTextCY("").parentCategory(
+                    "caseSubType").parentKey("PC2").active("Y").externalReference("74")
+                .externalReferenceType("MedicalRole").build(),
+            Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-94")
+                .valueEN("Financial office holder").valueCY("").hintTextEN("").hintTextCY("")
+                .parentCategory("caseSubType")
+                .parentKey("PC3").active("Y").externalReference("94").externalReferenceType("FinancialRole").build(),
+            Categories.builder().categoryKey("panelCategoryMember").serviceId("BBA3").key("PC1-01-84")
+                .valueEN("Judicial office holder").valueCY("").hintTextEN("").hintTextCY("")
+                .parentCategory("caseSubType")
+                .parentKey("PC1").active("Y").externalReference("84").externalReferenceType("JudicialRole")
+                .build()), 3);
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME);
+
+    }
+
+    @Test
+    @DisplayName("Status: Sucess - all values exist.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesAllRecordsContainNullExternalReferenceTypeAndNullExternalReferenceSuccess() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_external_reference_null_success.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(3, listOfValues.size());
+        //Validate Success Result
+        assertThat(listOfValues.get(0).get("categoryKey")).isEqualTo("panelCategoryMember");
+        assertThat(listOfValues.get(0).get("key")).isEqualTo("PC1-01-74");
+        assertThat(listOfValues.get(0).get("parentcategory")).isEqualTo("caseSubType");
+        assertThat(listOfValues.get(0).get("parentkey")).isEqualTo("PC2");
+        assertThat(listOfValues.get(0).get("external_reference")).isEqualTo("");
+        assertThat(listOfValues.get(0).get("external_reference_type")).isEqualTo("");
+
+        assertThat(listOfValues.get(1).get("categoryKey")).isEqualTo("panelCategoryMember");
+        assertThat(listOfValues.get(1).get("key")).isEqualTo("PC1-01-94");
+        assertThat(listOfValues.get(1).get("parentcategory")).isEqualTo("caseSubType");
+        assertThat(listOfValues.get(1).get("parentkey")).isEqualTo("PC3");
+        assertThat(listOfValues.get(1).get("external_reference")).isEqualTo("");
+        assertThat(listOfValues.get(1).get("external_reference_type")).isEqualTo("");
+
+        assertThat(listOfValues.get(2).get("categoryKey")).isEqualTo("panelCategoryMember");
+        assertThat(listOfValues.get(2).get("key")).isEqualTo("PC1-01-84");
+        assertThat(listOfValues.get(2).get("parentcategory")).isEqualTo("caseSubType");
+        assertThat(listOfValues.get(2).get("parentkey")).isEqualTo("PC1");
+        assertThat(listOfValues.get(2).get("external_reference")).isEqualTo("");
+        assertThat(listOfValues.get(2).get("external_reference_type")).isEqualTo("");
+        //Validates Success Audit
+        validateFlagServiceFileAudit(jdbcTemplate, auditSchedulerQuery, "Success",
+            UPLOAD_LIST_OF_VALUES_FILE_NAME);
+
+    }
+
+    @Test
+    @DisplayName("Status: Failure - Test for either of the external reference values are null.")
+    @Sql(scripts = {"/testData/commondata_truncate.sql"})
+    void testListOfValuesExternalReferenceFailure() throws Exception {
+        commonDataBlobSupport.uploadFile(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            new FileInputStream(getFile(
+                "classpath:sourceFiles/categories/list_of_values_external_reference_failure.csv"))
+        );
+
+        jobLauncherTestUtils.launchJob();
+        var listOfValues = jdbcTemplate.queryForList(listOfValuesSelectData);
+        assertEquals(1, listOfValues.size());
+
+        String externalReferenceErrorMessage = "Both external_reference and external_reference_type "
+            + "value must be null or both must be not-null";
+
+        Pair<String, String> pair = new Pair<>(
+            UPLOAD_LIST_OF_VALUES_FILE_NAME,
+            externalReferenceErrorMessage
+        );
+        validateCategoriesFileException(jdbcTemplate, exceptionQuery, pair);
+        validateCategoriesFileAudit(
+            jdbcTemplate,
+            auditSchedulerQuery,
+            "PartialSuccess",
             UPLOAD_LIST_OF_VALUES_FILE_NAME
         );
     }
