@@ -111,22 +111,21 @@ public class BatchConfig {
      * @return Job
      */
     @Bean
-    public Job runRoutesJob(JobRepository jobRepository) {
+    public Job runRoutesJob(JobRepository jobRepository, JobExecutionDecider decider) {
         return new JobBuilder(jobName, jobRepository)
             .start(stepCommonDataFlagDetailsRoute(jobRepository))
             .listener(jobResultListener)
             .on("*").to(stepCommonDataRoute(jobRepository))
             .on("*").to(stepOtherCategoriesRoute(jobRepository))
-            .on("*").to(checkCaseLinkingRouteStatus())
-            .from(checkCaseLinkingRouteStatus()).on("STOPPED")
-            .to(stepCommonDataCategoriesRoute(jobRepository))
-            .from(checkCaseLinkingRouteStatus()).on("ENABLED")
-            .to(stepCommonDataCaseLinkingRoute(jobRepository))
+            .on("*").to(decider)
+            .from(decider).on("STOPPED").to(stepCommonDataCategoriesRoute(jobRepository))
+            .from(decider).on("ENABLED").to(stepCommonDataCaseLinkingRoute(jobRepository))
             .on("*").to(stepCommonDataCategoriesRoute(jobRepository))
             .end()
             .build();
     }
 
+    @Bean
     public JobExecutionDecider checkCaseLinkingRouteStatus() {
         return (job, step) -> new FlowExecutionStatus(isDisabledCaseLinkingRoute ? "STOPPED" : "ENABLED");
     }
