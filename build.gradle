@@ -37,7 +37,7 @@ def versions = [
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
   flyway              : '6.5.7',
-  camel               : '3.8.0',
+  camel               : '4.9.0',
   log4j               : '2.24.1',
   springVersion       : '5.3.39',
   logback             : '1.2.13',
