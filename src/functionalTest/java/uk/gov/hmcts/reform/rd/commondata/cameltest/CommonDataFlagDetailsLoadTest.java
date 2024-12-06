@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -53,9 +53,10 @@ import static uk.gov.hmcts.reform.data.ingestion.camel.util.MappingConstants.SCH
 @CamelSpringBootTest
 @MockEndpoints("log:*")
 @ContextConfiguration(classes = {CommonDataCamelConfig.class, CamelTestContextBootstrapper.class,
-    JobLauncherTestUtils.class, BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
+    BatchConfig.class, AzureBlobConfig.class, BlobStorageCredentials.class},
     initializers = ConfigDataApplicationContextInitializer.class)
 @SpringBootTest
+@SpringBatchTest
 @EnableAutoConfiguration(exclude = JpaRepositoriesAutoConfiguration.class)
 @EnableTransactionManagement
 @SqlConfig(dataSource = "dataSource", transactionManager = "txManager",

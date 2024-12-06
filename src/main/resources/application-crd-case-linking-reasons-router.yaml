@@ -14,9 +14,9 @@ route:
       :#parentcategory,:#parentkey,:#active) on conflict (categorykey,key,serviceid) do UPDATE SET categorykey = :#categoryKey,
       serviceid = :#serviceId, value_en = :#value_en, value_cy = :#value_cy, hinttext_en =:#hinttext_en,
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
-      active = :#active?batch=true&dataSource=dataSource
+      active = :#active?dataSource=#dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=CaseLinkingReasons.csv
     processor-class: categoriesProcessor
     mapper-class: categoriesMapper
     csv-binder-object: Categories
