@@ -283,7 +283,7 @@ dependencies {
 
   implementation group: 'org.yaml', name: 'snakeyaml', version: '2.3'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0-beta-14') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
