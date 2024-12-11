@@ -486,7 +486,7 @@ integration {
 
 dependencyManagement {
   dependencies {
-    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.18.1') {
+    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.18.2') {
       entry 'jackson-databind'
       entry 'jackson-core'
       entry 'jackson-annotations'
