@@ -33,7 +33,7 @@ def versions = [
   serenity            : '2.6.0',
   lombok              : '1.18.34',
   gradlePitest        : '1.15.0',
-  pitest              : '1.17.0',
+  pitest              : '1.17.2',
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
   flyway              : '6.5.7',
