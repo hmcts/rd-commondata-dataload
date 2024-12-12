@@ -165,7 +165,7 @@ pitest {
   outputFormats = ['XML', 'HTML']
   timestampedReports = false
   mutationThreshold = 85
-  verbose = false
+  verbose = true
   useClasspathFile = true
 }
 project.tasks['pitest'].group = "Verification"
