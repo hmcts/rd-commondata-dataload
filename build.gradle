@@ -233,7 +233,7 @@ ext.libraries = [
 dependencyManagement {
   dependencies {
     dependency group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
-    dependencySet(group: 'com.google.guava', version: '30.1.1-jre') {
+    dependencySet(group: 'com.google.guava', version: '33.4.0-jre') {
       entry 'guava'
     }
 
@@ -330,7 +330,7 @@ dependencies {
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
-  implementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
+  implementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
 
   implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '12.5'
 
