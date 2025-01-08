@@ -245,7 +245,7 @@ dependencyManagement {
     }
 
     //CVE-2022-40152
-    dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
+    dependencySet(group: 'com.fasterxml.woodstox', version: '7.1.0') {
       entry 'woodstox-core'
     }
     //CVE-2023-24998
