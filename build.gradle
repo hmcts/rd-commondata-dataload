@@ -238,7 +238,7 @@ dependencyManagement {
     }
 
     // CVE-2023-28709
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.93') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.98') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
