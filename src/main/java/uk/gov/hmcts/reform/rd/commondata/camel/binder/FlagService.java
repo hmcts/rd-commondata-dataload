@@ -1,5 +1,8 @@
 package uk.gov.hmcts.reform.rd.commondata.camel.binder;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -13,9 +16,6 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.data.ingestion.camel.domain.CommonCsvField;
 
 import java.io.Serializable;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ALLOW_NUMERIC_REGEX;
 import static uk.gov.hmcts.reform.rd.commondata.camel.util.CommonDataLoadConstants.ALLOW_TRUE_FALSE_REGEX;

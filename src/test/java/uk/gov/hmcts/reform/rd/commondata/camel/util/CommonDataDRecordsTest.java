@@ -38,7 +38,9 @@ class CommonDataDRecordsTest {
 
     JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
 
-    CamelContext camelContext = mock(ExtendedCamelContext.class);
+    CamelContext camelContext = mock(CamelContext.class);
+
+    ExtendedCamelContext extendedCamelContext = mock(ExtendedCamelContext.class);
 
     JsrValidatorInitializer<OtherCategories> lovServiceJsrValidatorInitializer = mock(JsrValidatorInitializer.class);
 
@@ -55,6 +57,7 @@ class CommonDataDRecordsTest {
         setField(commonDataDRecords, "camelContext", camelContext);
         setField(commonDataDRecords, "jdbcTemplate", jdbcTemplate);
 
+        when(camelContext.getCamelContextExtension()).thenReturn(extendedCamelContext);
     }
 
 

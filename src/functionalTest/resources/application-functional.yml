@@ -21,10 +21,10 @@ commondata-categories-start-route: direct:CommonData-ListOfValues
 commondata-caselinking-start-route: direct:CommonData-CaseLinkingReasons
 commondata-othercategories-start-route: direct:CommonData-OtherCategories
 archival-route: direct:CommonDataArchival
-archival-path: azure-blob://${azure.storage.account-name}/rd-common-data-archive
-active-blob-path: azure-blob://${azure.storage.account-name}/rd-common-data
+archival-path: azure-storage-blob://${azure.storage.account-name}/rd-common-data-archive
+active-blob-path: azure-storage-blob://${azure.storage.account-name}/rd-common-data
 archival-file-names: FlagDetails-test.csv,FlagService-test.csv,ListOfValues-test.csv,CaseLinkingReasons-test.csv,OtherCategories-test.csv
-archival-cred: credentials=#credsreg&operation=updateBlockBlob
+archival-cred: credentials=#credsreg&operation=uploadBlockBlob
 #archival-date-format keep in dd-MM-yyyy as to delete in testing
 archival-date-format: dd-MM-yyyy
 file-read-time-out: 2000
@@ -51,12 +51,12 @@ route:
     file-name: FlagDetails-test.csv
     table-name: flag_details
     truncate-sql:
-      sql:truncate table flag_details restart identity cascade?dataSource=dataSource
+      sql:truncate table flag_details restart identity cascade?dataSource=#dataSource
     insert-sql:
       sql:insert into flag_details (id,flag_code,value_en,value_cy,category_id,mrd_created_time,mrd_updated_time,mrd_deleted_time)
-      values(:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?batch=true&dataSource=dataSource
+      values(:#id,:#flag_code,:#value_en,:#value_cy,:#category_id,:#mrd_created_time,:#mrd_updated_time,:#mrd_deleted_time)?dataSource=#dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/FlagDetails-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=FlagDetails-test.csv
     processor-class: flagDetailsProcessor
     mapper-class: flagDetailsMapper
     csv-binder-object: FlagDetails
@@ -67,12 +67,12 @@ route:
     file-name: FlagService-test.csv
     table-name: flag_service
     truncate-sql:
-      sql:truncate table flag_service restart identity?dataSource=dataSource
+      sql:truncate table flag_service restart identity?dataSource=#dataSource
     insert-sql:
       sql:insert into flag_service (id,service_id,hearing_relevant,request_reason,flag_code,default_status,available_externally)
-      values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code,:#default_status,:#available_externally)?batch=true&dataSource=dataSource
+      values(:#id,:#service_id,:#hearing_relevant,:#request_reason,:#flag_code,:#default_status,:#available_externally)?dataSource=#dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/FlagService-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=FlagService-test.csv
     processor-class: flagServiceProcessor
     mapper-class: flagServiceMapper
     csv-binder-object: FlagService
@@ -89,9 +89,9 @@ route:
       :#parentcategory,:#parentkey,:#active,:#external_reference,:#external_reference_type) on conflict (categorykey,key,serviceid) do UPDATE SET categorykey = :#categoryKey,
       serviceid = :#serviceId, value_en = :#value_en, value_cy = :#value_cy, hinttext_en =:#hinttext_en,
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
-      active = :#active,external_reference = :#external_reference,external_reference_type = :#external_reference_type?batch=true&dataSource=dataSource
+      active = :#active,external_reference = :#external_reference,external_reference_type = :#external_reference_type?dataSource=#dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/ListOfValues-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=ListOfValues-test.csv
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
@@ -108,9 +108,9 @@ route:
       :#parentcategory,:#parentkey,:#active) on conflict (categorykey,key,serviceid) do UPDATE SET categorykey = :#categoryKey,
       serviceid = :#serviceId, value_en = :#value_en, value_cy = :#value_cy, hinttext_en =:#hinttext_en,
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
-      active = :#active?batch=true&dataSource=dataSource
+      active = :#active?dataSource=#dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/CaseLinkingReasons-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=CaseLinkingReasons-test.csv
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
@@ -127,9 +127,9 @@ route:
       :#parentcategory,:#parentkey,:#active,:#external_reference,:#external_reference_type) on conflict (categorykey,key,serviceid) do UPDATE SET categorykey = :#categoryKey,
       serviceid = :#serviceId, value_en = :#value_en, value_cy = :#value_cy, hinttext_en =:#hinttext_en,
       hinttext_cy = :#hinttext_cy, lov_order = :#lov_order, parentcategory = :#parentcategory, parentkey = :#parentkey,
-      active = :#active,external_reference = :#external_reference,external_reference_type = :#external_reference_type?batch=true&dataSource=dataSource
+      active = :#active,external_reference = :#external_reference,external_reference_type = :#external_reference_type?dataSource=#dataSource
     blob-path:
-      azure-blob://${azure.storage.account-name}/rd-common-data/OtherCategories-test.csv?credentials=#credsreg&operation=updateBlockBlob
+      azure-storage-blob://${azure.storage.account-name}/rd-common-data?credentials=#credsreg&operation=uploadBlockBlob&blobName=OtherCategories-test.csv
     processor-class: listOfValuesProcessor
     mapper-class: listOfValuesMapper
     csv-binder-object: ListOfValues
