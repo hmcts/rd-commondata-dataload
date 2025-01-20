@@ -214,7 +214,7 @@ repositories {
 }
 
 ext {
-  springCloudVersion = '2023.0.3'
+  springCloudVersion = '2024.0.0'
 }
 
 def versions = [
