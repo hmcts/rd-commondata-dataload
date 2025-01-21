@@ -321,6 +321,8 @@ dependencies {
   }, version: versions.sonarPitest
 
   testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
+  testImplementation 'org.pitest:pitest-junit5-plugin:1.2.1'
+  testImplementation 'com.arcmutate:arcmutate-spring:1.0.0'
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
   integrationTestImplementation sourceSets.test.runtimeClasspath
