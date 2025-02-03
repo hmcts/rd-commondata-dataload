@@ -218,8 +218,8 @@ ext {
 }
 
 def versions = [
-  junit               : '5.11.3',
-  junitPlatform       : '1.11.3',
+  junit               : '5.11.4',
+  junitPlatform       : '1.11.4',
   reformLogging       : '6.1.7',
   springfoxSwagger    : '2.10.5',
   lombok              : '1.18.36',
