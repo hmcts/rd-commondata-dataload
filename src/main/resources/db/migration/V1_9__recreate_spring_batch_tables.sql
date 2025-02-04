@@ -22,10 +22,10 @@ drop sequence if exists BATCH_JOB_SEQ;
 
 
 -- ensure we have table names available
-drop table if exists batch_job_execution;
-drop table if exists batch_job_execution_context;
-drop table if exists batch_job_execution_params;
-drop table if exists batch_job_instance;
-drop table if exists batch_step_execution;
-drop table if exists batch_step_execution_context;
+drop table if exists batch_job_execution CASCADE;
+drop table if exists batch_job_execution_context CASCADE;
+drop table if exists batch_job_execution_params CASCADE;
+drop table if exists batch_job_instance CASCADE;
+drop table if exists batch_step_execution CASCADE;
+drop table if exists batch_step_execution_context CASCADE;
 
