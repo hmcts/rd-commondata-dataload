@@ -1,4 +1,5 @@
 
+
 -- rename existing tables in environments (AAT has had successful job runs)
 alter table if exists batch_step_execution_context rename to batch_step_execution_context_archived2;
 alter table if exists batch_job_execution_context rename to batch_job_execution_context_archived2;
@@ -18,6 +19,7 @@ alter table if exists batch_job_execution_context_archived2 rename constraint JO
 drop sequence if exists BATCH_STEP_EXECUTION_SEQ;
 drop sequence if exists BATCH_JOB_EXECUTION_SEQ;
 drop sequence if exists BATCH_JOB_SEQ;
+
 
 -- ensure we have table names available
 drop table if exists batch_job_execution;
