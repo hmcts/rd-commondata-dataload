@@ -230,7 +230,7 @@ def versions = [
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
   jackson             : '2.18.2',
-  log4j               : '2.24.2',
+  log4j               : '2.24.3',
   logback             : '1.5.12',
   bouncycastle        : '1.79',
   restAssured         : '5.5.0',
