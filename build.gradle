@@ -3,7 +3,7 @@ plugins {
   id 'checkstyle'
   id 'pmd'
   id 'jacoco'
-  id 'io.spring.dependency-management' version '1.1.6'
+  id 'io.spring.dependency-management' version '1.1.7'
   id 'org.owasp.dependencycheck' version '12.0.2'
   id 'org.springframework.boot' version '3.4.1'
   id 'com.github.ben-manes.versions' version '0.51.0'
@@ -218,8 +218,8 @@ ext {
 }
 
 def versions = [
-  junit               : '5.11.3',
-  junitPlatform       : '1.11.3',
+  junit               : '5.11.4',
+  junitPlatform       : '1.11.4',
   reformLogging       : '6.1.7',
   springfoxSwagger    : '2.10.5',
   lombok              : '1.18.36',
@@ -230,8 +230,8 @@ def versions = [
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
   jackson             : '2.18.2',
-  log4j               : '2.24.2',
-  logback             : '1.5.12',
+  log4j               : '2.24.3',
+  logback             : '1.5.16',
   bouncycastle        : '1.79',
   restAssured         : '5.5.0',
   serenity            : '4.2.9'
@@ -274,7 +274,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.18.2', ext: 'pom'
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.10.9'
-  implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+  implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
   implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
@@ -291,7 +291,7 @@ dependencies {
   implementation 'commons-io:commons-io:2.17.0'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
 
-  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
+  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.2'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
@@ -334,12 +334,12 @@ dependencies {
 
   testImplementation group: 'org.apache.camel', name: 'camel-test-spring-junit5', version: versions.camel
   testImplementation group: 'org.apache.camel', name: 'camel-test-junit5', version: versions.camel
-  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.20.3'
+  testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.20.4'
   testImplementation group: 'org.springframework.batch', name: 'spring-batch-test'
   testImplementation group: 'org.javatuples', name: 'javatuples', version: '1.2'
 
-  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
-  testImplementation 'com.github.hmcts:fortify-client:1.4.6:all'
+  testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
+  testImplementation 'com.github.hmcts:fortify-client:1.4.7:all'
 
   smokeTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
   functionalTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
