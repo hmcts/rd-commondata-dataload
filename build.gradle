@@ -220,7 +220,7 @@ ext {
 def versions = [
   junit               : '5.11.4',
   junitPlatform       : '1.11.4',
-  reformLogging       : '6.1.7',
+  reformLogging       : '6.1.8',
   springfoxSwagger    : '2.10.5',
   lombok              : '1.18.36',
   flyway              : '9.22.3',
