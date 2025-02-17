@@ -306,7 +306,7 @@ dependencies {
   }
   implementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
 
-  testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.0'
+  testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.1'
   testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
   testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
 
