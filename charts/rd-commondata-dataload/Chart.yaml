@@ -8,13 +8,13 @@ maintainers:
   - name: Reference Data Team
 dependencies:
   - name: job
-    version: 2.1.2
-    repository: https://hmctspublic.azurecr.io/helm/v1/repo/
+    version: 2.2.0
+    repository: oci://hmctspublic.azurecr.io/helm
   - name: postgresql
     version: 11.9.13
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: blobstorage
-    version: 2.0.2
-    repository: https://hmctspublic.azurecr.io/helm/v1/repo/
+    version: 2.1.0
+    repository: oci://hmctspublic.azurecr.io/helm
     condition: blobstorage.enabled
