@@ -209,7 +209,7 @@ repositories {
   mavenLocal()
   mavenCentral()
   maven {
-    url 'https://jitpack.io'
+    url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
   }
 }
 
@@ -283,7 +283,7 @@ dependencies {
 
   implementation group: 'org.yaml', name: 'snakeyaml', version: '2.4'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.0') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.1') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
