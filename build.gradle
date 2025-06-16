@@ -291,7 +291,7 @@ dependencies {
   implementation 'commons-io:commons-io:2.18.0'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
 
-  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.2'
+  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
