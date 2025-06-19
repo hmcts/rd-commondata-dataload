@@ -291,7 +291,7 @@ dependencies {
   implementation 'commons-io:commons-io:2.18.0'
   implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
 
-  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.2'
+  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
@@ -321,7 +321,7 @@ dependencies {
   }, version: versions.sonarPitest
 
   testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
-  testImplementation 'org.pitest:pitest-junit5-plugin:1.2.2'
+  testImplementation 'org.pitest:pitest-junit5-plugin:1.2.3'
   testImplementation 'com.arcmutate:arcmutate-spring:1.0.0'
 
   integrationTestImplementation sourceSets.main.runtimeClasspath
@@ -351,7 +351,6 @@ dependencies {
 }
 
 dependencyManagement {
-
   imports {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
   }
