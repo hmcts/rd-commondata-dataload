@@ -283,7 +283,7 @@ dependencies {
 
   implementation group: 'org.yaml', name: 'snakeyaml', version: '2.4'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.4') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.5') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
@@ -295,6 +295,7 @@ dependencies {
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
+  implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '4.2.0'
   implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '13.5'
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
