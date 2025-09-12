@@ -112,12 +112,12 @@ task fortifyScan(type: JavaExec)  {
 
 checkstyle {
   maxWarnings = 0
-  toolVersion = '8.45.1'
+  toolVersion = '11.0.1'
   getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
 pmd {
-  toolVersion = "6.55.0"
+  toolVersion = "7.16.0"
   sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
   reportsDir = file("$project.buildDir/reports/pmd")
   ignoreFailures = true
@@ -234,7 +234,7 @@ def versions = [
   logback             : '1.5.18',
   bouncycastle        : '1.80',
   restAssured         : '5.5.0',
-  serenity            : '4.2.16'
+  serenity            : '4.2.34'
 ]
 
 ext.libraries = [
@@ -243,7 +243,8 @@ ext.libraries = [
     "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
     "org.junit.jupiter:junit-jupiter-params:${versions.junit}",
     "org.junit.platform:junit-platform-commons:${versions.junitPlatform}",
-    "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
+    "org.junit.platform:junit-platform-engine:${versions.junitPlatform}",
+    "org.junit.vintage:junit-vintage-engine:${versions.junit}"
   ]
 ]
 
