@@ -306,7 +306,7 @@ dependencies {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
-  implementation group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
+  implementation group: 'com.google.guava', name: 'guava', version: '33.5.0-jre'
 
   testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.5.6'
   testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
