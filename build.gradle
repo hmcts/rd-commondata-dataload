@@ -232,7 +232,7 @@ def versions = [
   jackson             : '2.19.2',
   log4j               : '2.24.3',
   logback             : '1.5.19',
-  bouncycastle        : '1.80',
+  bouncycastle        : '1.82',
   restAssured         : '5.5.0',
   serenity            : '4.2.34'
 ]
