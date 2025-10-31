@@ -229,7 +229,7 @@ def versions = [
   pitest              : '1.17.0',
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
-  jackson             : '2.19.2',
+  jackson             : '2.20.0',
   log4j               : '2.25.2',
   logback             : '1.5.20',
   bouncycastle        : '1.82',
@@ -278,7 +278,7 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
   implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.20'
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.20.0', ext: 'pom'
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
 
