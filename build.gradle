@@ -5,12 +5,12 @@ plugins {
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.7'
   id 'org.owasp.dependencycheck' version '12.1.6'
-  id 'org.springframework.boot' version '3.5.9'
+  id 'org.springframework.boot' version '3.5.12'
   id 'com.github.ben-manes.versions' version '0.53.0'
   id 'org.sonarqube' version '7.1.0.6387'
   id "org.flywaydb.flyway" version '9.22.3'
   id 'info.solidsoft.pitest' version '1.15.0'
-  id 'uk.gov.hmcts.java' version '0.12.67'
+  id 'uk.gov.hmcts.java' version '0.12.68'
 }
 
 group = 'uk.gov.hmcts.reform.rd'
@@ -222,7 +222,7 @@ def versions = [
   junitPlatform       : '6.0.3',
   reformLogging       : '6.1.9',
   springfoxSwagger    : '2.10.5',
-  lombok              : '1.18.42',
+  lombok              : '1.18.44',
   flyway              : '9.22.3',
   camel               : '4.14.1',
   gradlePitest        : '1.15.0',
@@ -231,7 +231,7 @@ def versions = [
   junitPitest         : '1.2.1',
   jackson             : '2.19.2',
   log4j               : '2.25.3',
-  logback             : '1.5.24',
+  logback             : '1.5.32',
   bouncycastle        : '1.83',
   restAssured         : '5.5.0',
   serenity            : '4.3.4'
@@ -274,7 +274,7 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.20.1', ext: 'pom'
-  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '7.10.2'
+  implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '7.13.1'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.10'
   implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
@@ -298,7 +298,7 @@ dependencies {
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
   implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '4.3.0'
-  implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '13.6'
+  implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '13.9.3'
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testImplementation libraries.junit5
