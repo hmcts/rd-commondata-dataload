@@ -9,12 +9,12 @@ maintainers:
 dependencies:
   - name: job
     version: 2.2.0
-    repository: oci://hmctspublic.azurecr.io/helm
+    repository: oci://hmctsprod.azurecr.io/helm
   - name: postgresql
     version: 1.1.0
-    repository: oci://hmctspublic.azurecr.io/helm
+    repository: oci://hmctsprod.azurecr.io/helm
     condition: postgresql.enabled
   - name: blobstorage
     version: 2.1.0
-    repository: oci://hmctspublic.azurecr.io/helm
+    repository: oci://hmctsprod.azurecr.io/helm
     condition: blobstorage.enabled
