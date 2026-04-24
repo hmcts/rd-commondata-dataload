@@ -20,7 +20,7 @@ def component = "commondata-dataload"
 def secrets = [
   'rd-${env}': [
     secret('rd-commondata-storage-account-name', 'ACCOUNT_NAME'),
-    secret('rd-commondata-storage-account-primary-key', 'ACCOUNT_KEY')
+    secret('rd-commondata-storage-account-primary-key', 'ACCOUNT_KEY'),
     secret('ACCOUNT-KEY-PREVIEW', 'ACCOUNT_KEY_PREVIEW') 
 
   ]
