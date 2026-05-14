@@ -51,13 +51,6 @@ withNightlyPipeline(type, product, component) {
   overrideVaultEnvironments(vaultOverrides)
   loadVaultSecrets(secrets)
 
-  // Authenticate Docker to hmctsprod ACR so Testcontainers can pull the Ryuk reaper
-  // and base images via TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX. Reuses the managed
-  // identity already established by `az login --identity` earlier in the pipeline.
-  sh '''
-    env AZURE_CONFIG_DIR=/opt/jenkins/.azure-nonprod az acr login --name hmctsprod
-  '''
-
   enableSecurityScan()
   enableMutationTest()
   enableFortifyScan()
@@ -99,6 +92,13 @@ withNightlyPipeline(type, product, component) {
 
   afterSuccess('fortify-scan') {
     steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Fortify Scan/**/*'
+
+    // Authenticate Docker to hmctsprod ACR so Testcontainers can pull the Ryuk reaper
+    // and base images via TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX. Reuses the managed
+    // identity already established by `az login --identity` earlier in the pipeline.
+    sh '''
+      env AZURE_CONFIG_DIR=/opt/jenkins/.azure-nonprod az acr login --name hmctsprod
+    '''
   }
 }
 
