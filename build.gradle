@@ -10,7 +10,7 @@ plugins {
   id 'org.sonarqube' version '7.1.0.6387'
   id "org.flywaydb.flyway" version '9.22.3'
   id 'info.solidsoft.pitest' version '1.15.0'
-  id 'uk.gov.hmcts.java' version '0.12.68'
+  id 'uk.gov.hmcts.java' version '0.12.70'
 }
 
 group = 'uk.gov.hmcts.reform.rd'
@@ -220,7 +220,7 @@ ext {
 def versions = [
   junit               : '6.0.3',
   junitPlatform       : '6.0.3',
-  reformLogging       : '6.1.9',
+  reformLogging       : '8.0.0',
   springfoxSwagger    : '2.10.5',
   lombok              : '1.18.44',
   flyway              : '9.22.3',
