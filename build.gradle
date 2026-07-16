@@ -4,13 +4,13 @@ plugins {
   id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.7'
-  id 'org.owasp.dependencycheck' version '12.1.6'
-  id 'org.springframework.boot' version '3.5.12'
-  id 'com.github.ben-manes.versions' version '0.53.0'
+  id 'org.owasp.dependencycheck' version '12.2.0'
+  id 'org.springframework.boot' version '3.5.16'
+  id 'com.github.ben-manes.versions' version '0.54.0'
   id 'org.sonarqube' version '7.1.0.6387'
   id "org.flywaydb.flyway" version '9.22.3'
   id 'info.solidsoft.pitest' version '1.15.0'
-  id 'uk.gov.hmcts.java' version '0.12.68'
+  id 'uk.gov.hmcts.java' version '0.12.70'
 }
 
 group = 'uk.gov.hmcts.reform.rd'
@@ -214,7 +214,7 @@ repositories {
 }
 
 ext {
-  springCloudVersion = '2025.0.0'
+  springCloudVersion = '2025.0.2'
 }
 
 def versions = [
@@ -224,7 +224,7 @@ def versions = [
   springfoxSwagger    : '2.10.5',
   lombok              : '1.18.46',
   flyway              : '9.22.3',
-  camel               : '4.14.1',
+  camel               : '4.21.0',
   gradlePitest        : '1.15.0',
   pitest              : '1.17.0',
   sonarPitest         : '0.5',
@@ -232,7 +232,7 @@ def versions = [
   jackson             : '2.19.2',
   log4j               : '2.26.1',
   logback             : '1.5.38',
-  bouncycastle        : '1.83',
+  bouncycastle        : '1.85',
   restAssured         : '5.5.0',
   serenity            : '4.3.4'
 ]
@@ -255,7 +255,6 @@ dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
 
   implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
-  implementation "com.github.hmcts.java-logging:logging-appinsights:6.1.9"
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-batch'
@@ -289,16 +288,16 @@ dependencies {
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
   //Fix for CVE-2021-29425
-  implementation 'commons-io:commons-io:2.21.0'
-  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter'
+  implementation 'commons-io:commons-io:2.22.0'
+  implementation group: 'org.apache.camel.springboot', name: 'camel-spring-boot-starter', version: versions.camel
 
-  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
+  implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.1'
 
   implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
   implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '4.3.0'
-  implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '13.9.3'
+  implementation group: 'io.github.openfeign', name: 'feign-jackson', version: '13.13'
   compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
   testImplementation libraries.junit5
@@ -361,7 +360,7 @@ dependencyManagement {
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
     }
-    dependencySet(group: 'io.netty', version: '4.1.135.Final') {
+    dependencySet(group: 'io.netty', version: '4.2.15.Final') {
       entry 'netty-buffer'
       entry 'netty-codec'
       entry 'netty-codec-dns'
@@ -396,6 +395,38 @@ dependencyManagement {
       entry 'spring-tx'
       entry 'spring-web'
       entry 'spring-webmvc'
+    }
+    dependencySet(group: 'org.apache.camel.springboot', version: versions.camel) {
+      entry 'camel-azure-storage-blob-starter'
+      entry 'camel-bindy-starter'
+      entry 'camel-jdbc-starter'
+    }
+    dependencySet(group: 'org.apache.camel', version: versions.camel) {
+      entry 'camel-azure-storage-blob'
+      entry 'camel-bean-validator'
+      entry 'camel-bindy'
+      entry 'camel-core-catalog'
+      entry 'camel-core'
+      entry 'camel-csv'
+      entry 'camel-jdbc'
+      entry 'camel-spring-batch'
+      entry 'camel-sql'
+      entry 'camel-tooling-model'
+      entry 'camel-xml-io'
+      entry 'camel-xml-jaxb'
+      entry 'camel-yaml-io'
+      entry 'spi-annotations'
+    }
+    dependencySet(group: 'io.github.openfeign', version: '13.13') {
+      entry 'feign-core'
+      entry 'feign-form'
+      entry 'feign-form-spring'
+      entry 'feign-httpclient'
+      entry 'feign-jackson'
+      entry 'feign-slf4j'
+    }
+    dependencySet(group: 'org.codehaus.plexus', version: '3.6.1') {
+      entry 'plexus-utils'
     }
   }
 }
