@@ -417,6 +417,14 @@ dependencyManagement {
       entry 'camel-yaml-io'
       entry 'spi-annotations'
     }
+    dependencySet(group: 'io.github.openfeign', version: '13.13') {
+      entry 'feign-core'
+      entry 'feign-form'
+      entry 'feign-form-spring'
+      entry 'feign-httpclient'
+      entry 'feign-jackson'
+      entry 'feign-slf4j'
+    }
   }
 }
 
