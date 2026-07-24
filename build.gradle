@@ -229,7 +229,7 @@ def versions = [
   pitest              : '1.17.0',
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
-  jackson             : '2.19.2',
+  jackson             : '2.22.1',
   log4j               : '2.26.1',
   logback             : '1.5.38',
   bouncycastle        : '1.85',
@@ -273,13 +273,13 @@ dependencies {
   implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
   implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
-  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.20.1', ext: 'pom'
+  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.22.1', ext: 'pom'
   implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '7.14.0'
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.13'
   implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
-  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.20.1', ext: 'pom'
+  implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.22.1', ext: 'pom'
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
 
   implementation group: 'org.yaml', name: 'snakeyaml', version: '2.6'
