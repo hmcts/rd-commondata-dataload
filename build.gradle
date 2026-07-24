@@ -234,7 +234,7 @@ def versions = [
   logback             : '1.5.38',
   bouncycastle        : '1.85',
   restAssured         : '5.5.0',
-  serenity            : '4.3.4'
+  serenity            : '5.3.11'
 ]
 
 ext.libraries = [
