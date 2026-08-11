@@ -397,6 +397,44 @@ dependencyManagement {
       entry 'spring-web'
       entry 'spring-webmvc'
     }
+    dependencySet(group: 'org.apache.camel.springboot', version: versions.camel) {
+      entry 'camel-azure-storage-blob-starter'
+      entry 'camel-bindy-starter'
+      entry 'camel-jdbc-starter'
+    }
+    dependencySet(group: 'org.apache.camel', version: versions.camel) {
+      entry 'camel-azure-storage-blob'
+      entry 'camel-bean-validator'
+      entry 'camel-bindy'
+      entry 'camel-core-catalog'
+      entry 'camel-core'
+      entry 'camel-csv'
+      entry 'camel-jdbc'
+      entry 'camel-spring-batch'
+      entry 'camel-sql'
+      entry 'camel-tooling-model'
+      entry 'camel-xml-io'
+      entry 'camel-xml-jaxb'
+      entry 'camel-yaml-io'
+      entry 'spi-annotations'
+    }
+    dependencySet(group: 'io.github.openfeign', version: '13.13') {
+      entry 'feign-core'
+      entry 'feign-form'
+      entry 'feign-form-spring'
+      entry 'feign-httpclient'
+      entry 'feign-jackson'
+      entry 'feign-slf4j'
+    }
+    dependencySet(group: 'org.codehaus.plexus', version: '3.6.1') {
+      entry 'plexus-utils'
+    }
+    dependencySet(group: 'com.microsoft.azure', version: '3.7.8') {
+      entry 'applicationinsights-core'
+      entry 'applicationinsights-logging-logback'
+      entry 'applicationinsights-spring-boot-starter'
+      entry 'applicationinsights-web'
+    }
   }
 }
 
