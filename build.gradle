@@ -429,12 +429,6 @@ dependencyManagement {
     dependencySet(group: 'org.codehaus.plexus', version: '3.6.1') {
       entry 'plexus-utils'
     }
-    dependencySet(group: 'com.microsoft.azure', version: '3.7.8') {
-      entry 'applicationinsights-core'
-      entry 'applicationinsights-logging-logback'
-      entry 'applicationinsights-spring-boot-starter'
-      entry 'applicationinsights-web'
-    }
   }
 }
 
