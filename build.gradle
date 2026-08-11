@@ -402,6 +402,13 @@ dependencyManagement {
       entry 'camel-bindy-starter'
       entry 'camel-jdbc-starter'
     }
+    dependencySet(group: 'org.springframework.cloud', version: '4.3.3') {
+      entry 'spring-cloud-commons'
+      entry 'spring-cloud-config-client'
+      entry 'spring-cloud-context'
+      entry 'spring-cloud-starter'
+      entry 'spring-cloud-starter-openfeign'
+    }
     dependencySet(group: 'org.apache.camel', version: versions.camel) {
       entry 'camel-azure-storage-blob'
       entry 'camel-bean-validator'
