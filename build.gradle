@@ -231,7 +231,7 @@ def versions = [
   junitPitest         : '1.2.1',
   jackson             : '2.22.0',
   log4j               : '2.26.1',
-  logback             : '1.5.38',
+  logback             : '1.6.2',
   bouncycastle        : '1.85',
   restAssured         : '5.5.0',
   serenity            : '4.3.4'
