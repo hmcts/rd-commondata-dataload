@@ -43,4 +43,26 @@
     </notes>
     <cve>CVE-2025-4949</cve>
   </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+        Reviewed 2026-08-12
+        No remedy released:
+        CVE-2026-2587, CVE-2026-2586, CVE-2024-9329 apply to jaxb libraries.
+        Affected libraries reported by dependency-check are:
+        - jaxb-osgi 4.0.9
+        Versions of used libraries are their latest respectively.
+      ]]>
+    </notes>
+    <cve>CVE-2026-2587</cve>
+    <cve>CVE-2026-2586</cve>
+    <cve>CVE-2024-9329</cve>
+  </suppress>
+  <suppress>
+    <cve>CVE-2026-33117</cve>
+    <cve>CVE-2023-36415</cve>
+    <cve>CVE-2024-35255</cve>
+    <cve>CVE-2022-30187</cve>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
 </suppressions>
