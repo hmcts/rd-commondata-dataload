@@ -229,7 +229,7 @@ def versions = [
   pitest              : '1.17.0',
   sonarPitest         : '0.5',
   junitPitest         : '1.2.1',
-  jackson             : '2.19.2',
+  jackson             : '2.22.0',
   log4j               : '2.26.1',
   logback             : '1.5.38',
   bouncycastle        : '1.85',
@@ -277,7 +277,7 @@ dependencies {
   implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.13'
   implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.22'
   implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.20.1', ext: 'pom'
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
 
@@ -434,6 +434,22 @@ dependencyManagement {
     }
     dependencySet(group: 'org.codehaus.plexus', version: '3.6.1') {
       entry 'plexus-utils'
+    }
+    dependencySet(group: 'com.fasterxml.jackson.core', version: versions.jackson) {
+      entry 'jackson-core'
+      entry 'jackson-databind'
+    }
+    dependencySet(group: 'com.fasterxml.jackson.datatype', version: versions.jackson) {
+      entry 'jackson-datatype-jsr310'
+      entry 'jackson-datatype-jdk8'
+    }
+    dependencySet(group: 'com.fasterxml.jackson.dataformat', version: versions.jackson) {
+      entry 'jackson-dataformat-toml'
+      entry 'jackson-dataformat-xml'
+      entry 'jackson-dataformat-yaml'
+    }
+    dependencySet(group: 'com.fasterxml.jackson.module', version: versions.jackson) {
+      entry 'jackson-module-parameter-names'
     }
   }
 }
