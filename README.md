@@ -2,6 +2,7 @@
 # rd-commondata-dataload
 Reference data commondata dataload
 
+
 RDCD is batch application and RDCD batch is scheduled with Kubernetes which runs once in a day per cluster.
 
 RDCD consume data files from an external source, transform that data into the destination format
