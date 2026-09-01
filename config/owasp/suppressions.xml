@@ -65,4 +65,11 @@
     <cve>CVE-2022-30187</cve>
     <cve>CVE-2024-35255</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+           Spring framework CVEs
+   ]]></notes>
+    <cve>CVE-2026-59313</cve>
+    <cve>CVE-2026-59314</cve>
+  </suppress>
 </suppressions>
