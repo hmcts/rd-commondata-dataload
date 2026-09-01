@@ -71,5 +71,6 @@
    ]]></notes>
     <cve>CVE-2026-59313</cve>
     <cve>CVE-2026-59314</cve>
+    <cve>CVE-2026-59315</cve>
   </suppress>
 </suppressions>
