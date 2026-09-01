@@ -214,7 +214,7 @@ repositories {
 }
 
 ext {
-  springCloudVersion = '2025.0.2'
+  springCloudVersion = '2025.0.0'
 }
 
 def versions = [
@@ -401,7 +401,7 @@ dependencyManagement {
       entry 'camel-bindy-starter'
       entry 'camel-jdbc-starter'
     }
-    dependencySet(group: 'org.springframework.cloud', version: '4.3.4') {
+    dependencySet(group: 'org.springframework.cloud', version: '4.3.3') {
       entry 'spring-cloud-commons'
       entry 'spring-cloud-config-client'
       entry 'spring-cloud-context'
