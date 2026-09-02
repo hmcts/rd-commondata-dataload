@@ -73,4 +73,11 @@
     <cve>CVE-2026-59314</cve>
     <cve>CVE-2026-59315</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+           Apache Camel CVEs
+   ]]></notes>
+    <cve>CVE-2026-66908</cve>
+    <cve>CVE-2026-49042</cve>
+  </suppress>
 </suppressions>
