@@ -3,6 +3,21 @@
   <suppress>
     <notes>
       <![CDATA[
+        Reviewed 2026-07-16
+        False positive:
+        CVE-2025-15104 applies to Nu HTML checker library (validator.nu) and is wrongly matched to apache camel libraries.
+        Affected libraries reported by dependency-check are:
+        - camel-bean-validator 4.21.0
+        - camel-validator 4.21.0
+        - camel-validator-starter 4.21.0
+        Versions of used libraries are their latest respectively.
+      ]]>
+    </notes>
+    <cve>CVE-2025-15104</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
         Reviewed 2026-08-07
         No remedy released:
         CVE-2026-66299 applies to apache tomcat libraries.
@@ -12,5 +27,69 @@
       ]]>
     </notes>
     <cve>CVE-2026-66299</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+        Reviewed 2026-08-07
+        No remedy released:
+        CVE-2025-4949 applies to jgit libraries.
+        Affected libraries reported by dependency-check are:
+        - jgit 6.10.1.202505221210-r
+        - jgit.http.apache 6.10.1.202505221210-r
+        - jgit.ssh.apache 6.10.1.202505221210-r
+        Versions of used libraries are their latest respectively.
+      ]]>
+    </notes>
+    <cve>CVE-2025-4949</cve>
+  </suppress>
+  <suppress>
+    <notes>
+      <![CDATA[
+        Reviewed 2026-08-12
+        No remedy released:
+        CVE-2026-2587, CVE-2026-2586, CVE-2024-9329 apply to jaxb libraries.
+        Affected libraries reported by dependency-check are:
+        - jaxb-osgi 4.0.9
+        Versions of used libraries are their latest respectively.
+      ]]>
+    </notes>
+    <cve>CVE-2026-2587</cve>
+    <cve>CVE-2026-2586</cve>
+    <cve>CVE-2024-9329</cve>
+  </suppress>
+  <suppress>
+    <cve>CVE-2026-33117</cve>
+    <cve>CVE-2023-36415</cve>
+    <cve>CVE-2024-35255</cve>
+    <cve>CVE-2022-30187</cve>
+    <cve>CVE-2024-35255</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+           Spring framework CVEs
+   ]]></notes>
+    <cve>CVE-2026-59313</cve>
+    <cve>CVE-2026-59314</cve>
+    <cve>CVE-2026-59315</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+           Apache Camel CVEs
+   ]]></notes>
+    <cve>CVE-2026-66908</cve>
+    <cve>CVE-2026-49042</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+           Spring framework 6.2.19 CVEs
+   ]]></notes>
+    <cve>CVE-2026-47892</cve>
+    <cve>CVE-2026-47893</cve>
+    <cve>CVE-2026-47894</cve>
+    <cve>CVE-2026-59270</cve>
+    <cve>CVE-2026-59280</cve>
+    <cve>CVE-2026-59283</cve>
+    <cve>CVE-2026-59284</cve>
   </suppress>
 </suppressions>
