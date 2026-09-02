@@ -481,7 +481,7 @@ wrapper {
 }
 
 // Fix for CVE-2021-21295 & need to be removed with new Azure blob version
-configurations.all {
+//configurations.all {
 
   //resolutionStrategy.eachDependency { details ->
     // Fix for CVE-2020-21913 & needs to be removed when camel-azure-starter is upgraded to latest version in data-ingestion-library
@@ -490,8 +490,8 @@ configurations.all {
     //}
   //}
 
-  exclude group: 'org.codehaus.jettison', module: 'jettison'
-}
+  //exclude group: 'org.codehaus.jettison', module: 'jettison'
+//}
 
 test {
   useJUnitPlatform()
