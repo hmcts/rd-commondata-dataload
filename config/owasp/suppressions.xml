@@ -92,4 +92,26 @@
     <cve>CVE-2026-59283</cve>
     <cve>CVE-2026-59284</cve>
   </suppress>
+  <suppress>
+    <notes>https://tools.hmcts.net/jira/browse/DTSRD-6689 Spring reactor netty</notes>
+      <cve>CVE-2026-47874</cve>
+  </suppress>
+  <suppress>
+    <notes>https://tools.hmcts.net/jira/browse/DTSRD-6681 Spring framework</notes>
+      <cve>CVE-2026-47890</cve>
+      <cve>CVE-2026-47891</cve> 
+      <cve>CVE-2026-59282</cve> 
+      <cve>CVE-2026-59281</cve>
+  </suppress>
+  <suppress>
+    <notes>https://tools.hmcts.net/jira/browse/DTSRD-6685 Spring cloud</notes>
+      <cve>CVE-2026-47837</cve> 
+      <cve>CVE-2026-47836</cve>
+  </suppress>  
+  <suppress>
+    <notes>https://tools.hmcts.net/jira/browse/DTSRD-6684 spring security</notes>
+      <cve>CVE-2026-41710</cve> 
+      <cve>CVE-2026-47841</cve> 
+      <cve>CVE-2026-47842</cve>
+  </suppress>
 </suppressions>
