@@ -10,7 +10,7 @@ fi
 echo "Creating dbcommondata database . . ."
 
 psql -v ON_ERROR_STOP=1 --username postgres --dbname postgres <<-EOSQL
-  CREATE ROLE dbcommondata WITH PASSWORD 'dbcommondata';
+  CREATE ROLE dbcommondata WITH PASSWORD '${POSTGRES_PASSWORD}';
   CREATE DATABASE dbcommondata ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
   GRANT ALL PRIVILEGES ON DATABASE dbcommondata TO dbcommondata;
   ALTER ROLE dbcommondata WITH LOGIN;
