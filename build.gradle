@@ -222,7 +222,7 @@ def versions = [
   junitPlatform       : '6.1.2',
   reformLogging       : '8.0.0',
   springfoxSwagger    : '2.10.5',
-  lombok              : '1.18.46',
+  lombok              : '1.18.48',
   flyway              : '9.22.3',
   camel               : '4.14.1',
   gradlePitest        : '1.15.0',
