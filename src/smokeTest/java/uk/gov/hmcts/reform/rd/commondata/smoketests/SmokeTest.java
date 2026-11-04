@@ -24,7 +24,7 @@ public class SmokeTest {
 
         String response = SerenityRest
             .when()
-            .get("/health")
+            .get("/actuator/health")
             .then()
             .statusCode(OK.value())
             .and()
