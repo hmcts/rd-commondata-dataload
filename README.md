@@ -103,6 +103,8 @@ If running locally for development or testing you will need to add (Application.
 * ACCOUNT_NAME: <The actual account name. Please check with the dev team for more information.>
 * ACCOUNT_KEY: <The actual account key. Please check with the dev team for more information.>
 * CONTAINER_NAME: jud-ref-data
+* POSTGRES_USERNAME: <The local database username. No default is provided.>
+* POSTGRES_PASSWORD: <A locally generated database password. No default is provided.>
 
 ### Running the application
 
@@ -141,7 +143,7 @@ This will start the API container exposing the application's port
 In order to test if the application is up, you can call its health endpoint:
 
 ```bash
-  curl http://localhost:8100/health
+  curl http://localhost:8100/actuator/health
 ```
 
 
@@ -149,5 +151,5 @@ To build the project execute the following command:
   ./gradlew build
 
 
-The application exposes health endpoint (http://localhost:8100/health) and metrics endpoint
-(http://localhost:8100/metrics).
+The application exposes health endpoint (http://localhost:8100/actuator/health) and metrics endpoint
+(http://localhost:8100/actuator/prometheus).
