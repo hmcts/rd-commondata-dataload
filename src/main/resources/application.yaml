@@ -6,7 +6,7 @@ management:
     loggers:
       enabled: false
     health:
-      show-details: never
+      show-details: "when_authorized"
   endpoints:
     web:
       base-path: /actuator
