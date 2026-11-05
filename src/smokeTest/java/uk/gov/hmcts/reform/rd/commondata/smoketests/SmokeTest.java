@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class SmokeTest {
@@ -32,5 +33,18 @@ public class SmokeTest {
 
         Assertions.assertThat(response)
             .contains("UP");
+    }
+
+    @Test
+    public void loggersEndpointIsNotExposedAnonymously() {
+
+        RestAssured.baseURI = targetInstance;
+        RestAssured.useRelaxedHTTPSValidation();
+
+        SerenityRest
+            .when()
+            .get("/actuator/loggers")
+            .then()
+            .statusCode(NOT_FOUND.value());
     }
 }

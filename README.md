@@ -151,5 +151,5 @@ To build the project execute the following command:
   ./gradlew build
 
 
-The application exposes health endpoint (http://localhost:8100/actuator/health) and metrics endpoint
-(http://localhost:8100/actuator/prometheus).
+The application exposes the health endpoint (http://localhost:8100/actuator/health). Health details are
+not included in the response.
