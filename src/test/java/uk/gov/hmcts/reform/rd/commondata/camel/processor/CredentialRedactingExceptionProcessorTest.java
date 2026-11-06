@@ -21,10 +21,6 @@ class CredentialRedactingExceptionProcessorTest {
     @Test
     void redactsExceptionBeforeLoggingAndAuditing() throws Exception {
         var camelContext = new DefaultCamelContext();
-        var applicationContext = new GenericApplicationContext();
-        var auditService = mock(IAuditService.class);
-        var fileResponseProcessor = mock(FileResponseProcessor.class);
-        var processor = new CredentialRedactingExceptionProcessor();
         var fileStatus = FileStatus.builder().fileName("data.csv").build();
         var routeProperties = new RouteProperties();
         routeProperties.setFileName("data.csv");
@@ -36,10 +32,13 @@ class CredentialRedactingExceptionProcessorTest {
         camelContext.getRegistry().bind("data.csv", fileStatus);
         exchange.getIn().setHeader("routedetails", routeProperties);
         exchange.setProperty(Exchange.EXCEPTION_CAUGHT, exception);
-
+        final var processor = new CredentialRedactingExceptionProcessor();
+        final var applicationContext = new GenericApplicationContext();
         ReflectionTestUtils.setField(processor, "camelContext", camelContext);
         ReflectionTestUtils.setField(processor, "applicationContext", applicationContext);
+        final var auditService = mock(IAuditService.class);
         ReflectionTestUtils.setField(processor, "auditService", auditService);
+        final var fileResponseProcessor = mock(FileResponseProcessor.class);
         ReflectionTestUtils.setField(processor, "fileResponseProcessor", fileResponseProcessor);
 
         processor.process(exchange);
