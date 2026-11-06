@@ -11,8 +11,10 @@ final class ExceptionSanitizer {
         "(?i)([?&](?:credentials?|password|sharedaccesssignature)=)[^\\s&\"'<>]*"
     );
     private static final Pattern TOKEN_PARAMETER = Pattern.compile(
-        "(?i)([?&](?:account[-_]?key|sas(?:token)?|sig(?:nature)?|access[_-]?token|client[_-]?secret)="
-            + ")[^\\s&\"'<>]*"
+        "(?i)([?&](?:account[-_]?key|sas(?:token)?|sig(?:nature)?)=)[^\\s&\"'<>]*"
+    );
+    private static final Pattern TOKEN_PARAMETER_ALT = Pattern.compile(
+        "(?i)([?&](?:access[_-]?token|client[_-]?secret)=)[^\\s&\"'<>]*"
     );
     private static final Pattern SHARED_KEY = Pattern.compile("(?i)(SharedKey\\s+)[^\\s,;]+");
 
@@ -57,6 +59,7 @@ final class ExceptionSanitizer {
         }
         String redacted = CREDENTIAL_PARAMETER.matcher(message).replaceAll(REDACTED_VALUE);
         redacted = TOKEN_PARAMETER.matcher(redacted).replaceAll(REDACTED_VALUE);
+        redacted = TOKEN_PARAMETER_ALT.matcher(redacted).replaceAll(REDACTED_VALUE);
         return SHARED_KEY.matcher(redacted).replaceAll(REDACTED_VALUE);
     }
 
