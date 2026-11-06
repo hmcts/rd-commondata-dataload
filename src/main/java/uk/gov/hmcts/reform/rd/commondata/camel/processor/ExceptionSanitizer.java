@@ -7,8 +7,11 @@ import java.util.regex.Pattern;
 final class ExceptionSanitizer {
 
     private static final Pattern CREDENTIAL_PARAMETER = Pattern.compile(
-        "(?i)([?&](?:credentials?|account[-_]?key|sas(?:token)?|sharedaccesssignature|sig|signature|"
-            + "access[_-]?token|client[_-]?secret|password)=)[^\\s&\"'<>]*"
+        "(?i)([?&](?:credentials?|password|sharedaccesssignature)=)[^\\s&\"'<>]*"
+    );
+    private static final Pattern TOKEN_PARAMETER = Pattern.compile(
+        "(?i)([?&](?:account[-_]?key|sas(?:token)?|sig(?:nature)?|access[_-]?token|client[_-]?secret)="
+            + ")[^\\s&\"'<>]*"
     );
     private static final Pattern SHARED_KEY = Pattern.compile("(?i)(SharedKey\\s+)[^\\s,;]+");
 
@@ -51,8 +54,9 @@ final class ExceptionSanitizer {
         if (message == null) {
             return null;
         }
-        return SHARED_KEY.matcher(CREDENTIAL_PARAMETER.matcher(message).replaceAll("$1[REDACTED]"))
-            .replaceAll("$1[REDACTED]");
+        String redacted = CREDENTIAL_PARAMETER.matcher(message).replaceAll("$1[REDACTED]");
+        redacted = TOKEN_PARAMETER.matcher(redacted).replaceAll("$1[REDACTED]");
+        return SHARED_KEY.matcher(redacted).replaceAll("$1[REDACTED]");
     }
 
     private static final class SanitizedException extends Exception {
