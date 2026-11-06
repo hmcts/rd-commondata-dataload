@@ -4,9 +4,29 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExceptionSanitizerTest {
+
+    @Test
+    void preservesExceptionWithNullMessage() {
+        Exception sanitized = ExceptionSanitizer.sanitize(new Exception());
+
+        assertNull(sanitized.getMessage());
+    }
+
+    @Test
+    void preservesCyclicCauseReferences() {
+        Exception first = new Exception("first");
+        Exception second = new Exception("second");
+        first.initCause(second);
+        second.initCause(first);
+
+        Exception sanitized = ExceptionSanitizer.sanitize(first);
+
+        assertTrue(sanitized.getCause().getCause() == sanitized);
+    }
 
     @Test
     void redactsCredentialParametersAndSharedKeysFromExceptionTree() {
