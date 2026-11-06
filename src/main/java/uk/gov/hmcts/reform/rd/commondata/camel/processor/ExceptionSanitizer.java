@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 final class ExceptionSanitizer {
 
+    private static final String REDACTED_VALUE = "$1[REDACTED]";
     private static final Pattern CREDENTIAL_PARAMETER = Pattern.compile(
         "(?i)([?&](?:credentials?|password|sharedaccesssignature)=)[^\\s&\"'<>]*"
     );
@@ -54,9 +55,9 @@ final class ExceptionSanitizer {
         if (message == null) {
             return null;
         }
-        String redacted = CREDENTIAL_PARAMETER.matcher(message).replaceAll("$1[REDACTED]");
-        redacted = TOKEN_PARAMETER.matcher(redacted).replaceAll("$1[REDACTED]");
-        return SHARED_KEY.matcher(redacted).replaceAll("$1[REDACTED]");
+        String redacted = CREDENTIAL_PARAMETER.matcher(message).replaceAll(REDACTED_VALUE);
+        redacted = TOKEN_PARAMETER.matcher(redacted).replaceAll(REDACTED_VALUE);
+        return SHARED_KEY.matcher(redacted).replaceAll(REDACTED_VALUE);
     }
 
     private static final class SanitizedException extends Exception {
