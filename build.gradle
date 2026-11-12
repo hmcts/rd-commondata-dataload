@@ -224,7 +224,7 @@ def versions = [
   springfoxSwagger    : '2.10.5',
   lombok              : '1.18.48',
   flyway              : '9.22.3',
-  camel               : '4.14.1',
+  camel               : '4.23.0',
   gradlePitest        : '1.15.0',
   pitest              : '1.17.0',
   sonarPitest         : '0.5',
@@ -284,7 +284,7 @@ dependencies {
 
   implementation group: 'org.yaml', name: 'snakeyaml', version: '2.7'
 
-  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.5') {
+  implementation ('com.github.hmcts:data-ingestion-lib:0.6.0.10') {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     exclude group: 'org.glassfish', module: 'jakarta.el'
   }
