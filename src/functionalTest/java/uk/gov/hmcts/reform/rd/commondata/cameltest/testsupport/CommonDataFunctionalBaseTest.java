@@ -221,14 +221,15 @@ public abstract class CommonDataFunctionalBaseTest {
 
     @SuppressWarnings("unchecked")
     protected void validateFlagServiceFileJsrException(JdbcTemplate jdbcTemplate,
-                                                       String exceptionQuery, int size, String tableName,
+                                                       String exceptionQuery, String tableName,
                                                        Quartet<String, String, String, Long>... quartets) {
         var result = jdbcTemplate.queryForList(exceptionQuery);
-        assertEquals(result.size(), size);
 
         List<Map<String, Object>> actualResult = result.stream()
             .filter(exception -> exception.containsValue(tableName))
             .collect(Collectors.toUnmodifiableList());
+        assertEquals(quartets.length, actualResult.size());
+
         int numberOfMatchingErrors = 0;
         for (Map<String, Object> currResult : actualResult) {
             for (Quartet<String, String, String, Long> quartet : quartets) {
@@ -240,7 +241,7 @@ public abstract class CommonDataFunctionalBaseTest {
                 }
             }
         }
-        assertEquals(numberOfMatchingErrors, quartets.length);
+        assertEquals(quartets.length, numberOfMatchingErrors);
     }
 
     @SuppressWarnings("unchecked")
