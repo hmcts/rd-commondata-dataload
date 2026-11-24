@@ -3,13 +3,15 @@ server:
 
 management:
   endpoint:
+    loggers:
+      enabled: false
     health:
-      show-details: "always"
+      show-details: "when_authorized"
   endpoints:
     web:
-      base-path: /
+      base-path: /actuator
       exposure:
-        include: health, info, prometheus
+        include: health
 
 spring:
   application:
